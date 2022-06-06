@@ -1,74 +1,26 @@
 import React, { useState, useEffect } from "react";
-import InputSelectComponent from "./InputSelectComponent";
-import ExampleListBox from "./ExampleListBox";
 import { publicInstance } from "../api/axiosInstance";
-
-const categories = [
-  {
-    id: 9,
-    name: "Biblioteca",
-    tag: [
-      {
-        id: 1,
-        tag: {
-          id: 7,
-          name: "menu",
-          booleanType: false,
-        },
-        value:
-          '{"foodSections":[{"name":"primi","dishes":[{"name":"pasta pomodoro","price":4.5,"ingradients":["pasta","pomodoro","olio oliva"]},{"name":"pasta bianco","price":3.0,"ingradients":["pasta","olio oliva"]}]}],"price":2}',
-      },
-    ],
-    tagString: [],
-    tagBool: [],
-  },
-  {
-    id: 10,
-    name: "Chiesa",
-    tag: [
-      {
-        id: 2,
-        tag: {
-          id: 17,
-          name: "ingresso animali",
-          booleanType: true,
-        },
-        value: null,
-      },
-    ],
-    tagString: [],
-    tagBool: [],
-  },
-];
+import CategorySection from "./category-type-tag-component/CategorySection";
 
 function ExampleComponent() {
   const [realCategories, setRealCategories] = useState([]);
   const [categoryValue, setCategoryValue] = useState([]);
-  const [boolean, setboolean] = useState(false);
+  const [types, setTypes] = useState([]);
+  const [typeValue, setTypeValue] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
   const [clicked, setClicked] = useState(false);
-
-  function getCategories() {
-    publicInstance
-      .get("/api/category/all")
-      .then((res) => {
-        setRealCategories(res.data);
-        console.log(res.status);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  const [via, setVia] = useState("");
+  const [number, setNumber] = useState(0);
 
   function createPoi() {
     let payload = {
       name: name,
       description: description,
-      lat:lat,
-      lon:lon
+      lat: lat,
+      lon: lon,
     };
     publicInstance
       .post("/api/ente/createPoi", payload)
@@ -79,55 +31,16 @@ function ExampleComponent() {
   }
 
   useEffect(() => {
-    getCategories();
     return () => {
       setName("");
       setDescription("");
       setLat("");
       setLon("");
-      setCategoryValue([]);
       setClicked(false);
+      setTypeValue([]);
     };
   }, [clicked]);
 
-  function renderInputTag() {
-    return categoryValue.map((someValue) => {
-      return someValue.tag.map((someTag) => {
-        return someTag.tag.booleanType ? (
-          <ExampleListBox
-            key={someTag.id}
-            keyValue={someTag.tag.name}
-            multiple={false}
-            values={[true, false]}
-            value={boolean}
-            onChange={setboolean}
-          />
-        ) : (
-          <div key={someTag.id}>
-            <label
-              htmlFor="about"
-              className="block text-sm font-medium text-gray-700"
-            >
-              {someTag.tag.name}
-            </label>
-            <div className="mt-1 flex rounded-md shadow-sm">
-              <textarea
-                id={someTag.tag.name}
-                name={someTag.tag.name}
-                rows={3}
-                className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
-                placeholder=""
-                defaultValue={""}
-              />
-            </div>
-            {/* <p className="mt-2 text-sm text-gray-500">
-                Brief description for your profile. URLs are hyperlinked.
-              </p> */}
-          </div>
-        );
-      });
-    });
-  }
   return (
     <div className="md:grid md:grid-cols-3 md:gap-6">
       <div className="md:col-span-1">
@@ -141,10 +54,12 @@ function ExampleComponent() {
           </p>
         </div>
       </div>
-      <div className="mt-5 md:mt-0 md:col-span-2">
+      <div className="mt-2 md:mt-0 md:col-span-2">
         <form>
           <div className="shadow sm:rounded-md sm:overflow-hidden">
             <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
+              <br />
+              <p>Poi informations</p>
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3 sm:col-span-2">
                   <label
@@ -193,7 +108,70 @@ function ExampleComponent() {
                       Brief description for your profile. URLs are hyperlinked.
                     </p> */}
               </div>
+
+              {/* categories input select */}
+              <CategorySection 
+              categories={realCategories} 
+              categoryValue={categoryValue}
+              setCategoryValue={setCategoryValue}
+              setCategories={setRealCategories}
+              types={types}
+              setTypeValue={setTypeValue}
+              typeValue={typeValue}
+              setTypes={setTypes}
+              />
+
+              {/* address Section */}
+              <br />
+              <p>Address</p>
+              <div className="grid grid-cols-3 gap-6">
+                <div className="col-span-3 sm:col-span-2">
+                  <label
+                    htmlFor="poi-via"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    POI via
+                  </label>
+                  <div className="mt-1 flex rounded-md shadow-sm">
+                    <input
+                      type="text"
+                      name="poi-via"
+                      id="poi-via"
+                      className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
+                      placeholder="Via del punto"
+                      value={via}
+                      onChange={(e) => {
+                        setVia(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+                <div className="col-span-3 sm:col-span-2">
+                  <label
+                    htmlFor="poi-numero"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    numero
+                  </label>
+                  <div className="mt-1 flex rounded-md shadow-sm">
+                    <input
+                      type="number"
+                      name="poi-numero"
+                      id="poi-numero"
+                      className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
+                      placeholder="numero della via"
+                      value={number}
+                      onChange={(e) => {
+                        setNumber(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* lat e lon */}
+              <br />
+              <p>Coordinate</p>
               <div className="grid grid-cols-3 gap-6">
                 {/* lat */}
                 <div /* className="col-span-3 sm:col-span-2" */>
@@ -205,13 +183,13 @@ function ExampleComponent() {
                   </label>
                   <div className="mt-1 flex rounded-md shadow-sm">
                     <input
-                      type="text"
+                      type="number"
                       name="poi-lat"
                       id="poi-lat"
                       className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                       placeholder="Latitudine del punto"
                       value={lat}
-                      onChange={(e)=>{
+                      onChange={(e) => {
                         setLat(e.target.value);
                       }}
                     />
@@ -227,13 +205,13 @@ function ExampleComponent() {
                   </label>
                   <div className="mt-1 flex rounded-md shadow-sm">
                     <input
-                      type="text"
+                      type="number"
                       name="poi-lon"
                       id="poi-lon"
                       className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                       placeholder="Longitudine del punto"
                       value={lon}
-                      onChange={(e)=>{
+                      onChange={(e) => {
                         setLon(e.target.value);
                       }}
                     />
@@ -243,6 +221,7 @@ function ExampleComponent() {
 
               {/* timepicker */}
               <br />
+              <p>Open time</p>
               <div className="float-left mr-6">
                 <label
                   htmlFor="time"
@@ -269,32 +248,16 @@ function ExampleComponent() {
                   className="hover:bg-indigo-200"
                 />
               </div>
-              <br />
 
-              {/* categories input select */}
-              <div className="clear-both">
-                <label className="block text-sm font-medium text-gray-700">
-                  Categories
-                </label>
-                <div className="mt-1 flex items-center">
-                  {/* <InputSelectComponent
-                    keyValue="select categories:"
-                    values={categories}
-                    value={categoryValue}
-                    currentVisual={categoryValue.name}
-                    changeValue={setCategoryValue}
-                  /> */}
-                  <ExampleListBox
-                    value={categoryValue}
-                    values={realCategories}
-                    multiple={true}
-                    onChange={setCategoryValue}
-                    keyValue="select categories:"
-                  />
-                </div>
-                <button
+              {/* <button
                   type="button"
-                  onClick={() => {alert(categoryValue.map((c)=>{return c.name}))}}
+                  onClick={() => {
+                    alert(
+                      categoryValue.map((c) => {
+                        return c.name;
+                      })
+                    );
+                  }}
                   className="ml-5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Print
@@ -306,7 +269,9 @@ function ExampleComponent() {
                 ) : (
                   <p>no category selected</p>
                 )}
-              </div>
+              </div> */}
+
+              {/* categories input select */}
 
               {/* <div>
                     <label className="block text-sm font-medium text-gray-700">
@@ -354,10 +319,11 @@ function ExampleComponent() {
               <button
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={()=>{createPoi();
+                onClick={() => {
+                  createPoi();
                   setClicked(true);
                 }}
-                >
+              >
                 Save
               </button>
             </div>

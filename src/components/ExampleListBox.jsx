@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Listbox } from "@headlessui/react";
 import { SelectorIcon } from "@heroicons/react/solid";
 
-/* i */
-
 export default function ExampleListBox({
   value,
   onChange,
@@ -11,11 +9,6 @@ export default function ExampleListBox({
   values,
   keyValue,
 }) {
-  /* const [selectedCat, setSelectedCat] = useState([
-    categories[0],
-    categories[1],
-  ]); */
-
   return (
     <Listbox value={value} onChange={onChange} multiple={multiple}>
       <Listbox.Label className="block text-sm font-medium text-gray-700 mr-3">
@@ -36,10 +29,10 @@ export default function ExampleListBox({
         </Listbox.Button>
         <Listbox.Options
           className="z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base 
-      ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+            ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
         >
           {values.map((val) => (
-            <Listbox.Option key={val.id} value={val}>
+            <Listbox.Option key={val.id===undefined ? val.name : val.id} value={val}>
               {val.name ===undefined?val.toString():val.name}
             </Listbox.Option>
           ))}
