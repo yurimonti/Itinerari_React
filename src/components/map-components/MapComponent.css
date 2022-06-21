@@ -1,0 +1,16 @@
+.leaflet-container {
+    height: 40rem;
+    width: 100vw;
+}
+ 
+@media (min-width: 640px) {
+    .leaflet-container{width:95vw}
+}
+ 
+@media (min-width: 768px) {
+    .leaflet-container{width: 95vw;}
+}
+ 
+@media (min-width: 1024px) {
+    .leaflet-container{width: 100%;}
+}
