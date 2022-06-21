@@ -13,17 +13,36 @@ function ExampleComponent() {
   const [lat, setLat] = useState("");
   const [lon, setLon] = useState("");
   const [clicked, setClicked] = useState(false);
-  const [via, setVia] = useState("");
-  const [number, setNumber] = useState(0);
   const [hours, setHours] = useState([]);
   const [tagsAndValue, setTagsAndValue] = useState([]);
+  const [address, setAddress] = useState({});
 
-  function createPoi() {
+  /* function createPoi() {
     let payload = {
       name: name,
       description: description,
       lat: lat,
       lon: lon,
+    };
+    publicInstance
+      .post("/api/ente/createPoi", payload)
+      .then((res) => {
+        console.log(res.status);
+      })
+      .catch((err) => console.log(err));
+  } */
+
+  function createPoi() {
+    let typesName = typeValue.map(t=>{return t.name});
+    let payload = {
+      name: name,
+      description: description,
+      lat: lat,
+      lon: lon,
+      street: address.street,
+      number: address.number,
+      types: typesName,
+      tags:tagsAndValue
     };
     publicInstance
       .post("/api/ente/createPoi", payload)
@@ -39,12 +58,13 @@ function ExampleComponent() {
       setDescription("");
       setLat("");
       setLon("");
-      setClicked(false);
       setTypeValue([]);
       setHours([]);
-      setVia("");
-      setNumber(0);
       setTagsAndValue([]);
+      setAddress((a) => {
+        a.number = "";
+        return a;
+      });
     };
   }, [clicked]);
 
@@ -124,9 +144,12 @@ function ExampleComponent() {
                     id="poi-via"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="Via del punto"
-                    value={via}
+                    value={address.street}
                     onChange={(e) => {
-                      setVia(e.target.value);
+                      setAddress((a) => {
+                        a.street = e.target.value;
+                        return a;
+                      });
                     }}
                   />
                 </div>
@@ -143,9 +166,12 @@ function ExampleComponent() {
                     id="poi-numero"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="numero della via"
-                    value={number}
+                    value={address.number}
                     onChange={(e) => {
-                      setNumber(e.target.value);
+                      setAddress((a) => {
+                        a.number = e.target.value;
+                        return a;
+                      });
                     }}
                   />
                 </div>
@@ -260,12 +286,41 @@ function ExampleComponent() {
               </div>
             </div>
             <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              {/* <button
+                type="button"
+                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={() => {
+                  alert(
+                    "Name: " +
+                      name +
+                      "\nDescription: " +
+                      description +
+                      "\nCoords: " +
+                      lat +
+                      " " +
+                      lon +
+                      "\nAddress: " +
+                      address.street +
+                      " " +
+                      address.number
+                  );
+                  setClicked((c) => {
+                    c = !c;
+                    return c;
+                  });
+                }}
+              >
+                Print Values
+              </button> */}
               <button
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
                   createPoi();
-                  setClicked(true);
+                  setClicked((c) => {
+                    c = !c;
+                    return c;
+                  });
                 }}
               >
                 Save

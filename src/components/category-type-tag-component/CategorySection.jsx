@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { publicInstance } from "../../api/axiosInstance";
-import ExampleListBox from "../ExampleListBox";
 import InputSelect from "../InputSelect";
 
 export default function CategorySection(props) {
   const [click, setClick] = useState(false);
   const [tags, setTags] = useState([]);
-/*   const [tagsAndValue, setTagsAndValue] = useState([]); */
 
   useEffect(() => {
     getCategories();
@@ -15,7 +13,7 @@ export default function CategorySection(props) {
       props.setCategories([]);
       props.setTypeValue([]);
       props.setTypes([]);
-      props.setTags([]);
+      setTags([]);
       props.setTagValues([]);
     };
   }, []);
@@ -111,7 +109,7 @@ export default function CategorySection(props) {
         ""
       )}
       {renderInputFromType()}
-      <button
+      {/* <button
         type="button"
         onClick={() => {
           props.tagsAndValue.map((t) => {
@@ -121,43 +119,9 @@ export default function CategorySection(props) {
         className="bg-sky-600"
       >
         click me to alert values of Tags
-      </button>
+      </button> */}
     </div>
   );
-}
-
-{
-  /* function TagsValuesComponent({ tag }) {
-  const [tagValue, setTagValue] = useState({});
-  const [tagValues, setTagValues] = useState([
-    { name: "true" },
-    { name: "false" },
-  ]);
-  return tag.isBooleanType ? (
-    <div className="grid grid-cols-2 gap-6">
-      <ExampleListBox
-        values={tagValues}
-        value={tagValue}
-        onChange={setTagValue}
-        keyValue={tag.name}
-      />
-    </div>
-  ) : (
-    <div className="grid grid-cols-2 gap-6">
-      <textarea
-        id={tag.name}
-        name={tag.name}
-        rows={3}
-        className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
-        placeholder="Descrizione ..."
-        value={tagValue}
-        onChange={(e) => {
-          setTagValue(e.target.value);
-        }}
-      />
-    </div>
-  );
-} */
 }
 
 function TagsValuesComponent({ tag, tags, setTagsAndValue, tagRelValue }) {
@@ -168,13 +132,13 @@ function TagsValuesComponent({ tag, tags, setTagsAndValue, tagRelValue }) {
   function addIfExists(valueToAdd) {
     if (
       !tagRelValue.includes((t) => {
-        return t.tag.name === tag.name;
+        return t.tag === tag.name;
       })
     )
-      tagRelValue.push({ tag: tag, value: valueToAdd });
+      tagRelValue.push({ tag: tag.name, value: valueToAdd });
     else {
       let index = tagRelValue.findIndex((t) => {
-        return t.name === tag.name;
+        return t.tag === tag.name;
       });
       if (index !== -1) {
         tagRelValue[index].value = valueToAdd;
@@ -196,16 +160,22 @@ function TagsValuesComponent({ tag, tags, setTagsAndValue, tagRelValue }) {
     </div>
   ) : (
     <div className="grid grid-cols-2 gap-6">
+      <label
+        htmlFor={tag.name}
+        className="block text-sm font-medium text-gray-700"
+      >
+        {tag.name}
+      </label>
       <textarea
         id={tag.name}
         name={tag.name}
         rows={3}
         className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
-        placeholder="Descrizione ..."
+        placeholder={tag.name}
         value={tagValue}
         onChange={(e) => {
           setTagValue(e.target.value);
-          addIfExists(e);
+          addIfExists(e.target.value);
         }}
       />
     </div>
