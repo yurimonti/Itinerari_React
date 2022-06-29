@@ -1,9 +1,8 @@
 import { Marker, Popup } from "react-leaflet";
-import L from 'leaflet';
+import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
 
-const MyMarker = ({ poi, popup,icon }) => {
-    const baseUrl = '/node_modules/leaflet/src/images';
+const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
 
   function renderInfoOfAPoi(poi) {
     let info = { title: poi.name, subtitle: poi.description };
@@ -22,35 +21,39 @@ const MyMarker = ({ poi, popup,icon }) => {
     });
   }
 
-  function getStandardIcon(){
+  function getStandardIcon() {
     return new IconDefault();
   }
 
-  function adjustIcon(poi){
+  function adjustIcon(poi) {
     let typesPoi = poi.types.map((t) => {
-        return t.name;
-      });
-      let result = "";
-      switch (typesPoi[0]) {
-        case "Chiesa":
-          result = getIcon([30, 30], "christian-cross.png");
-          break;
-        case "Museo":
-          result = getIcon([30, 30], "park.svg");
-          break;
-        default:
-          result = getStandardIcon();
-          break;
-      }
-      return result;
+      return t.name;
+    });
+    let result = "";
+    switch (typesPoi[0]) {
+      case "Basilica":
+      case "Chiesa":
+      case "Monastero":
+        result = getIcon([30, 30], "christian-cross.png");
+        break;
+      case "Bosco":
+      case "Giardino":
+      case "Parco":
+        result = getIcon([30, 30], "park.svg");
+        break;
+      default:
+        result = getStandardIcon();
+        break;
+    }
+    return result;
   }
 
   return (
     <Marker
       position={[poi.coordinate.lat, poi.coordinate.lon]}
-      icon={icon ? adjustIcon(poi) : getStandardIcon()}
+      icon={isPoiIcon ? adjustIcon(poi) :getStandardIcon()}
     >
-      {popup || (<Popup>{renderInfoOfAPoi(poi)}</Popup>)}
+      {popup || <Popup>{renderInfoOfAPoi(poi)}</Popup>}
     </Marker>
   );
 };

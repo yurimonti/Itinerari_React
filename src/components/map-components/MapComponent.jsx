@@ -87,7 +87,7 @@ export default function MapComponent() {
   function renderMarkers() {
     return pois.map((poi) => {
       return (
-        <MyMarker key={poi.id}  poi={poi} />
+        <MyMarker key={poi.id} isPoiIcon={true} poi={poi} />
       );
     });
   }
@@ -95,7 +95,7 @@ export default function MapComponent() {
   return (
     <div className="leaflet-container">
       <MapContainer
-        center={[43.139641221333925, 13.068900421656135]}
+        center={[43.13454678335075, 13.066346732844925]}
         zoom={15}
         scrollWheelZoom={true}
       >
