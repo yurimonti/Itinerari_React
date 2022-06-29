@@ -3,7 +3,6 @@ import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
 
 const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
-
   function renderInfoOfAPoi(poi) {
     let info = { title: poi.name, subtitle: poi.description };
     return (
@@ -18,6 +17,10 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
     return L.icon({
       iconUrl: require("../../static/" + image),
       iconSize: iconSize,
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41],
     });
   }
 
@@ -34,12 +37,12 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
       case "Basilica":
       case "Chiesa":
       case "Monastero":
-        result = getIcon([30, 30], "christian-cross.png");
+        result = getIcon([35, 35], "christian-cross.png");
         break;
       case "Bosco":
       case "Giardino":
       case "Parco":
-        result = getIcon([30, 30], "park.svg");
+        result = getIcon([38, 38], "park.svg");
         break;
       default:
         result = getStandardIcon();
@@ -51,7 +54,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
   return (
     <Marker
       position={[poi.coordinate.lat, poi.coordinate.lon]}
-      icon={isPoiIcon ? adjustIcon(poi) :getStandardIcon()}
+      icon={isPoiIcon ? adjustIcon(poi) : getStandardIcon()}
     >
       {popup || <Popup>{renderInfoOfAPoi(poi)}</Popup>}
     </Marker>
