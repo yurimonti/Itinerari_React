@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 //TODO: cambiare con le informazioni dell'utente.
 /* const user = {
   name: "Tom Haff",
@@ -28,24 +29,53 @@ function classNames(...classes) {
 }
 
 export default function UserAppShell({ children }) {
+  const navigate = useNavigate();
   //TODO: cambiare il href e modificare le rotte ed elementi
   const [navigation, setNavigation] = useState([
+    { name: "Home", href: '/', current: true },
+    { name: "Map", href: '/map', current: false },
+    { name: "Add Poi", href: '/poi-form', current: false },
+    { name: "Reports", href: "", current: false },
+  ]);
+
+/*   const [navigation, setNavigation] = useState([
     { name: "Home", href: "#", current: true },
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
     { name: "Reports", href: "#", current: false },
-  ]);
+  ]); */
 
   const [userNavigation, setUserNavigation] = useState([
+    { name: "Your Profile", href: "ancora non presente" },
+    { name: "Settings", href: "ancora non presente" },
+    { name: "Sign out", href: "ancora non presente" },
+    { name: "Dashboard", href: "ancora non presente" },
+  ]);
+
+
+/*   const [userNavigation, setUserNavigation] = useState([
     { name: "Your Profile", href: "#" },
     { name: "Settings", href: "#" },
     { name: "Sign out", href: "#" },
     { name: "Dashboard", href: "#" },
-  ]);
+  ]); */
 
   const [user, setUser] = useState({});
 
   function getCurrentNav() {
+    return navigation.filter((nav) => {
+      return nav.current === true;
+    })[0];
+  }
+ 
+  function setCurrentToNav(nav) {
+    navigation.forEach((nav) => nav.current = false);
+    setNavigation(navigation);
+    setNavigation(navigation.map((n) => n.name === nav.name ? { ...n, current: true } : { ...n }));
+  }
+
+
+/*   function getCurrentNav() {
     return navigation.filter((nav) => {
       return nav.current == true;
     })[0];
@@ -53,7 +83,7 @@ export default function UserAppShell({ children }) {
 
   function setCurrentToNav(nav){
     setNavigation(navigation.map((n)=> n.name==nav.name ? {...n, current:true} : {...n}))
-  }
+  } */
 
   return (
     <>
@@ -84,7 +114,6 @@ export default function UserAppShell({ children }) {
                         {navigation.map((item) => (
                           <button
                             key={item.name}
-                            href={item.href}
                             className={classNames(
                               item.current
                                 ? "bg-gray-900 text-white"
@@ -92,7 +121,10 @@ export default function UserAppShell({ children }) {
                               "px-3 py-2 rounded-md text-sm font-medium"
                             )}
                             aria-current={item.current ? "page" : undefined}
-                            onClick={()=>{setCurrentToNav(item)}}
+                            onClick={() => {
+                              setCurrentToNav(item);
+                              navigate(item.href);
+                              }}
                           >
                             {item.name}
                           </button>
@@ -154,7 +186,7 @@ export default function UserAppShell({ children }) {
                           leaveTo="transform opacity-0 scale-95"
                         >
                           <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                            {userNavigation.map((item) => (
+                            {/* {userNavigation.map((item) => (
                               <Menu.Item key={item.name}>
                                 {({ active }) => (
                                   <a
@@ -168,7 +200,7 @@ export default function UserAppShell({ children }) {
                                   </a>
                                 )}
                               </Menu.Item>
-                            ))}
+                            ))} */}
                           </Menu.Items>
                         </Transition>
                       </Menu>
@@ -200,8 +232,7 @@ export default function UserAppShell({ children }) {
                   {navigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
-                      as="a"
-                      href={item.href}
+                      onClick={() => navigate(item.href)}
                       className={classNames(
                         item.current
                           ? "bg-gray-900 text-white"
@@ -240,7 +271,7 @@ export default function UserAppShell({ children }) {
                     </button>
                   </div>
                   <div className="mt-3 px-2 space-y-1">
-                    {userNavigation.map((item) => (
+                    {/* {userNavigation.map((item) => (
                       <Disclosure.Button
                         key={item.name}
                         as="a"
@@ -249,7 +280,7 @@ export default function UserAppShell({ children }) {
                       >
                         {item.name}
                       </Disclosure.Button>
-                    ))}
+                    ))} */}
                   </div>
                 </div>
               </Disclosure.Panel>

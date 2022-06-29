@@ -14,7 +14,7 @@ export default function CategorySection(props) {
       props.setTypeValue([]);
       props.setTypes([]);
       setTags([]);
-      props.setTagValues([]);
+      // props.setTagValues([]);
     };
   }, []);
 

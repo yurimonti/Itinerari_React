@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import "./App.css";
 import UserAppShell from "./components/user-components/UserAppShell";
-import ExampleComponent from "./components/ExampleComponent";
-import MapComponent from "./components/map-components/MapComponent";
+import { BrowserRouter } from "react-router-dom";
 import "./Material.css";
+import MyRoutes from "./components/user-components/MyRoutes";
 
 function App() {
   return (
-    <UserAppShell>
-      <MapComponent />
-    </UserAppShell>
+    <BrowserRouter>
+      <UserAppShell>
+        <MyRoutes />
+      </UserAppShell>
+    </BrowserRouter>
   );
 }
 
