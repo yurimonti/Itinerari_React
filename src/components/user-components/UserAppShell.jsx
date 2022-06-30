@@ -35,7 +35,7 @@ export default function UserAppShell({ children }) {
     { name: "Home", href: '/', current: true },
     { name: "Map", href: '/map', current: false },
     { name: "Add Poi", href: '/poi-form', current: false },
-    { name: "Reports", href: "", current: false },
+    { name: "Itinerary", href: "/itinerary", current: false },
   ]);
 
 /*   const [navigation, setNavigation] = useState([
