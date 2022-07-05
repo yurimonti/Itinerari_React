@@ -2,7 +2,8 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { useMyContext, useUpdateMyContext } from "../../utils/MyProvider";
 //TODO: cambiare con le informazioni dell'utente.
 /* const user = {
   name: "Tom Haff",
@@ -28,17 +29,28 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function UserAppShell({ children }) {
+export default function AppShell({ children }) {
+  const isUser = useMyContext();
+  const setIsUser = useUpdateMyContext();
   const navigate = useNavigate();
   //TODO: cambiare il href e modificare le rotte ed elementi
-  const [navigation, setNavigation] = useState([
-    { name: "Home", href: '/', current: true },
-    { name: "Map", href: '/map', current: false },
-    { name: "Add Poi", href: '/poi-form', current: false },
-    { name: "Itinerary", href: "/itinerary", current: false },
-  ]);
+  const [navigation, setNavigation] = useState(
+    isUser === true
+      ? [
+          { name: "Home", href: "/", current: true },
+          { name: "Map", href: "/map", current: false },
+          { name: "Add Poi", href: "/poi-form", current: false },
+          { name: "Notifies", href: "/notifies", current: false },
+        ]
+      : [
+          { name: "Home", href: "/", current: true },
+          { name: "Map", href: "/map", current: false },
+          { name: "Add Poi", href: "/poi-form", current: false },
+          { name: "Notifies", href: "/notifies", current: false },
+        ]
+  );
 
-/*   const [navigation, setNavigation] = useState([
+  /*   const [navigation, setNavigation] = useState([
     { name: "Home", href: "#", current: true },
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
@@ -52,8 +64,7 @@ export default function UserAppShell({ children }) {
     { name: "Dashboard", href: "ancora non presente" },
   ]);
 
-
-/*   const [userNavigation, setUserNavigation] = useState([
+  /*   const [userNavigation, setUserNavigation] = useState([
     { name: "Your Profile", href: "#" },
     { name: "Settings", href: "#" },
     { name: "Sign out", href: "#" },
@@ -67,15 +78,18 @@ export default function UserAppShell({ children }) {
       return nav.current === true;
     })[0];
   }
- 
+
   function setCurrentToNav(nav) {
-    navigation.forEach((nav) => nav.current = false);
+    navigation.forEach((nav) => (nav.current = false));
     setNavigation(navigation);
-    setNavigation(navigation.map((n) => n.name === nav.name ? { ...n, current: true } : { ...n }));
+    setNavigation(
+      navigation.map((n) =>
+        n.name === nav.name ? { ...n, current: true } : { ...n }
+      )
+    );
   }
 
-
-/*   function getCurrentNav() {
+  /*   function getCurrentNav() {
     return navigation.filter((nav) => {
       return nav.current == true;
     })[0];
@@ -124,7 +138,7 @@ export default function UserAppShell({ children }) {
                             onClick={() => {
                               setCurrentToNav(item);
                               navigate(item.href);
-                              }}
+                            }}
                           >
                             {item.name}
                           </button>
@@ -162,8 +176,11 @@ export default function UserAppShell({ children }) {
                       <Menu as="div" className="ml-3 relative">
                         <div>
                           {user.name === undefined ? (
-                            <a href="#">
-                              <p className="text-sm text-white">Login</p>
+                            <a onClick={setIsUser}>
+                              {/* <p className="text-sm text-white">Login</p> */}
+                              <p className="text-sm text-white">
+                                {isUser === true ? "User" : "Ente"}
+                              </p>
                             </a>
                           ) : (
                             <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
@@ -232,7 +249,10 @@ export default function UserAppShell({ children }) {
                   {navigation.map((item) => (
                     <Disclosure.Button
                       key={item.name}
-                      onClick={() => navigate(item.href)}
+                      onClick={() => {
+                        setCurrentToNav(item);
+                        navigate(item.href);
+                      }}
                       className={classNames(
                         item.current
                           ? "bg-gray-900 text-white"

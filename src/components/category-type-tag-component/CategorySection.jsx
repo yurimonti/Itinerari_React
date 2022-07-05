@@ -41,7 +41,7 @@ export default function CategorySection(props) {
   function getTypesFiltered() {
     let payload = props.categoryValue;
     publicInstance
-      .post("/api/poiType/all", payload)
+      .post("/api/\Type/all", payload)
       .then((res) => {
         props.setTypes(res.data);
         console.log(res.status);

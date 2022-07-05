@@ -1,39 +1,61 @@
 import React, { useState, useEffect } from "react";
-import { publicInstance } from "../api/axiosInstance";
-import CategorySection from "./category-type-tag-component/CategorySection";
-import DayOpenComponent from "./DayOpenComponent";
+import { publicInstance } from "../../api/axiosInstance";
+import { useMyContext } from "../../utils/MyProvider";
+import CategorySection from "../category-type-tag-component/CategorySection";
+import DayOpenComponent from "../DayOpenComponent";
+import InputSelect from "../InputSelect";
 
-function ExampleComponent() {
+export default function PoiFormComponent() {
+  const isUser = useMyContext();
   const [realCategories, setRealCategories] = useState([]);
   const [categoryValue, setCategoryValue] = useState([]);
   const [types, setTypes] = useState([]);
   const [typeValue, setTypeValue] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [lat, setLat] = useState("");
-  const [lon, setLon] = useState("");
+  const [lat, setLat] = useState("0");
+  const [lon, setLon] = useState("0");
   const [clicked, setClicked] = useState(false);
   const [hours, setHours] = useState([]);
   const [tagsAndValue, setTagsAndValue] = useState([]);
   const [address, setAddress] = useState({});
+  const [cities, setCities] = useState([]);
+  const [city, setCity] = useState({});
 
-  /* function createPoi() {
+  function getCities() {
+    publicInstance
+      .get("/api/city/all")
+      .then((result) => setCities(result.data))
+      .catch((err) => console.log(err.message));
+  }
+
+  function postCreatePoiRequest() {
+    let typesName = typeValue.map((t) => {
+      return t.name;
+    });
     let payload = {
       name: name,
       description: description,
+      city: city,
       lat: lat,
       lon: lon,
+      street: address.street,
+      number: address.number,
+      types: typesName,
+      tags: tagsAndValue,
     };
     publicInstance
-      .post("/api/ente/createPoi", payload)
+      .post("/api/user/addPoi", payload)
       .then((res) => {
         console.log(res.status);
       })
       .catch((err) => console.log(err));
-  } */
+  }
 
   function createPoi() {
-    let typesName = typeValue.map(t=>{return t.name});
+    let typesName = typeValue.map((t) => {
+      return t.name;
+    });
     let payload = {
       name: name,
       description: description,
@@ -42,7 +64,7 @@ function ExampleComponent() {
       street: address.street,
       number: address.number,
       types: typesName,
-      tags:tagsAndValue
+      tags: tagsAndValue,
     };
     publicInstance
       .post("/api/ente/createPoi", payload)
@@ -53,16 +75,18 @@ function ExampleComponent() {
   }
 
   useEffect(() => {
+    if (isUser === true) getCities();
     return () => {
       setName("");
       setDescription("");
-      setLat("");
-      setLon("");
+      setLat("0");
+      setLon("0");
       setTypeValue([]);
       setHours([]);
       setTagsAndValue([]);
       setAddress((a) => {
         a.number = "";
+        a.street = "";
         return a;
       });
     };
@@ -129,7 +153,22 @@ function ExampleComponent() {
                     }}
                   />
                 </div>
+              </div>
 
+              {/* city */}
+              {isUser === true && (
+                <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
+                  <InputSelect
+                    values={cities}
+                    value={city}
+                    onChange={setCity}
+                    keyValue="City"
+                    toView="name"
+                  />
+                </div>
+              )}
+
+              <div className="md:grid md:grid-cols-2 md:gap-6">
                 {/* indirizzo */}
                 <label
                   htmlFor="poi-via"
@@ -224,6 +263,7 @@ function ExampleComponent() {
               </div>
 
               {/* categories input select */}
+
               <CategorySection
                 categories={realCategories}
                 categoryValue={categoryValue}
@@ -235,7 +275,6 @@ function ExampleComponent() {
                 setTypes={setTypes}
                 tagsAndValue={tagsAndValue}
               />
-
               {/* timepicker */}
               <br />
               <p>Open</p>
@@ -316,7 +355,7 @@ function ExampleComponent() {
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
-                  createPoi();
+                  isUser === true ? postCreatePoiRequest() : createPoi();
                   setClicked((c) => {
                     c = !c;
                     return c;
@@ -332,5 +371,3 @@ function ExampleComponent() {
     </div>
   );
 }
-
-export default ExampleComponent;
