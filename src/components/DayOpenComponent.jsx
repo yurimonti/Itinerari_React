@@ -12,13 +12,14 @@ export default function DayOpenComponent({keyValue,multiple}) {
     { name: "Sunday" }
   ]);
   const [selectedDay,setSelectedDay] = useState({});
+  const [selectedDays,setSelectedDays] = useState([]);
   return (
     <>
     {/* apertura */}
       <ExampleListBox
         values={days}
-        onChange={setSelectedDay}
-        value={selectedDay}
+        onChange={setSelectedDays}
+        value={selectedDays}
         multiple={multiple}
         keyValue={keyValue}
       />

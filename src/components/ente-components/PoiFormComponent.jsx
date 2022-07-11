@@ -4,6 +4,8 @@ import { useMyContext } from "../../utils/MyProvider";
 import CategorySection from "../category-type-tag-component/CategorySection";
 import DayOpenComponent from "../DayOpenComponent";
 import InputSelect from "../InputSelect";
+import OraProva from "../prova/OraProva";
+import OpenHourComponent from "./OpenHourComponent";
 
 export default function PoiFormComponent() {
   const isUser = useMyContext();
@@ -21,6 +23,22 @@ export default function PoiFormComponent() {
   const [address, setAddress] = useState({});
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
+  //FIXME: valutare bene
+  const [monday, setMonday] = useState([]);
+  const [tuesday, setTuesday] = useState([]);
+  const [wednesday, setWednesday] = useState([]);
+  const [thursday, setThursday] = useState([]);
+  const [friday, setFriday] = useState([]);
+  const [saturday, setSaturday] = useState([]);
+  const [sunday, setSunday] = useState([]);
+
+  //const [monday, setMonday] = useState({ start: [], end: [] });
+  //const [tuesday, setTuesday] = useState({ start: [], end: [] });
+  //const [wednesday, setWednesday] = useState({ start: [], end: [] });
+  //const [thursday, setThursday] = useState({ start: [], end: [] });
+  //const [friday, setFriday] = useState({ start: [], end: [] });
+  //const [saturday, setSaturday] = useState({ start: [], end: [] });
+  //const [sunday, setSunday] = useState({ start: [], end: [] });
 
   function getCities() {
     publicInstance
@@ -278,12 +296,21 @@ export default function PoiFormComponent() {
               {/* timepicker */}
               <br />
               <p>Open</p>
-              <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-1">
+              <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-2">
+              <OraProva keyValue="Monday" value={monday} setValue={setMonday}/>
+              <OraProva keyValue="Tuesday" value={tuesday} setValue={setTuesday}/>
+              <OraProva keyValue="Wednesday" value={wednesday} setValue={setWednesday}/>
+              <OraProva keyValue="Thursday" value={thursday} setValue={setThursday}/>
+              <OraProva keyValue="Friday" value={friday} setValue={setFriday}/>
+              <OraProva keyValue="Saturday" value={saturday} setValue={setSaturday}/>
+              <OraProva keyValue="Sunday" value={sunday} setValue={setSunday}/>
+              </div>
+              {/* <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-1">
                 <DayOpenComponent keyValue={"Open time"} />
                 <DayOpenComponent keyValue={"Closed time"} />
-              </div>
+              </div> */}
 
-              <div className="float-left mr-6">
+              {/* <div className="float-left mr-6">
                 <label
                   htmlFor="time"
                   className="block text-sm font-medium text-gray-700"
@@ -322,35 +349,9 @@ export default function PoiFormComponent() {
                     });
                   }}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-              {/* <button
-                type="button"
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={() => {
-                  alert(
-                    "Name: " +
-                      name +
-                      "\nDescription: " +
-                      description +
-                      "\nCoords: " +
-                      lat +
-                      " " +
-                      lon +
-                      "\nAddress: " +
-                      address.street +
-                      " " +
-                      address.number
-                  );
-                  setClicked((c) => {
-                    c = !c;
-                    return c;
-                  });
-                }}
-              >
-                Print Values
-              </button> */}
               <button
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
