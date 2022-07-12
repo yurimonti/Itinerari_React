@@ -23,7 +23,7 @@ export default function PoiFormComponent() {
   const [address, setAddress] = useState({});
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
-  //FIXME: valutare bene
+
   const [monday, setMonday] = useState([]);
   const [tuesday, setTuesday] = useState([]);
   const [wednesday, setWednesday] = useState([]);
@@ -32,13 +32,41 @@ export default function PoiFormComponent() {
   const [saturday, setSaturday] = useState([]);
   const [sunday, setSunday] = useState([]);
 
-  //const [monday, setMonday] = useState({ start: [], end: [] });
-  //const [tuesday, setTuesday] = useState({ start: [], end: [] });
-  //const [wednesday, setWednesday] = useState({ start: [], end: [] });
-  //const [thursday, setThursday] = useState({ start: [], end: [] });
-  //const [friday, setFriday] = useState({ start: [], end: [] });
-  //const [saturday, setSaturday] = useState({ start: [], end: [] });
-  //const [sunday, setSunday] = useState({ start: [], end: [] });
+  const [ticket, setTicket] = useState(0.00);
+  const [timeTovisit, setTimeToVisit] = useState("");
+  const [emailContacts,setEmailContacts] = useState("");
+  const [phoneContacts,setPhoneContacts] = useState("");
+  const [faxContacts,setFaxContacts] = useState("");
+
+  const anInput = (symbol,value,setValue,label,type,placeholder) => {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+        <label
+          htmlFor={label.toLowerCase()}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
+        <div className="mt-1 flex rounded-md shadow-sm">
+          {symbol!==null && <div className="mr-2 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <span className="text-black-500 md:text-l sm:text-sm">{symbol}</span>
+          </div>}
+          <input
+            value={value}
+            onChange={(e)=>{
+              setValue(e.target.value);
+            }}
+            type={type}
+            min={type==="number" ? "0" :""}
+            name={label.toLowerCase()}
+            id={label.toLowerCase()}
+            className="focus:outline-none focus:ring-2 pl-3 pr-12 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
+            placeholder={placeholder}
+          />
+        </div>
+      </div>
+    );
+  };
 
   function getCities() {
     publicInstance
@@ -61,6 +89,18 @@ export default function PoiFormComponent() {
       number: address.number,
       types: typesName,
       tags: tagsAndValue,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
+      phone: phoneContacts,
+      email: emailContacts,
+      fax: faxContacts,
+      timeToVisit: timeTovisit,
+      price: ticket
     };
     publicInstance
       .post("/api/user/addPoi", payload)
@@ -83,6 +123,18 @@ export default function PoiFormComponent() {
       number: address.number,
       types: typesName,
       tags: tagsAndValue,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
+      phone: phoneContacts,
+      email: emailContacts,
+      fax: faxContacts,
+      timeToVisit: timeTovisit,
+      price: ticket
     };
     publicInstance
       .post("/api/ente/createPoi", payload)
@@ -115,11 +167,11 @@ export default function PoiFormComponent() {
       <div className="md:col-span-1">
         <div className="px-4 sm:px-0">
           <h3 className="text-lg font-medium leading-6 text-gray-900">
-            POI Base Informations
+            Informazioni POI Base
           </h3>
           <p className="mt-1 text-sm text-gray-600">
-            This information will be displayed publicly so be careful what you
-            share.
+          Queste informazioni verranno visualizzate pubblicamente,
+          quindi fai attenzione a ciò che condividi.
           </p>
         </div>
       </div>
@@ -128,14 +180,14 @@ export default function PoiFormComponent() {
           <div className="shadow sm:rounded-md sm:overflow-hidden">
             <div className="px-4 py-5 bg-white space-y-6 sm:p-6">
               <br />
-              <p>Poi informations</p>
+              <p>Informazioni Poi</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                 {/* <div className="col-span-3 sm:col-span-2"> */}
                 <label
                   htmlFor="poi-name"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  POI name
+                  Nome POI
                 </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <input
@@ -156,7 +208,7 @@ export default function PoiFormComponent() {
                   htmlFor="about"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  Description
+                  Descrizione
                 </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <textarea
@@ -180,7 +232,7 @@ export default function PoiFormComponent() {
                     values={cities}
                     value={city}
                     onChange={setCity}
-                    keyValue="City"
+                    keyValue="Città"
                     toView="name"
                   />
                 </div>
@@ -192,7 +244,7 @@ export default function PoiFormComponent() {
                   htmlFor="poi-via"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  POI via
+                  Via POI
                 </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <input
@@ -214,7 +266,7 @@ export default function PoiFormComponent() {
                   htmlFor="poi-numero"
                   className="block text-sm font-medium text-gray-700"
                 >
-                  numero
+                  Numero Civico
                 </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <input
@@ -240,7 +292,7 @@ export default function PoiFormComponent() {
                     htmlFor="poi-lat"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    POI latitude
+                    Latitudine
                   </label>
                   <div className="mt-1 flex rounded-md shadow-sm">
                     <input
@@ -262,7 +314,7 @@ export default function PoiFormComponent() {
                     htmlFor="poi-lon"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    POI longitude
+                    Longitudine
                   </label>
                   <div className="mt-1 flex rounded-md shadow-sm">
                     <input
@@ -293,17 +345,59 @@ export default function PoiFormComponent() {
                 setTypes={setTypes}
                 tagsAndValue={tagsAndValue}
               />
+              {/* ticket input */}
+              {anInput("€",ticket,setTicket,"Prezzo","number","0.00")}
+
+              {/* time to visit input */}
+              {anInput("min",timeTovisit,setTimeToVisit,"Tempo Visita","number","0")}
+              <br />
+              <p>Contatti</p>
+              {/* email input */}
+              {anInput(null,emailContacts,setEmailContacts,"Email","text","example@domain.com")}
+              {/* cellphone input */}
+              {anInput("+39",phoneContacts,setPhoneContacts,"Tel","number","0123456789")}
+              {/* fax input */}
+              {anInput(null,faxContacts,setFaxContacts,"Fax","text","fax")}
+
               {/* timepicker */}
               <br />
-              <p>Open</p>
+              <p>Orari</p>
               <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-2">
-              <OraProva keyValue="Monday" value={monday} setValue={setMonday}/>
-              <OraProva keyValue="Tuesday" value={tuesday} setValue={setTuesday}/>
-              <OraProva keyValue="Wednesday" value={wednesday} setValue={setWednesday}/>
-              <OraProva keyValue="Thursday" value={thursday} setValue={setThursday}/>
-              <OraProva keyValue="Friday" value={friday} setValue={setFriday}/>
-              <OraProva keyValue="Saturday" value={saturday} setValue={setSaturday}/>
-              <OraProva keyValue="Sunday" value={sunday} setValue={setSunday}/>
+                <OraProva
+                  keyValue="Lunedì"
+                  value={monday}
+                  setValue={setMonday}
+                />
+                <OraProva
+                  keyValue="Martedì"
+                  value={tuesday}
+                  setValue={setTuesday}
+                />
+                <OraProva
+                  keyValue="Mercoledì"
+                  value={wednesday}
+                  setValue={setWednesday}
+                />
+                <OraProva
+                  keyValue="Giovedì"
+                  value={thursday}
+                  setValue={setThursday}
+                />
+                <OraProva
+                  keyValue="Venerdì"
+                  value={friday}
+                  setValue={setFriday}
+                />
+                <OraProva
+                  keyValue="Sabato"
+                  value={saturday}
+                  setValue={setSaturday}
+                />
+                <OraProva
+                  keyValue="Domenica"
+                  value={sunday}
+                  setValue={setSunday}
+                />
               </div>
               {/* <div className="grid md:grid-cols-4 sm:grid-cols-2 gap-1">
                 <DayOpenComponent keyValue={"Open time"} />
@@ -363,7 +457,7 @@ export default function PoiFormComponent() {
                   });
                 }}
               >
-                Save
+                Salva
               </button>
             </div>
           </div>

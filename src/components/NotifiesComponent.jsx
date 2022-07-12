@@ -48,19 +48,25 @@ export default function NotifiesComponent() {
   function getAllNotifies() {
     publicInstance
       .get("/api/ente/notifies", {
-        params: { username: "ente1" },
+        params: { username: "ente_camerino" },
       })
       .then((res) => setRequests(res.data))
       .catch((err) => console.log(err));
   }
 
+  /**
+   * 
+   * @param {boolean} toSet isAccepted
+   * @param {number} id id of Request
+   * @param {string} toRead string to set in the message
+   */
   function setRequestTo(toSet, id, toRead) {
     publicInstance
       .post("/api/ente/notifies", null,{
-        params:{ username: "ente1", toSet: toSet,id:id},
+        params:{toSet: toSet,id:id},
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.status);
         alert("richiesta " + toRead);
         setClicked((p)=>{
           p = !p;
@@ -150,6 +156,7 @@ export default function NotifiesComponent() {
                   setOpen(false);
                 }}
                 accept={() => {
+                  setRequestTo(true,requests.id,"accettata".toUpperCase());
                   setOpen(false);
                 }}
                 title={getType(requests).type.toUpperCase()}

@@ -17,7 +17,7 @@ export default function InputSelect({
 
   //FIXME: rivedere metodo.. da errore negli input per i tag.
   function toSet(value) {
-    if (value===null || value===undefined || value.length === 0 || Object.keys(value).length === 0) return "none";
+    if (value===null || value===undefined || value.length === 0 || Object.keys(value).length === 0) return "Nessuna";
     if (multiple) {
       return value.map((sel) => realValue(sel)).join(", ");
     } else return realValue(value);

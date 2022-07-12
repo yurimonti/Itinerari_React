@@ -74,7 +74,7 @@ export default function CategorySection(props) {
           value={props.categoryValue}
           multiple={true}
           onChange={props.setCategoryValue}
-          keyValue="Categories"
+          keyValue="Categorie"
           toView="name"
         />
         <div className="flex-box">
@@ -88,9 +88,9 @@ export default function CategorySection(props) {
               }
               setClick((s) => !s);
             }}
-            className="ml-5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="ml-5 mt-1.5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            {click ? "delete" : "confirm"}
+            {click ? "cancella" : "conferma"}
           </button>
         </div>
       </div>

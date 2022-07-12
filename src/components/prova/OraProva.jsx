@@ -21,7 +21,7 @@ const OraProva = ({keyValue,value,setValue}) => {
     <label>{keyValue}</label>
       <div className="justify-center flex">
         <label className="block text-sm font-medium text-gray-700 mr-2">
-          From
+          Dalle
         </label>
         <input
           type="time"
@@ -35,7 +35,7 @@ const OraProva = ({keyValue,value,setValue}) => {
           }}
         />
         <label className="block text-sm font-medium text-gray-700 mr-2">
-          To
+          Alle
         </label>
         <input
           type="time"
@@ -51,7 +51,7 @@ const OraProva = ({keyValue,value,setValue}) => {
       </div>
       <div className="justify-center flex">
         <label className="block text-sm font-medium text-gray-700 mr-2">
-          From
+          Dalle
         </label>
         <input
           type="time"
@@ -65,7 +65,7 @@ const OraProva = ({keyValue,value,setValue}) => {
           }}
         />
         <label className="block text-sm font-medium text-gray-700 mr-2">
-          To
+          Alle
         </label>
         <input
           type="time"
@@ -79,9 +79,6 @@ const OraProva = ({keyValue,value,setValue}) => {
           }}
         />
       </div>
-{/*       <button type="button" className="border bg-sky-500" onClick={logHours}>
-        Log Hours!
-      </button> */}
     </>
   );
 };
