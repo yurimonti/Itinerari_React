@@ -1,14 +1,66 @@
 import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
+import ModifyModalComponent from "../ModifyModalComponent";
+import { useNavigate } from "react-router-dom";
+import PoiFormComponent from "../ente-components/PoiFormComponent";
+import { useState } from "react";
 
 const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
-  function renderInfoOfAPoi(poi) {
-    let info = { title: poi.name, subtitle: poi.description };
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+
+  function renderMoreInfo() {
     return (
       <>
-        <h1>{info.title}</h1>
-        <h4>{info.subtitle}</h4>
+        <p>{poi.coordinate.lat}</p>
+      </>
+    );
+  }
+
+  function renderInfoOfAPoi(poi) {
+    let info = {
+      title: poi.name,
+      subtitle: poi.description,
+      isOpen: poi.hours.isOpen,
+      visit: poi.timeToVisit,
+      price: poi.ticketPrice,
+    };
+    return (
+      <>
+        <div className="text-center">
+          <h1>{info.title}</h1>
+          <h4>{info.subtitle.slice(0, 32) + "..."}</h4>
+          {info.price !== 0 && info.price !== null && (
+            <h4>{"prezzo: " + info.price}</h4>
+          )}
+          <h4>{info.visit}</h4>
+          <h4>{info.isOpen ? "APERTO" : "CHIUSO"}</h4>
+          {open && renderMoreInfo()}
+        </div>
+        {/*TODO: mapre il modal per info estese*/}
+        <button
+          onClick={() => {
+            setOpen((prev) => {
+              prev = !prev;
+              return prev;
+            });
+          }}
+          className="border bg-red-400"
+        >
+          INFO
+        </button>
+        {open && (
+          <button
+            onClick={(e) => {
+              navigate("/poi-form", { state: { poi: poi } });
+            }}
+            className="border bg-sky-500 block float-right"
+          >
+            modifica
+          </button>
+        )}
       </>
     );
   }
@@ -52,12 +104,18 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
   }
 
   return (
-    <Marker
-      position={[poi.coordinate.lat, poi.coordinate.lon]}
-      icon={isPoiIcon ? adjustIcon(poi) : getStandardIcon()}
-    >
-      {popup || <Popup>{renderInfoOfAPoi(poi)}</Popup>}
-    </Marker>
+    <>
+      <Marker
+        position={[poi.coordinate.lat, poi.coordinate.lon]}
+        icon={isPoiIcon ? adjustIcon(poi) : getStandardIcon()}
+      >
+        {popup && (
+          <Popup maxWidth="300" minWidth="100" maxHeight="200">
+            {renderInfoOfAPoi(poi)}
+          </Popup>
+        )}
+      </Marker>
+    </>
   );
 };
 

@@ -3,39 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
 import ModalComponent from "./ente-components/ModalComponent";
 
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
-const products = [
-  {
-    id: 1,
-    name: "Basic Tee",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "$35",
-    color: "Black",
-  },
-];
-
 export default function NotifiesComponent() {
   const [requests, setRequests] = useState([]);
   const [open, setOpen] = useState(false);
-  const [clicked,setClicked] = useState(false);
+  const [clicked, setClicked] = useState(false);
   const styles = [
     { type: "aggiunta", color: "bg-green-200 border border-green-600" },
     { type: "modifica", color: "bg-yellow-200 border border-yellow-600" },
@@ -55,20 +26,20 @@ export default function NotifiesComponent() {
   }
 
   /**
-   * 
+   *
    * @param {boolean} toSet isAccepted
    * @param {number} id id of Request
    * @param {string} toRead string to set in the message
    */
   function setRequestTo(toSet, id, toRead) {
     publicInstance
-      .post("/api/ente/notifies", null,{
-        params:{toSet: toSet,id:id},
+      .post("/api/ente/notifies", null, {
+        params: { toSet: toSet, id: id },
       })
       .then((res) => {
         console.log(res.status);
         alert("richiesta " + toRead);
-        setClicked((p)=>{
+        setClicked((p) => {
           p = !p;
           return p;
         });
@@ -82,6 +53,44 @@ export default function NotifiesComponent() {
       setRequests([]);
     };
   }, [clicked]);
+
+  function printHours(day, hours) {
+    if (hours.length === 0) return day + " - chiuso";
+    if (hours.length === 2) return day + ": " + hours[0] + " - " + hours[1];
+    if (hours.length === 4)
+      return (
+        day +
+        ": " +
+        hours[0] +
+        " - " +
+        hours[1] +
+        " | " +
+        hours[2] +
+        " - " +
+        hours[3]
+      );
+  }
+
+  function renderhours(request) {
+    let hours = [];
+    hours.push(request.timeSlot.monday);
+    hours.push(request.timeSlot.tuesday);
+    hours.push(request.timeSlot.wednesday);
+    hours.push(request.timeSlot.thursday);
+    hours.push(request.timeSlot.friday);
+    hours.push(request.timeSlot.saturday);
+    hours.push(request.timeSlot.sunday);
+    return(
+    <div>
+      <p>{printHours("Lunedì", hours[0])}</p>
+      <p>{printHours("Martedì", hours[1])}</p>
+      <p>{printHours("Mercoledì", hours[2])}</p>
+      <p>{printHours("Giovedì", hours[3])}</p>
+      <p>{printHours("Venerdì", hours[4])}</p>
+      <p>{printHours("Sabato", hours[5])}</p>
+      <p>{printHours("Domenica", hours[6])}</p>
+    </div>);
+  }
 
   return (
     <div className="bg-white">
@@ -151,21 +160,22 @@ export default function NotifiesComponent() {
                 onClose={() => {
                   setOpen(false);
                 }}
-                deny={()=>{
-                  setRequestTo(false,requests.id,"cancellata".toUpperCase());
+                deny={() => {
+                  setRequestTo(false, requests.id, "cancellata".toUpperCase());
                   setOpen(false);
                 }}
                 accept={() => {
-                  setRequestTo(true,requests.id,"accettata".toUpperCase());
+                  setRequestTo(true, requests.id, "accettata".toUpperCase());
                   setOpen(false);
                 }}
                 title={getType(requests).type.toUpperCase()}
               >
-                <p>{requests.name}</p>
-                <p>{requests.description}</p>
-                <p>{requests?.coordinate?.lat}</p>
-                <p>{requests?.coordinate?.lon}</p>
-                <p>{requests.username}</p>
+                <p>{requests?.name}</p>
+                <p>{requests?.description}</p>
+                <p>{"lat: " +requests?.coordinate?.lat}</p>
+                <p>{"lng: "+requests?.coordinate?.lon}</p>
+                {renderhours(requests)}
+                <p>{"Da :"+requests?.username}</p>
               </ModalComponent>
             </button>
           ))}

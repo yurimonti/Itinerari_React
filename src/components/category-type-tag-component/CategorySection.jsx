@@ -1,29 +1,56 @@
 import { useState, useEffect } from "react";
 import { publicInstance } from "../../api/axiosInstance";
+import CheckBoxComponent from "../CheckBoxComponent";
 import InputSelect from "../InputSelect";
 
 export default function CategorySection(props) {
   const [click, setClick] = useState(false);
   const [tags, setTags] = useState([]);
+  const [tagValues,setTagValues] = useState([]);
 
   useEffect(() => {
     getCategories();
+    if (props.filledFormData !== null) {
+      getTypesFiltered();
+      props.filledFormData.types.forEach((type) => {
+        return type.tags.forEach((t) => {
+          if (!tags.includes(t)) {
+            setTags((prev) => {
+              prev.push(t);
+              return prev;
+            });
+          }
+        });
+      });
+      props.filledFormData.tagValues.forEach((tv) => {
+        /* let tag = tags.filter(t => t.name === tv.tag.name); */
+        if (tv.tag.isBooleanType)
+          props.tagsAndValue.push({ tag: tv.tag.name, value: tv.booleanValue });
+        else
+          props.tagsAndValue.push({ tag: tv.tag.name, value: tv.stringValue });
+      });
+    }
     return () => {
       props.setCategoryValue([]);
       props.setCategories([]);
       props.setTypeValue([]);
       props.setTypes([]);
+      props.tagsAndValue.length = 0;
       setTags([]);
       // props.setTagValues([]);
     };
-  }, []);
+  }, [click]);
 
   function addTagIfNotExists(tag) {
-    if (!tags.includes(tag))
+    if (!tags.includes(tag)) {
       setTags((pre) => {
         pre.push(tag);
         return pre;
       });
+      tag.isBooleanType === true
+        ? props.tagsAndValue.push({ tag: tag.name, value: false })
+        : props.tagsAndValue.push({ tag: tag.name, value: "" });
+    }
   }
 
   function getCategories() {
@@ -49,53 +76,104 @@ export default function CategorySection(props) {
       .catch((err) => console.log(err));
   }
 
+  function addIfNotExistsInTagValues(tag, valueToAdd) {
+    if (props.tagsAndValue.filter((t) => t.tag === tag.name).length <= 0) {
+      props.tagsAndValue.push({ tag: tag.name, value: valueToAdd });
+    } else {
+      let index = props.tagsAndValue.findIndex((t) => {
+        return t.tag === tag.name;
+      });
+      if (index !== -1) {
+        props.tagsAndValue[index].value = valueToAdd;
+      }
+    }
+  }
+
+  function tagsAndValuesRender(tag, key) {
+    let tagIndex = tags.indexOf(tag);
+    console.log(tagValues);
+    return tag.isBooleanType ? (
+      <div className="grid grid-cols-2 gap-6" key={key}>
+        <CheckBoxComponent
+          value={tagValues[tagIndex]}
+          setValue={(e) => {
+            setTagValues(prev =>{
+              prev.push(e);
+              return prev;
+            });
+            addIfNotExistsInTagValues(tag, e);
+          }}
+          keyValue={tag.name}
+        />
+      </div>
+    ) : (
+      <div className="grid grid-cols-2 gap-6" key={key}>
+        <label
+          htmlFor={tag.name}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {tag.name}
+        </label>
+        <textarea
+          id={tag.name}
+          name={tag.name}
+          rows={3}
+          className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
+          placeholder={tag.name}
+          value={tagValues[tagIndex]}
+          onChange={(e) => {
+            setTagValues(e.target.value);
+            addIfNotExistsInTagValues(e.target.value);
+          }}
+        />
+      </div>
+    );
+  }
+
   function renderInputFromType() {
     return props.typeValue.map((type) => {
       return type.tags.map((tag) => {
         //FIXME: rivedere bene
         addTagIfNotExists(tag);
-        return (
-          <TagsValuesComponent
-            key={type.name + tag.name}
-            tag={tag}
-            tags={tags}
-            tagRelValue={props.tagsAndValue}
-          />
-        );
+        return tagsAndValuesRender(tag, tag.name);
       });
     });
   }
 
   return (
     <div>
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
-        <InputSelect
-          values={props.categories}
-          value={props.categoryValue}
-          multiple={true}
-          onChange={props.setCategoryValue}
-          keyValue="Categorie"
-          toView="name"
-        />
-        <div className="flex-box">
-          <button
-            type="button"
-            onClick={() => {
-              if (!click) getTypesFiltered();
-              else {
-                props.setCategoryValue([]);
-                props.setTypeValue([]);
-              }
-              setClick((s) => !s);
-            }}
-            className="ml-5 mt-1.5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {click ? "cancella" : "conferma"}
-          </button>
+      {props.filledFormData === null && (
+        <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
+          <InputSelect
+            values={props.categories}
+            value={props.categoryValue}
+            multiple={true}
+            onChange={props.setCategoryValue}
+            keyValue="Categorie"
+            toView="name"
+          />
+          <div className="flex-box">
+            <button
+              type="button"
+              onClick={() => {
+                if (!click) getTypesFiltered();
+                else {
+                  props.setCategoryValue([]);
+                  props.setTypeValue([]);
+                  setTags([]);
+                  props.tagsAndValue.length = 0;
+                }
+                setClick((s) => !s);
+              }}
+              className="ml-5 mt-1.5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {click ? "cancella" : "conferma"}
+            </button>
+          </div>
         </div>
-      </div>
-      {click ? (
-        <div className="grid flex grid-cols-1 gap-6">
+      )}
+      {click || props.filledFormData !== null ? (
+        <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
           <InputSelect
             values={props.types}
             value={props.typeValue}
@@ -104,6 +182,19 @@ export default function CategorySection(props) {
             keyValue="Types"
             toView="name"
           />
+          <div className="flex-box">
+            <button
+              type="button"
+              onClick={() => {
+                setClick((s) => {
+                  return !s;
+                });
+              }}
+              className="ml-5 mt-1.5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              cancella
+            </button>
+          </div>
         </div>
       ) : (
         ""
@@ -120,64 +211,6 @@ export default function CategorySection(props) {
       >
         click me to alert values of Tags
       </button> */}
-    </div>
-  );
-}
-
-function TagsValuesComponent({ tag, tags, setTagsAndValue, tagRelValue }) {
-  const [tagValue, setTagValue] = useState("");
-  const [tagValues, setTagValues] = useState(["true", "false"]);
-
-  //FIXME: rivedere bene
-  function addIfExists(valueToAdd) {
-    if (
-      !tagRelValue.includes((t) => {
-        return t.tag === tag.name;
-      })
-    )
-      tagRelValue.push({ tag: tag.name, value: valueToAdd });
-    else {
-      let index = tagRelValue.findIndex((t) => {
-        return t.tag === tag.name;
-      });
-      if (index !== -1) {
-        tagRelValue[index].value = valueToAdd;
-      }
-    }
-  }
-
-  return tag.isBooleanType ? (
-    <div className="grid grid-cols-2 gap-6">
-      <InputSelect
-        values={tagValues}
-        value={tagValue}
-        onChange={(e) => {
-          setTagValue(e);
-          addIfExists(e);
-        }}
-        keyValue={tag.name}
-      />
-    </div>
-  ) : (
-    <div className="grid grid-cols-2 gap-6">
-      <label
-        htmlFor={tag.name}
-        className="block text-sm font-medium text-gray-700"
-      >
-        {tag.name}
-      </label>
-      <textarea
-        id={tag.name}
-        name={tag.name}
-        rows={3}
-        className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
-        placeholder={tag.name}
-        value={tagValue}
-        onChange={(e) => {
-          setTagValue(e.target.value);
-          addIfExists(e.target.value);
-        }}
-      />
     </div>
   );
 }

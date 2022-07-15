@@ -1,26 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { publicInstance } from "../../api/axiosInstance";
-import { useMyContext } from "../../utils/MyProvider";
-import CategorySection from "../category-type-tag-component/CategorySection";
-import InputSelect from "../InputSelect";
+import ProvaCheckBox from "./ProvaCheckBox";
 import OraProva from "../OraProva";
 
-//TODO: checkbox per booleani
-export default function PoiFormComponent() {
-  const isUser = useMyContext();
-  const location = useLocation();
-  const [realCategories, setRealCategories] = useState([]);
-  const [categoryValue, setCategoryValue] = useState([]);
+export default function ProvaForm() {
+  const [tagValues, setTagValues] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [categoryValues, setCategoryValues] = useState([]);
   const [types, setTypes] = useState([]);
-  const [typeValue, setTypeValue] = useState([]);
+  const [typeValues, setTypeValues] = useState([]);
+  //-------------------------------------dopo-------------------
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [lat, setLat] = useState("0");
   const [lon, setLon] = useState("0");
   const [clicked, setClicked] = useState(false);
   const [hours, setHours] = useState([]);
-  const [tagsAndValue, setTagsAndValue] = useState([]);
   const [address, setAddress] = useState({});
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
@@ -38,24 +33,73 @@ export default function PoiFormComponent() {
   const [emailContacts, setEmailContacts] = useState("");
   const [phoneContacts, setPhoneContacts] = useState("");
   const [faxContacts, setFaxContacts] = useState("");
-
-  function renderFormIfIsPreFilled(){
-    if (location?.state?.poi !== undefined) {
-      setName(location.state.poi.name);
-      setDescription(location.state.poi.description);
-      setLat(location.state.poi.coordinate.lat);
-      setLon(location.state.poi.coordinate.lon);
-      location.state.poi.hours.monday.length!==0 && setMonday(location.state.poi.hours.monday);
-      location.state.poi.hours.tuesday.length!==0 && setTuesday(location.state.poi.hours.tuesday);
-      location.state.poi.hours.wednesday.length!==0 && setWednesday(location.state.poi.hours.wednesday);
-      location.state.poi.hours.thursday.length!==0 && setThursday(location.state.poi.hours.thursday);
-      location.state.poi.hours.friday.length!==0 && setFriday(location.state.poi.hours.friday);
-      location.state.poi.hours.saturday.length!==0 && setSaturday(location.state.poi.hours.saturday);
-      location.state.poi.hours.sunday.length!==0 && setSunday(location.state.poi.hours.sunday);
-      setTypeValue(location.state.poi.types);
-    }
+  //--------------------------------------------APIs call------------------------------------------
+  function getCities() {
+    publicInstance
+      .get("/api/city/all")
+      .then((result) => setCities(result.data))
+      .catch((err) => console.log(err.message));
   }
 
+  function createPoi() {
+    let typesName = typeValues.map((t) => {
+      return t.name;
+    });
+    let payload = {
+      name: name,
+      description: description,
+      lat: lat,
+      lon: lon,
+      street: address.street,
+      number: address.number,
+      types: typesName,
+      tags: tagValues,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
+      phone: phoneContacts,
+      email: emailContacts,
+      fax: faxContacts,
+      timeToVisit: timeTovisit,
+      price: ticket,
+    };
+    publicInstance
+      .post("/api/ente/createPoi", payload)
+      .then((res) => {
+        console.log(res.status);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  //-----------------------------------useEffect-------------------------------------------------
+
+  useEffect(() => {
+    return () => {
+      setTypeValues([]);
+      setTagValues([]);
+      setName("");
+      setDescription("");
+      setLat("0");
+      setLon("0");
+      setHours([]);
+      setAddress((a) => {
+        a.number = "";
+        a.street = "";
+        return a;
+      });
+      setEmailContacts("");
+      setFaxContacts("");
+      setHours([]);
+      setPhoneContacts("");
+      setTicket("0.00");
+      setTimeToVisit("0");
+    };
+  }, [clicked]);
+  //---------------------------------------------input render-------------------------------
   const anInput = (symbol, value, setValue, label, type, placeholder, min) => {
     return (
       <>
@@ -90,116 +134,6 @@ export default function PoiFormComponent() {
     );
   };
 
-  function getCities() {
-    publicInstance
-      .get("/api/city/all")
-      .then((result) => setCities(result.data))
-      .catch((err) => console.log(err.message));
-  }
-
-  function postCreatePoiRequest(isToAdd) {
-    let typesName = typeValue.map((t) => {
-      return t.name;
-    });
-    let payload = {
-      name: name,
-      description: description,
-      city: city,
-      lat: lat,
-      lon: lon,
-      street: address.street,
-      number: address.number,
-      types: typesName,
-      tags: tagsAndValue,
-      monday: monday,
-      tuesday: tuesday,
-      wednesday: wednesday,
-      thursday: thursday,
-      friday: friday,
-      saturday: saturday,
-      sunday: sunday,
-      phone: phoneContacts,
-      email: emailContacts,
-      fax: faxContacts,
-      timeToVisit: timeTovisit,
-      price: ticket,
-    };
-    if (isToAdd === true) {
-      publicInstance
-        .post("/api/user/addPoi", payload)
-        .then((res) => {
-          console.log(res.status);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      publicInstance
-        .post("/api/user/modifyPoi", payload)
-        .then((res) => {
-          console.log(res.status);
-        })
-        .catch((err) => console.log(err));
-    }
-  }
-
-  function createPoi() {
-    let typesName = typeValue.map((t) => {
-      return t.name;
-    });
-    let payload = {
-      name: name,
-      description: description,
-      lat: lat,
-      lon: lon,
-      street: address.street,
-      number: address.number,
-      types: typesName,
-      tags: tagsAndValue,
-      monday: monday,
-      tuesday: tuesday,
-      wednesday: wednesday,
-      thursday: thursday,
-      friday: friday,
-      saturday: saturday,
-      sunday: sunday,
-      phone: phoneContacts,
-      email: emailContacts,
-      fax: faxContacts,
-      timeToVisit: timeTovisit,
-      price: ticket,
-    };
-    publicInstance
-      .post("/api/ente/createPoi", payload)
-      .then((res) => {
-        console.log(res.status);
-      })
-      .catch((err) => console.log(err));
-  }
-
-  useEffect(() => {
-    if (isUser === true) getCities();
-    renderFormIfIsPreFilled();
-    return () => {
-      setName("");
-      setDescription("");
-      setLat("0");
-      setLon("0");
-      setTypeValue([]);
-      setHours([]);
-      setTagsAndValue([]);
-      setAddress((a) => {
-        a.number = "";
-        a.street = "";
-        return a;
-      });
-      setEmailContacts("");
-      setFaxContacts("");
-      setHours([]);
-      setPhoneContacts("");
-      setTicket("0.00");
-      setTimeToVisit("0");
-    };
-  }, [clicked, location]);
-
   return (
     <div className="md:grid md:grid-cols-3 md:gap-6">
       <div className="md:col-span-1">
@@ -220,9 +154,16 @@ export default function PoiFormComponent() {
               <br />
               <p>Informazioni Poi</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
                 {/* Nome POI */}
-                {anInput(null,name,setName,"Nome POI","text","nome poi","")}
+                {anInput(
+                  null,
+                  name,
+                  setName,
+                  "Nome POI",
+                  "text",
+                  "nome poi",
+                  ""
+                )}
 
                 {/* Descrizione */}
                 <label
@@ -247,17 +188,6 @@ export default function PoiFormComponent() {
               </div>
 
               {/* city */}
-              {isUser === true && location?.state?.poi === undefined && (
-                <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
-                  <InputSelect
-                    values={cities}
-                    value={city}
-                    onChange={setCity}
-                    keyValue="Città"
-                    toView="name"
-                  />
-                </div>
-              )}
 
               <div className="md:grid md:grid-cols-2 md:gap-6">
                 {/* indirizzo */}
@@ -307,37 +237,38 @@ export default function PoiFormComponent() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-6">
-
                 {/* lat */}
                 <div>
-                {anInput(null,lat,setLat,"Latitudine","number","0","0")}
+                  {anInput(null, lat, setLat, "Latitudine", "number", "0", "0")}
                 </div>
 
                 {/* lon */}
                 <div>
-                {anInput(null,lon,setLon,"Longitudine","number","0","0")}
+                  {anInput(
+                    null,
+                    lon,
+                    setLon,
+                    "Longitudine",
+                    "number",
+                    "0",
+                    "0"
+                  )}
                 </div>
-
               </div>
 
               {/* categories input select */}
-
-              <CategorySection
-                filledFormData={location?.state?.poi !==undefined ? location.state.poi : null}
-                categories={realCategories}
-                categoryValue={categoryValue}
-                setCategoryValue={setCategoryValue}
-                setCategories={setRealCategories}
+              <ProvaCheckBox
+                categories={categories}
+                setCategories={setCategories}
+                categoryValues={categoryValues}
+                setCategoryValues={setCategoryValues}
                 types={types}
-                setTypeValue={setTypeValue}
-                typeValue={typeValue}
+                setTypeValues={setTypeValues}
+                typeValues={typeValues}
                 setTypes={setTypes}
-                tagsAndValue={tagsAndValue}
+                tagValues={tagValues}
+                setTagValues={setTagValues}
               />
-              <button className="bg-sky-600" onClick={(e)=>{
-                console.log(tagsAndValue);
-                e.preventDefault();
-              }}>CLICK</button>
               <br />
               <p>Visita</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -432,12 +363,7 @@ export default function PoiFormComponent() {
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
-                  //TODO:mettere se commerciante
-                  if (isUser === true) {
-                    location?.state?.poi !== undefined
-                      ? postCreatePoiRequest(false)
-                      : postCreatePoiRequest(true);
-                  } else createPoi();
+                  createPoi();
                   setClicked((c) => {
                     c = !c;
                     return c;

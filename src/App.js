@@ -5,9 +5,10 @@ import { BrowserRouter } from "react-router-dom";
 import "./Material.css";
 import MyRoutes from "./components/MyRoutes";
 import { MyProvider } from "./utils/MyProvider";
+import ProvaCheckBox from "./components/prova/ProvaCheckBox";
+import ProvaForm from "./components/prova/ProvaForm";
 
 function App() {
-
   return (
     <BrowserRouter>
       <MyProvider>
