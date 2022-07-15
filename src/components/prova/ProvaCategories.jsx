@@ -3,7 +3,7 @@ import CheckBoxComponent from "../CheckBoxComponent";
 import { publicInstance } from "../../api/axiosInstance";
 import InputSelect from "../InputSelect";
 
-export default function ProvaCheckBox({
+export default function ProvaCategories({
   tagValues,
   setTagValues,
   categories,
@@ -15,7 +15,7 @@ export default function ProvaCheckBox({
   typeValues,
   setTypeValues,
 }) {
-  const [click, setClick] = useState(false);
+  //const [click, setClick] = useState(false);
   /* const [tagValues, setTagValues] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryValues, setCategoryValues] = useState([]);
@@ -121,7 +121,10 @@ export default function ProvaCheckBox({
           values={categories}
           value={categoryValues}
           multiple={true}
-          onChange={setCategoryValues}
+          onChange={(values) => {
+            setCategoryValues(values);
+            getTypesFiltered(values);
+          }}
           keyValue="Categorie"
           toView="name"
         />
@@ -130,20 +133,14 @@ export default function ProvaCheckBox({
           <button
             type="button"
             onClick={() => {
-              if (!click) getTypesFiltered(categoryValues);
-              else {
-                setCategoryValues([]);
-                setTypeValues([]);
-                getTypesFiltered(categoryValues);
-                setTagValues([]);
-              }
-              setClick((s) => {
-                return s === true ? false : true;
-              });
+              setCategoryValues([]);
+              setTypeValues([]);
+              getTypesFiltered(categoryValues);
+              setTagValues([]);
             }}
             className="ml-5 mt-1.5 bg-white py-2 px-3 border border-gray-300 shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-indigo-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            {click ? "cancella" : "conferma"}
+            cancella
           </button>
         </div>
       </div>

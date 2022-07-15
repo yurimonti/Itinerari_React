@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { publicInstance } from "../../api/axiosInstance";
-import ProvaCheckBox from "./ProvaCheckBox";
+import ProvaCategories from "./ProvaCategories";
 import OraProva from "../OraProva";
 
 export default function ProvaForm() {
@@ -16,7 +16,9 @@ export default function ProvaForm() {
   const [lon, setLon] = useState("0");
   const [clicked, setClicked] = useState(false);
   const [hours, setHours] = useState([]);
-  const [address, setAddress] = useState({});
+  /*   const [address, setAddress] = useState({}); */
+  const [street, setStreet] = useState("");
+  const [number, setNumber] = useState("0");
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
 
@@ -50,8 +52,8 @@ export default function ProvaForm() {
       description: description,
       lat: lat,
       lon: lon,
-      street: address.street,
-      number: address.number,
+      street: street,
+      number: number,
       types: typesName,
       tags: tagValues,
       monday: monday,
@@ -79,6 +81,7 @@ export default function ProvaForm() {
 
   useEffect(() => {
     return () => {
+      setCategoryValues([]);
       setTypeValues([]);
       setTagValues([]);
       setName("");
@@ -86,11 +89,13 @@ export default function ProvaForm() {
       setLat("0");
       setLon("0");
       setHours([]);
-      setAddress((a) => {
+      setStreet("");
+      setNumber("0");
+      /* setAddress((a) => {
         a.number = "";
         a.street = "";
-        return a;
-      });
+        re turn a;
+      });*/
       setEmailContacts("");
       setFaxContacts("");
       setHours([]);
@@ -204,12 +209,9 @@ export default function ProvaForm() {
                     id="poi-via"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="Via del punto"
-                    value={address.street}
+                    value={street}
                     onChange={(e) => {
-                      setAddress((a) => {
-                        a.street = e.target.value;
-                        return a;
-                      });
+                      setStreet(e.target.value);
                     }}
                   />
                 </div>
@@ -226,12 +228,9 @@ export default function ProvaForm() {
                     id="poi-numero"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="numero della via"
-                    value={address.number}
+                    value={number}
                     onChange={(e) => {
-                      setAddress((a) => {
-                        a.number = e.target.value;
-                        return a;
-                      });
+                      setNumber(e.target.value);
                     }}
                   />
                 </div>
@@ -257,7 +256,7 @@ export default function ProvaForm() {
               </div>
 
               {/* categories input select */}
-              <ProvaCheckBox
+              <ProvaCategories
                 categories={categories}
                 setCategories={setCategories}
                 categoryValues={categoryValues}
@@ -359,6 +358,18 @@ export default function ProvaForm() {
               </div>
             </div>
             <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+              <button
+                type="button"
+                className="inline-flex mr-3 justify-center py-2 px-4 border border-gray shadow-sm text-sm font-medium rounded-md text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-200"
+                onClick={() => {
+                  setClicked((c) => {
+                    c = !c;
+                    return c;
+                  });
+                }}
+              >
+                Reset
+              </button>
               <button
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

@@ -1,7 +1,7 @@
 import { useState } from "react";
 //FIXME: valutare bene
 const OraProva = ({keyValue,value,setValue}) => {
-  const [input0, setInput0] = useState("");
+/*   const [input0, setInput0] = useState("");
   const [input1, setInput1] = useState("");
   const [input2, setInput2] = useState("");
   const [input3, setInput3] = useState("");
@@ -14,7 +14,7 @@ const OraProva = ({keyValue,value,setValue}) => {
     console.log(
       value[0] + " ; " + value[1] + " ; " + value[2] + " ; " + value[3] + " ; "
     );
-  }
+  } */
 
   return (
     <>
