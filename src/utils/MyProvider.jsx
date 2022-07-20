@@ -20,17 +20,17 @@ export function useUpdateDataContext() {
 } */
 
 export const MyProvider = ({ children }) => {
-  const [auth, setAuth] = useState(true);
+  const [auth, setAuth] = useState("user");
   //const [data, setData] = useState(null);
 
-  function setToken() {
-    auth ? setAuth(false) : setAuth(true);
+  function setToken(role) {
+    setAuth(role);
     console.log(auth);
   }
 
   return (
     <MyContext.Provider value={auth}>
-      <UpdateMyContext.Provider value={setToken}>
+      <UpdateMyContext.Provider value={(role)=>setToken(role)}>
             {children}
       </UpdateMyContext.Provider>
     </MyContext.Provider>

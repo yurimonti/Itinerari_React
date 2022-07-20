@@ -30,12 +30,13 @@ function classNames(...classes) {
 }
 
 export default function AppShell({ children }) {
-  const isUser = useMyContext();
-  const setIsUser = useUpdateMyContext();
+  const role = useMyContext();
+  const setRole = useUpdateMyContext();
+  const roles = ["user", "ente"];
   const navigate = useNavigate();
   //TODO: cambiare il href e modificare le rotte ed elementi
   const [navigation, setNavigation] = useState(
-    isUser === true
+    role === "user"
       ? [
           { name: "Home", href: "/", current: true },
           { name: "Map", href: "/map", current: false },
@@ -176,12 +177,13 @@ export default function AppShell({ children }) {
                       <Menu as="div" className="ml-3 relative">
                         <div>
                           {user.name === undefined ? (
-                            <a onClick={setIsUser}>
-                              {/* <p className="text-sm text-white">Login</p> */}
-                              <p className="text-sm text-white">
-                                {isUser === true ? "User" : "Ente"}
-                              </p>
-                            </a>
+                            <>
+                              <label className="text-white mr-2" for="roles">Choose a role:</label>
+                              <select value={role} onChange={(e)=> setRole(e.target.value)} name="roles" id="roles">
+                                <option value={roles[0]}>User</option>
+                                <option value={roles[1]}>Ente</option>
+                              </select>
+                            </>
                           ) : (
                             <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                               <span className="sr-only">Open user menu</span>

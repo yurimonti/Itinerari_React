@@ -98,18 +98,54 @@ export default function ProvaCategories({
     );
   }
 
+  function handleTextTagInput(event, tagValue) {
+    let currentValue = event.target.value;
+    setTagValues(
+      tagValues.map((v) => {
+        if (v.tag === tagValue.tag) {
+          v.value = currentValue;
+        }
+        return v;
+      })
+    );
+  }
+
   function renderAllTags() {
     return tagValues.map((v) => {
-      return (
-        <CheckBoxComponent
-          onChange={(e) => {
-            handleCheckTagInput(e, v);
-          }}
-          tagValue={v}
-          key={v.tag}
-          keyValue={v.tag}
-        />
-      );
+      if (typeof v.value == "boolean") {
+        return (
+          <div className="grid grid-cols-2 gap-6" key={v.tag}>
+            <CheckBoxComponent
+              onChange={(e) => {
+                handleCheckTagInput(e, v);
+              }}
+              tagValue={v}
+              keyValue={v.tag}
+            />
+          </div>
+        );
+      } else
+        return (
+          <div className="grid grid-cols-2 gap-6" key={v.tag}>
+            <label
+              htmlFor={v.tag}
+              className="block text-sm font-medium text-gray-700"
+            >
+              {v.tag}
+            </label>
+            <textarea
+              id={v.tag}
+              name={v.tag}
+              rows={3}
+              className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
+              placeholder={v.tag}
+              value={v.value}
+              onChange={(e) => {
+                handleTextTagInput(e, v);
+              }}
+            />
+          </div>
+        );
     });
   }
 

@@ -8,18 +8,12 @@ import NotifiesComponent from "./NotifiesComponent";
 import ProvaForm from "./prova/ProvaForm";
 
 export default function MyRoutes() {
-  const isUser = useMyContext();
-  const routes = useRoutes(isUser.value ? [
+  const role = useMyContext();
+  const routes = useRoutes([
     { path: "/", element: <HomePage /> },
     { path: "map", element: <MapComponent /> },
-    { path: "poi-form", element: <ProvaForm /> },
-    { path: "notifies", element: <NotifiesComponent /> },
-    { path: "login", element: <LoginForm /> },
-  ] : [
-    { path: "/", element: <HomePage /> },
-    { path: "map", element: <MapComponent /> },
-    { path: "poi-form", element: <ProvaForm /> },
-    { path: "notifies", element: <NotifiesComponent /> },
+    { path: "poi-form", element: <ProvaForm role={role}/> },
+    { path: "notifies", element: <NotifiesComponent role={role}/> },
     { path: "login", element: <LoginForm /> },
   ]);
 

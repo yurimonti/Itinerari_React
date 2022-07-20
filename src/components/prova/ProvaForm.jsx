@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react";
 import { publicInstance } from "../../api/axiosInstance";
+import InputSelect from "../InputSelect";
 import ProvaCategories from "./ProvaCategories";
 import OraProva from "../OraProva";
+import { useMyContext } from "../../utils/MyProvider";
+import { useLocation } from "react-router-dom";
 
-export default function ProvaForm() {
+export default function ProvaForm({role}) {
   const [tagValues, setTagValues] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryValues, setCategoryValues] = useState([]);
   const [types, setTypes] = useState([]);
   const [typeValues, setTypeValues] = useState([]);
   //-------------------------------------dopo-------------------
+  const location = useLocation();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [lat, setLat] = useState("0");
   const [lon, setLon] = useState("0");
   const [clicked, setClicked] = useState(false);
-  const [hours, setHours] = useState([]);
   /*   const [address, setAddress] = useState({}); */
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("0");
@@ -68,6 +71,7 @@ export default function ProvaForm() {
       fax: faxContacts,
       timeToVisit: timeTovisit,
       price: ticket,
+      username:"ente_camerino"
     };
     publicInstance
       .post("/api/ente/createPoi", payload)
@@ -77,9 +81,97 @@ export default function ProvaForm() {
       .catch((err) => console.log(err));
   }
 
+  function postCreatePoiRequest(isToAdd) {
+    let typesName = typeValues.map((t) => {
+      return t.name;
+    });
+    let payload = {
+      name: name,
+      description: description,
+      city: city,
+      lat: lat.toString(),
+      lon: lon.toString(),
+      street: street,
+      number: number.toString(),
+      types: typesName,
+      tags: tagValues,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
+      phone: phoneContacts.toString(),
+      email: emailContacts,
+      fax: faxContacts,
+      timeToVisit: timeTovisit.toString(),
+      price: ticket.toString(),
+      poi:null,
+      username:"an_user"
+    };
+    if (isToAdd === true) {
+      publicInstance
+        .post("/api/user/addPoi", payload)
+        .then((res) => {
+          console.log(res.status);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      payload.poi = location.state.poi.id.toString();
+      publicInstance
+        .post("/api/user/modifyPoi", payload)
+        .then((res) => {
+          console.log(res.status);
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+
   //-----------------------------------useEffect-------------------------------------------------
 
+  function renderFormIfIsPreFilled() {
+    if (location?.state?.poi !== undefined) {
+      setEmailContacts(location.state.poi.contact.email);
+      setFaxContacts(location.state.poi.contact.fax);
+      setPhoneContacts(location.state.poi.contact.cellNumber);
+      setName(location.state.poi.name);
+      setDescription(location.state.poi.description);
+      setLat(location.state.poi.coordinate.lat);
+      setLon(location.state.poi.coordinate.lon);
+      location.state.poi.hours.monday.length !== 0 &&
+        setMonday(location.state.poi.hours.monday);
+      location.state.poi.hours.tuesday.length !== 0 &&
+        setTuesday(location.state.poi.hours.tuesday);
+      location.state.poi.hours.wednesday.length !== 0 &&
+        setWednesday(location.state.poi.hours.wednesday);
+      location.state.poi.hours.thursday.length !== 0 &&
+        setThursday(location.state.poi.hours.thursday);
+      location.state.poi.hours.friday.length !== 0 &&
+        setFriday(location.state.poi.hours.friday);
+      location.state.poi.hours.saturday.length !== 0 &&
+        setSaturday(location.state.poi.hours.saturday);
+      location.state.poi.hours.sunday.length !== 0 &&
+        setSunday(location.state.poi.hours.sunday);
+      setTypeValues(location.state.poi.types);
+      setStreet(location.state.poi.address.street);
+      setNumber(location.state.poi.address.number);
+      location.state.poi.tagValues.forEach((tv) => {
+        setTagValues((previous) => {
+          if (tv.tag.isBooleanType)
+            previous.push({ tag: tv.tag.name, value: tv.booleanValue });
+          else previous.push({ tag: tv.tag.name, value: tv.stringValue });
+          return previous;
+        });
+      });
+    }
+  }
+
   useEffect(() => {
+    renderFormIfIsPreFilled();
+    if (role==="user" && location?.state?.poi===undefined) {
+      getCities();
+    }
     return () => {
       setCategoryValues([]);
       setTypeValues([]);
@@ -88,20 +180,17 @@ export default function ProvaForm() {
       setDescription("");
       setLat("0");
       setLon("0");
-      setHours([]);
       setStreet("");
       setNumber("0");
-      /* setAddress((a) => {
-        a.number = "";
-        a.street = "";
-        re turn a;
-      });*/
       setEmailContacts("");
       setFaxContacts("");
-      setHours([]);
       setPhoneContacts("");
       setTicket("0.00");
       setTimeToVisit("0");
+      if (role==="user") {
+        setCity({});
+        setCities([]);
+      }
     };
   }, [clicked]);
   //---------------------------------------------input render-------------------------------
@@ -193,6 +282,17 @@ export default function ProvaForm() {
               </div>
 
               {/* city */}
+              {role === "user" && location?.state?.poi===undefined && (
+                <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
+                  <InputSelect
+                    values={cities}
+                    value={city}
+                    onChange={setCity}
+                    keyValue="Città"
+                    toView="name"
+                  />
+                </div>
+              )}
 
               <div className="md:grid md:grid-cols-2 md:gap-6">
                 {/* indirizzo */}
@@ -374,7 +474,10 @@ export default function ProvaForm() {
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
-                  createPoi();
+                  if (role === "user") {
+                    if(location?.state?.poi===undefined) postCreatePoiRequest(true);
+                    else postCreatePoiRequest(false);
+                  } else createPoi();
                   setClicked((c) => {
                     c = !c;
                     return c;
