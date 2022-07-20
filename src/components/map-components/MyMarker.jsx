@@ -13,14 +13,14 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
   const info = {
     title: poi.name,
     subtitle: poi.description,
-    isOpen: poi.hours.isOpen,
+    isOpen: poi?.hours?.isOpen,
     visit: poi.timeToVisit,
     price: poi.ticketPrice,
     types: printTypes(poi),
-    address: poi.address.street + " " + poi.address.number,
-    email: poi.contact.email,
-    fax: poi.contact.fax,
-    phone: poi.contact.cellNumber
+    address: poi?.address?.street + " " + poi?.address?.number,
+    email: poi?.contact?.email,
+    fax: poi?.contact?.fax,
+    phone: poi?.contact?.cellNumber
   };
 
   function renderMoreInfo() {

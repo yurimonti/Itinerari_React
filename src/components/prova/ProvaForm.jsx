@@ -50,13 +50,14 @@ export default function ProvaForm({role}) {
     let typesName = typeValues.map((t) => {
       return t.name;
     });
+    let params = location?.state?.poi === undefined ? {username:"ente_camerino"} : {username:"ente_camerino",id:location.state.poi.id}
     let payload = {
       name: name,
       description: description,
-      lat: lat,
-      lon: lon,
+      lat: lat.toString(),
+      lon: lon.toString(),
       street: street,
-      number: number,
+      number: number.toString(),
       types: typesName,
       tags: tagValues,
       monday: monday,
@@ -66,15 +67,16 @@ export default function ProvaForm({role}) {
       friday: friday,
       saturday: saturday,
       sunday: sunday,
-      phone: phoneContacts,
+      phone: phoneContacts.toString(),
       email: emailContacts,
       fax: faxContacts,
-      timeToVisit: timeTovisit,
-      price: ticket,
-      username:"ente_camerino"
+      timeToVisit: timeTovisit.toString(),
+      price: ticket.toString()
     };
     publicInstance
-      .post("/api/ente/createPoi", payload)
+      .post("/api/ente/createPoi", payload,{
+        params:params
+      })
       .then((res) => {
         console.log(res.status);
       })
