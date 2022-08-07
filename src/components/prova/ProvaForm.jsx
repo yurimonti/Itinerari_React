@@ -5,8 +5,24 @@ import ProvaCategories from "./ProvaCategories";
 import OraProva from "../OraProva";
 import { useMyContext } from "../../utils/MyProvider";
 import { useLocation } from "react-router-dom";
+import ClassicInput from "./ClassicInput";
 
-export default function ProvaForm({role}) {
+
+const initialStateInputsString = {
+  name: "",
+  description: "",
+  lat: "0",
+  lon: "0",
+  street: "",
+  number: "0",
+  ticket: "0.00",
+  timeToVisit: "0.00",
+  emailContacts: "",
+  phoneContacts: "",
+  faxContacts: "",
+}
+
+export default function ProvaForm({ role }) {
   const [tagValues, setTagValues] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryValues, setCategoryValues] = useState([]);
@@ -14,14 +30,15 @@ export default function ProvaForm({role}) {
   const [typeValues, setTypeValues] = useState([]);
   //-------------------------------------dopo-------------------
   const location = useLocation();
-  const [name, setName] = useState("");
+  const [inputsString, setInputsString] = useState(initialStateInputsString);
+  /* const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [lat, setLat] = useState("0");
-  const [lon, setLon] = useState("0");
+  const [lon, setLon] = useState("0"); */
   const [clicked, setClicked] = useState(false);
   /*   const [address, setAddress] = useState({}); */
-  const [street, setStreet] = useState("");
-  const [number, setNumber] = useState("0");
+/*   const [street, setStreet] = useState("");
+  const [number, setNumber] = useState("0"); */
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
 
@@ -33,11 +50,19 @@ export default function ProvaForm({role}) {
   const [saturday, setSaturday] = useState([]);
   const [sunday, setSunday] = useState([]);
 
-  const [ticket, setTicket] = useState("0.00");
+ /*  const [ticket, setTicket] = useState("0.00");
   const [timeTovisit, setTimeToVisit] = useState("0");
   const [emailContacts, setEmailContacts] = useState("");
   const [phoneContacts, setPhoneContacts] = useState("");
-  const [faxContacts, setFaxContacts] = useState("");
+  const [faxContacts, setFaxContacts] = useState(""); */
+  //-------------------------------------------handle inputs string----------------------------------------------
+  function handleInputsString(e) {
+    setInputsString((prev) => {
+      return { ...prev, [e.target.name]: e.target.value };
+    });
+    console.log(inputsString);
+  }
+
   //--------------------------------------------APIs call------------------------------------------
   function getCities() {
     publicInstance
@@ -50,14 +75,21 @@ export default function ProvaForm({role}) {
     let typesName = typeValues.map((t) => {
       return t.name;
     });
-    let params = location?.state?.poi === undefined ? {username:"ente_camerino"} : {username:"ente_camerino",id:location.state.poi.id}
+    let params =
+      location?.state?.poi === undefined
+        ? { username: "ente_camerino" }
+        : { username: "ente_camerino", id: location.state.poi.id };
+    let url =
+      location?.state?.poi === undefined
+        ? "/api/ente/createPoi"
+        : "/api/ente/notifies/modify";
     let payload = {
-      name: name,
-      description: description,
-      lat: lat.toString(),
-      lon: lon.toString(),
-      street: street,
-      number: number.toString(),
+      name: inputsString.name,
+      description: inputsString.description,
+      lat: inputsString.lat.toString(),
+      lon: inputsString.lon.toString(),
+      street: inputsString.street,
+      number: inputsString.number.toString(),
       types: typesName,
       tags: tagValues,
       monday: monday,
@@ -67,15 +99,18 @@ export default function ProvaForm({role}) {
       friday: friday,
       saturday: saturday,
       sunday: sunday,
-      phone: phoneContacts.toString(),
-      email: emailContacts,
-      fax: faxContacts,
-      timeToVisit: timeTovisit.toString(),
-      price: ticket.toString()
+      phone: inputsString.phoneContacts.toString(),
+      email: inputsString.emailContacts,
+      fax: inputsString.faxContacts,
+      timeToVisit: inputsString.timeTovisit.toString(),
+      price: inputsString.ticket.toString(),
+      username: null,
     };
+    if (location?.state?.poi !== undefined)
+      payload.username = location.state.poi.username;
     publicInstance
-      .post("/api/ente/createPoi", payload,{
-        params:params
+      .post(url, payload, {
+        params: params,
       })
       .then((res) => {
         console.log(res.status);
@@ -88,13 +123,13 @@ export default function ProvaForm({role}) {
       return t.name;
     });
     let payload = {
-      name: name,
-      description: description,
+      name: inputsString.name,
+      description: inputsString.description,
       city: city,
-      lat: lat.toString(),
-      lon: lon.toString(),
-      street: street,
-      number: number.toString(),
+      lat: inputsString.lat.toString(),
+      lon: inputsString.lon.toString(),
+      street: inputsString.street,
+      number: inputsString.number.toString(),
       types: typesName,
       tags: tagValues,
       monday: monday,
@@ -104,13 +139,13 @@ export default function ProvaForm({role}) {
       friday: friday,
       saturday: saturday,
       sunday: sunday,
-      phone: phoneContacts.toString(),
-      email: emailContacts,
-      fax: faxContacts,
-      timeToVisit: timeTovisit.toString(),
-      price: ticket.toString(),
-      poi:null,
-      username:"an_user"
+      phone: inputsString.phoneContacts.toString(),
+      email: inputsString.emailContacts,
+      fax: inputsString.faxContacts,
+      timeToVisit: inputsString.timeTovisit.toString(),
+      price: inputsString.ticket.toString(),
+      poi: null,
+      username: "an_user",
     };
     if (isToAdd === true) {
       publicInstance
@@ -171,64 +206,31 @@ export default function ProvaForm({role}) {
 
   useEffect(() => {
     renderFormIfIsPreFilled();
-    if (role==="user" && location?.state?.poi===undefined) {
+    if (role === "user" && location?.state?.poi === undefined) {
       getCities();
     }
     return () => {
       setCategoryValues([]);
       setTypeValues([]);
       setTagValues([]);
-      setName("");
+      /* setName("");
       setDescription("");
       setLat("0");
-      setLon("0");
-      setStreet("");
-      setNumber("0");
-      setEmailContacts("");
+      setLon("0"); */
+      /* setStreet("");
+      setNumber("0"); */
+      /* setEmailContacts("");
       setFaxContacts("");
       setPhoneContacts("");
       setTicket("0.00");
-      setTimeToVisit("0");
-      if (role==="user") {
+      setTimeToVisit("0"); */
+      if (role === "user") {
         setCity({});
         setCities([]);
       }
     };
   }, [clicked]);
   //---------------------------------------------input render-------------------------------
-  const anInput = (symbol, value, setValue, label, type, placeholder, min) => {
-    return (
-      <>
-        <label
-          htmlFor={label.toLowerCase()}
-          className="block text-sm font-medium text-gray-700"
-        >
-          {label}
-        </label>
-        <div className="mt-1 flex rounded-md shadow-sm">
-          {symbol !== null && (
-            <div className="mr-2 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span className="text-black-500 md:text-l sm:text-sm">
-                {symbol}
-              </span>
-            </div>
-          )}
-          <input
-            value={value}
-            onChange={(e) => {
-              setValue(e.target.value);
-            }}
-            type={type}
-            min={min}
-            name={label.toLowerCase()}
-            id={label.toLowerCase()}
-            className="focus:outline-none focus:ring-2 pl-3 pr-12 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
-            placeholder={placeholder}
-          />
-        </div>
-      </>
-    );
-  };
 
   return (
     <div className="md:grid md:grid-cols-3 md:gap-6">
@@ -251,15 +253,15 @@ export default function ProvaForm({role}) {
               <p>Informazioni Poi</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Nome POI */}
-                {anInput(
-                  null,
-                  name,
-                  setName,
-                  "Nome POI",
-                  "text",
-                  "nome poi",
-                  ""
-                )}
+                <ClassicInput
+                  name="name"
+                  symbol={null}
+                  setValue={handleInputsString}
+                  label="name"
+                  type="text"
+                  placeholder="Nome del Poi"
+                  min=""
+                />
 
                 {/* Descrizione */}
                 <label
@@ -270,21 +272,18 @@ export default function ProvaForm({role}) {
                 </label>
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <textarea
-                    id="about"
-                    name="about"
+                    id="description"
+                    name="description"
                     rows={3}
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
                     placeholder="Descrizione ..."
-                    value={description}
-                    onChange={(e) => {
-                      setDescription(e.target.value);
-                    }}
+                    onChange={handleInputsString}
                   />
                 </div>
               </div>
 
               {/* city */}
-              {role === "user" && location?.state?.poi===undefined && (
+              {role === "user" && location?.state?.poi === undefined && (
                 <div className="grid md:grid-cols-3 grid-cols-1 gap-2 md:gap-6">
                   <InputSelect
                     values={cities}
@@ -307,14 +306,11 @@ export default function ProvaForm({role}) {
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <input
                     type="text"
-                    name="poi-via"
-                    id="poi-via"
+                    name="street"
+                    id="street"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="Via del punto"
-                    value={street}
-                    onChange={(e) => {
-                      setStreet(e.target.value);
-                    }}
+                    onChange={handleInputsString}
                   />
                 </div>
                 <label
@@ -326,34 +322,38 @@ export default function ProvaForm({role}) {
                 <div className="mt-1 flex rounded-md shadow-sm">
                   <input
                     type="number"
-                    name="poi-numero"
-                    id="poi-numero"
+                    name="number"
+                    id="number"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="numero della via"
-                    value={number}
-                    onChange={(e) => {
-                      setNumber(e.target.value);
-                    }}
+                    onChange={handleInputsString}
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-6">
                 {/* lat */}
                 <div>
-                  {anInput(null, lat, setLat, "Latitudine", "number", "0", "0")}
+                  <ClassicInput
+                    name="lat"
+                    symbol={null}
+                    setValue={handleInputsString}
+                    label="lat"
+                    type="number"
+                    placeholder="latitudine del Poi"
+                    min="0"
+                  />
                 </div>
-
                 {/* lon */}
                 <div>
-                  {anInput(
-                    null,
-                    lon,
-                    setLon,
-                    "Longitudine",
-                    "number",
-                    "0",
-                    "0"
-                  )}
+                  <ClassicInput
+                    name="lon"
+                    symbol={null}
+                    setValue={handleInputsString}
+                    label="lon"
+                    type="number"
+                    placeholder="longitudine del Poi"
+                    min="0"
+                  />
                 </div>
               </div>
 
@@ -374,48 +374,60 @@ export default function ProvaForm({role}) {
               <p>Visita</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* ticket input */}
-                {anInput("€", ticket, setTicket, "Prezzo", "number", "0.00")}
+                <ClassicInput
+                    name="ticket"
+                    symbol="€"
+                    setValue={handleInputsString}
+                    label="ticket"
+                    type="number"
+                    placeholder="Prezzo"
+                    min="0.00"
+                  />
 
                 {/* time to visit input */}
-                {anInput(
-                  "min",
-                  timeTovisit,
-                  setTimeToVisit,
-                  "Tempo Visita",
-                  "number",
-                  "0"
-                )}
+                <ClassicInput
+                    name="timeToVisit"
+                    symbol={null}
+                    setValue={handleInputsString}
+                    label="timeToVisit"
+                    type="number"
+                    placeholder="Tempo Visita"
+                    min="0"
+                  />
               </div>
               <br />
               <p>Contatti</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* email input */}
-                {anInput(
-                  null,
-                  emailContacts,
-                  setEmailContacts,
-                  "Email",
-                  "text",
-                  "example@domain.com"
-                )}
+                <ClassicInput
+                    name="emailContacts"
+                    symbol={null}
+                    setValue={handleInputsString}
+                    label="emailContacts"
+                    type="text"
+                    placeholder="example@domain.com"
+                    min=""
+                  />
                 {/* cellphone input */}
-                {anInput(
-                  "+39",
-                  phoneContacts,
-                  setPhoneContacts,
-                  "Tel",
-                  "number",
-                  "0123456789"
-                )}
+                <ClassicInput
+                    name="phoneContacts"
+                    symbol="+39"
+                    setValue={handleInputsString}
+                    label="phoneContacts"
+                    type="number"
+                    placeholder="0123456789"
+                    min=""
+                  />
                 {/* fax input */}
-                {anInput(
-                  null,
-                  faxContacts,
-                  setFaxContacts,
-                  "Fax",
-                  "text",
-                  "fax"
-                )}
+                <ClassicInput
+                    name="faxContacts"
+                    symbol="+39"
+                    setValue={handleInputsString}
+                    label="faxContacts"
+                    type="text"
+                    placeholder="fax"
+                    min=""
+                  />
               </div>
 
               {/* timepicker */}
@@ -477,7 +489,8 @@ export default function ProvaForm({role}) {
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
                   if (role === "user") {
-                    if(location?.state?.poi===undefined) postCreatePoiRequest(true);
+                    if (location?.state?.poi === undefined)
+                      postCreatePoiRequest(true);
                     else postCreatePoiRequest(false);
                   } else createPoi();
                   setClicked((c) => {
@@ -487,6 +500,15 @@ export default function ProvaForm({role}) {
                 }}
               >
                 Salva
+              </button>
+              <button
+                type="button"
+                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                onClick={() => {
+                  console.log(inputsString);
+                }}
+              >
+                Stampa Valori
               </button>
             </div>
           </div>

@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { getMatrix } from "../../utils/map-utils/matrixService";
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from "react-leaflet";
-import Direction from "./Direction";
+import { MapContainer, TileLayer, Marker, GeoJSON } from "react-leaflet";
 import { publicInstance } from "../../api/axiosInstance";
 import "./MapComponent.css";
-import L from "leaflet";
 import MyMarker from "./MyMarker";
 
-export default function MapComponent() {
+export default function MapComponent({ data,zoom,renderAll }) {
   const [pois, setPois] = useState([]);
 
   useEffect(() => {
@@ -16,6 +13,12 @@ export default function MapComponent() {
       setPois([]);
     };
   }, []);
+
+  function provaRenderMarker() {
+    return data?.metadata?.query?.coordinates.map((c) => {
+      return <Marker key={c} position={[c[1], c[0]]} />;
+    });
+  }
 
   function fillPois() {
     publicInstance
@@ -29,24 +32,28 @@ export default function MapComponent() {
   }
 
   function renderMarkers() {
-    return pois.map((poi) => {
-      return (
-        <MyMarker key={poi.id} isPoiIcon={true} poi={poi} popup={true} />
-      );
+    return renderAll && pois.map((poi) => {
+      return <MyMarker key={poi.id} isPoiIcon={true} poi={poi} popup={true} />;
     });
+  }
+
+  function calculateCenter(coords){
+    return [coords[1],coords[0]];
   }
 
   return (
     <div className="leaflet-container">
       <MapContainer
-        center={[43.13454678335075, 13.066346732844925]}
-        zoom={15}
+        center={calculateCenter(data?.metadata?.query?.coordinates[0])}
+        zoom={zoom}
         scrollWheelZoom={true}
       >
         <TileLayer
           attribution={"https://www.openstreetmap.org/copyright"}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        <GeoJSON data={data} />
+        {provaRenderMarker()}
         {renderMarkers()}
       </MapContainer>
     </div>

@@ -64,7 +64,8 @@ export default function NotifiesComponent({ role }) {
     if (role === "ente") {
       publicInstance
         .post("/api/ente/notifies", null, {
-          params: { isAccepted: toSet, idPoiRequest: id },
+          //TODO:cambiare toSet isAccepted id in idPoiRequests
+          params: { toSet: toSet, id: id },
         })
         .then((res) => {
           console.log(res.status);

@@ -42,12 +42,14 @@ export default function AppShell({ children }) {
           { name: "Map", href: "/map", current: false },
           { name: "Add Poi", href: "/poi-form", current: false },
           { name: "Notifies", href: "/notifies", current: false },
+          { name: "Itineraries", href: "/itineraries", current: false }
         ]
       : [
           { name: "Home", href: "/", current: true },
           { name: "Map", href: "/map", current: false },
           { name: "Add Poi", href: "/poi-form", current: false },
           { name: "Notifies", href: "/notifies", current: false },
+          { name: "Itineraries", href: "/itineraries", current: false }
         ]
   );
 
@@ -73,6 +75,7 @@ export default function AppShell({ children }) {
   ]); */
 
   const [user, setUser] = useState({});
+
 
   function getCurrentNav() {
     return navigation.filter((nav) => {
