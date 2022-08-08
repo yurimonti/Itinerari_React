@@ -7,7 +7,6 @@ import { useMyContext } from "../../utils/MyProvider";
 import { useLocation } from "react-router-dom";
 import ClassicInput from "./ClassicInput";
 
-
 const initialStateInputsString = {
   name: "",
   description: "",
@@ -20,7 +19,7 @@ const initialStateInputsString = {
   emailContacts: "",
   phoneContacts: "",
   faxContacts: "",
-}
+};
 
 export default function ProvaForm({ role }) {
   const [tagValues, setTagValues] = useState([]);
@@ -37,7 +36,7 @@ export default function ProvaForm({ role }) {
   const [lon, setLon] = useState("0"); */
   const [clicked, setClicked] = useState(false);
   /*   const [address, setAddress] = useState({}); */
-/*   const [street, setStreet] = useState("");
+  /*   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("0"); */
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
@@ -50,7 +49,7 @@ export default function ProvaForm({ role }) {
   const [saturday, setSaturday] = useState([]);
   const [sunday, setSunday] = useState([]);
 
- /*  const [ticket, setTicket] = useState("0.00");
+  /*  const [ticket, setTicket] = useState("0.00");
   const [timeTovisit, setTimeToVisit] = useState("0");
   const [emailContacts, setEmailContacts] = useState("");
   const [phoneContacts, setPhoneContacts] = useState("");
@@ -169,13 +168,27 @@ export default function ProvaForm({ role }) {
 
   function renderFormIfIsPreFilled() {
     if (location?.state?.poi !== undefined) {
-      setEmailContacts(location.state.poi.contact.email);
+      let poiState = {
+        name: location.state.poi.name,
+        description: location.state.poi.description,
+        lat: location.state.poi.coordinate.lat,
+        lon: location.state.poi.coordinate.lon,
+        street: location.state.poi.address.street,
+        number: location.state.poi.address.number,
+        ticket: location.state.poi.ticket,
+        timeToVisit: location.state.poi.timeToVisit,
+        emailContacts: location.state.poi.contact.email,
+        phoneContacts: location.state.poi.contact.cellNumber,
+        faxContacts: location.state.poi.contact.fax,
+      };
+      setInputsString(poiState);
+      /* setEmailContacts(location.state.poi.contact.email);
       setFaxContacts(location.state.poi.contact.fax);
       setPhoneContacts(location.state.poi.contact.cellNumber);
       setName(location.state.poi.name);
       setDescription(location.state.poi.description);
       setLat(location.state.poi.coordinate.lat);
-      setLon(location.state.poi.coordinate.lon);
+      setLon(location.state.poi.coordinate.lon); */
       location.state.poi.hours.monday.length !== 0 &&
         setMonday(location.state.poi.hours.monday);
       location.state.poi.hours.tuesday.length !== 0 &&
@@ -191,8 +204,8 @@ export default function ProvaForm({ role }) {
       location.state.poi.hours.sunday.length !== 0 &&
         setSunday(location.state.poi.hours.sunday);
       setTypeValues(location.state.poi.types);
-      setStreet(location.state.poi.address.street);
-      setNumber(location.state.poi.address.number);
+      /* setStreet(location.state.poi.address.street);
+      setNumber(location.state.poi.address.number); */
       location.state.poi.tagValues.forEach((tv) => {
         setTagValues((previous) => {
           if (tv.tag.isBooleanType)
@@ -256,6 +269,7 @@ export default function ProvaForm({ role }) {
                 <ClassicInput
                   name="name"
                   symbol={null}
+                  value={inputsString.name}
                   setValue={handleInputsString}
                   label="name"
                   type="text"
@@ -277,6 +291,7 @@ export default function ProvaForm({ role }) {
                     rows={3}
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-200"
                     placeholder="Descrizione ..."
+                    value={inputsString.description}
                     onChange={handleInputsString}
                   />
                 </div>
@@ -310,6 +325,7 @@ export default function ProvaForm({ role }) {
                     id="street"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="Via del punto"
+                    value={inputsString.street}
                     onChange={handleInputsString}
                   />
                 </div>
@@ -326,6 +342,7 @@ export default function ProvaForm({ role }) {
                     id="number"
                     className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
                     placeholder="numero della via"
+                    value={inputsString.number}
                     onChange={handleInputsString}
                   />
                 </div>
@@ -336,6 +353,7 @@ export default function ProvaForm({ role }) {
                   <ClassicInput
                     name="lat"
                     symbol={null}
+                    value={inputsString.lat}
                     setValue={handleInputsString}
                     label="lat"
                     type="number"
@@ -348,6 +366,7 @@ export default function ProvaForm({ role }) {
                   <ClassicInput
                     name="lon"
                     symbol={null}
+                    value={inputsString.lon}
                     setValue={handleInputsString}
                     label="lon"
                     type="number"
@@ -375,59 +394,64 @@ export default function ProvaForm({ role }) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* ticket input */}
                 <ClassicInput
-                    name="ticket"
-                    symbol="€"
-                    setValue={handleInputsString}
-                    label="ticket"
-                    type="number"
-                    placeholder="Prezzo"
-                    min="0.00"
-                  />
+                  name="ticket"
+                  symbol="€"
+                  value={inputsString.ticket}
+                  setValue={handleInputsString}
+                  label="ticket"
+                  type="number"
+                  placeholder="Prezzo"
+                  min="0.00"
+                />
 
                 {/* time to visit input */}
                 <ClassicInput
-                    name="timeToVisit"
-                    symbol={null}
-                    setValue={handleInputsString}
-                    label="timeToVisit"
-                    type="number"
-                    placeholder="Tempo Visita"
-                    min="0"
-                  />
+                  name="timeToVisit"
+                  symbol={null}
+                  value={inputsString.timeToVisit}
+                  setValue={handleInputsString}
+                  label="timeToVisit"
+                  type="number"
+                  placeholder="Tempo Visita"
+                  min="0"
+                />
               </div>
               <br />
               <p>Contatti</p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* email input */}
                 <ClassicInput
-                    name="emailContacts"
-                    symbol={null}
-                    setValue={handleInputsString}
-                    label="emailContacts"
-                    type="text"
-                    placeholder="example@domain.com"
-                    min=""
-                  />
+                  name="emailContacts"
+                  symbol={null}
+                  value={inputsString.emailContacts}
+                  setValue={handleInputsString}
+                  label="emailContacts"
+                  type="text"
+                  placeholder="example@domain.com"
+                  min=""
+                />
                 {/* cellphone input */}
                 <ClassicInput
-                    name="phoneContacts"
-                    symbol="+39"
-                    setValue={handleInputsString}
-                    label="phoneContacts"
-                    type="number"
-                    placeholder="0123456789"
-                    min=""
-                  />
+                  name="phoneContacts"
+                  symbol="+39"
+                  value={inputsString.phoneContacts}
+                  setValue={handleInputsString}
+                  label="phoneContacts"
+                  type="number"
+                  placeholder="0123456789"
+                  min=""
+                />
                 {/* fax input */}
                 <ClassicInput
-                    name="faxContacts"
-                    symbol="+39"
-                    setValue={handleInputsString}
-                    label="faxContacts"
-                    type="text"
-                    placeholder="fax"
-                    min=""
-                  />
+                  name="faxContacts"
+                  symbol="+39"
+                  value={inputsString.faxContacts}
+                  setValue={handleInputsString}
+                  label="faxContacts"
+                  type="text"
+                  placeholder="fax"
+                  min=""
+                />
               </div>
 
               {/* timepicker */}

@@ -1,11 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { PaperClipIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
 import ErrorPage from "../pages/ErrorPage";
 import { printArray } from "../utils/utilFunctions";
 import MapComponent from "./map-components/MapComponent";
+import { calculateCenter } from "../utils/map-utils/coordsManager";
 
 const initialData = {
   categories: [],
@@ -46,7 +46,7 @@ export default function DescriptionLists() {
   function renderMap() {
     return (
       itinerary.geoJson !== "" && (
-        <MapComponent data={JSON.parse(itinerary.geoJson)} zoom={12} />
+        <MapComponent data={JSON.parse(itinerary.geoJson)} zoom={12} center={calculateCenter(JSON.parse(itinerary.geoJson).metadata.query.coordinates[0])} />
       )
     );
   }

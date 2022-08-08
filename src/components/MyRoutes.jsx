@@ -17,7 +17,7 @@ export default function MyRoutes() {
   //TODO: completare
   const routes = useRoutes([
     { path: "/", element: <HomePage /> },
-    { path: "map", element: <MapComponent /> },
+    { path: "map", element: <MapComponent renderAll zoom={15} center={[43.13629626765269, 13.06711823898054]}/> },
     { path: "poi-form", element: <ProvaForm role={role} /> },
     { path: "notifies", element: <NotifiesComponent role={role} /> },
     { path: "login", element: <LoginForm /> },

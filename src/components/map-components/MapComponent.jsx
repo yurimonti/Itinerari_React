@@ -4,7 +4,7 @@ import { publicInstance } from "../../api/axiosInstance";
 import "./MapComponent.css";
 import MyMarker from "./MyMarker";
 
-export default function MapComponent({ data,zoom,renderAll }) {
+export default function MapComponent({ data, zoom, renderAll, center }) {
   const [pois, setPois] = useState([]);
 
   useEffect(() => {
@@ -32,22 +32,23 @@ export default function MapComponent({ data,zoom,renderAll }) {
   }
 
   function renderMarkers() {
-    return renderAll && pois.map((poi) => {
-      return <MyMarker key={poi.id} isPoiIcon={true} poi={poi} popup={true} />;
-    });
+    return (
+      renderAll &&
+      pois.map((poi) => {
+        return (
+          <MyMarker key={poi.id} isPoiIcon={true} poi={poi} popup={true} />
+        );
+      })
+    );
   }
 
-  function calculateCenter(coords){
+  /* function calculateCenter(coords){
     return [coords[1],coords[0]];
-  }
+  } */
 
   return (
     <div className="leaflet-container">
-      <MapContainer
-        center={calculateCenter(data?.metadata?.query?.coordinates[0])}
-        zoom={zoom}
-        scrollWheelZoom={true}
-      >
+      <MapContainer center={center} zoom={zoom} scrollWheelZoom={true}>
         <TileLayer
           attribution={"https://www.openstreetmap.org/copyright"}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

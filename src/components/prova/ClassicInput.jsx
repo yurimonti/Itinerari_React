@@ -1,10 +1,16 @@
-const ClassicInput = ({name,symbol, setValue, label, type, placeholder, min}) => {
+const ClassicInput = ({
+  name,
+  symbol,
+  value,
+  setValue,
+  label,
+  type,
+  placeholder,
+  min,
+}) => {
   return (
     <>
-      <label
-        htmlFor={name}
-        className="block text-sm font-medium text-gray-700"
-      >
+      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
         {label}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm">
@@ -16,6 +22,7 @@ const ClassicInput = ({name,symbol, setValue, label, type, placeholder, min}) =>
           </div>
         )}
         <input
+          value={value}
           onChange={setValue}
           type={type}
           min={min}
@@ -29,4 +36,4 @@ const ClassicInput = ({name,symbol, setValue, label, type, placeholder, min}) =>
   );
 };
 
-  export default ClassicInput;
+export default ClassicInput;

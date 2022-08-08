@@ -7,4 +7,8 @@ function reverseLatLng(coords){
     return result;
 }
 
-module.exports = {reverseLatLng}
+function calculateCenter(coords){
+    return [coords[1],coords[0]];
+  }
+
+module.exports = {reverseLatLng,calculateCenter}
