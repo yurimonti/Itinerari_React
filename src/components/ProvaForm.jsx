@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { publicInstance } from "../../api/axiosInstance";
-import InputSelect from "../InputSelect";
+import { publicInstance } from "../api/axiosInstance";
+import InputSelect from "./InputSelect";
 import ProvaCategories from "./ProvaCategories";
-import OraProva from "../OraProva";
-import { useMyContext } from "../../utils/MyProvider";
+import OraProva from "./OraProva";
 import { useLocation } from "react-router-dom";
 import ClassicInput from "./ClassicInput";
 
@@ -141,7 +140,7 @@ export default function ProvaForm({ role }) {
       phone: inputsString.phoneContacts.toString(),
       email: inputsString.emailContacts,
       fax: inputsString.faxContacts,
-      timeToVisit: inputsString.timeTovisit.toString(),
+      timeToVisit: inputsString.timeToVisit.toString(),
       price: inputsString.ticket.toString(),
       poi: null,
       username: "an_user",

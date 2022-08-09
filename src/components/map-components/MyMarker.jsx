@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import PoiFormComponent from "../ente-components/PoiFormComponent";
 import { useState } from "react";
 
-const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
+const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -20,7 +20,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
     address: poi?.address?.street + " " + poi?.address?.number,
     email: poi?.contact?.email,
     fax: poi?.contact?.fax,
-    phone: poi?.contact?.cellNumber
+    phone: poi?.contact?.cellNumber,
   };
 
   function renderMoreInfo() {
@@ -51,7 +51,9 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
       return (
         <p key={tv.tag.name}>
           {tv.tag.name}:{" "}
-          {tv.tag.isBooleanType ? tv.booleanValue.toString() : tv.stringValue.toString()}
+          {tv.tag.isBooleanType
+            ? tv?.booleanValue?.toString()
+            : tv?.stringValue?.toString()}
         </p>
       );
     });
@@ -84,16 +86,12 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon }) => {
         >
           INFO
         </button>
-        {open && (
-          <button
-            onClick={(e) => {
-              navigate("/poi-form", { state: { poi: poi } });
-            }}
-            className="border bg-sky-500 block float-right"
-          >
-            modifica
-          </button>
-        )}
+        <button
+          onClick={()=>{popUpEffect.action(poi)}}
+          className="border bg-sky-500 block float-right"
+        >
+          {popUpEffect?.name}
+        </button>
       </>
     );
   }

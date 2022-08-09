@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import "./Material.css";
 import MyRoutes from "./components/MyRoutes";
 import { MyProvider } from "./utils/MyProvider";
+import ProvaItinerario from "./components/prova/ProvaItinerario";
 
 function App() {
   return (

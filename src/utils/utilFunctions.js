@@ -12,4 +12,9 @@ function printArray(array){
     return result;
 }
 
-module.exports = {printArray};
+function mToKmRounded(metres){
+    let km = metres/1000;
+    return km - km%0.001;
+  }
+
+module.exports = {printArray,mToKmRounded};

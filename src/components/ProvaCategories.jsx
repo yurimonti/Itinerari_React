@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import CheckBoxComponent from "../CheckBoxComponent";
-import { publicInstance } from "../../api/axiosInstance";
-import InputSelect from "../InputSelect";
+import CheckBoxComponent from "./CheckBoxComponent";
+import { publicInstance } from "../api/axiosInstance";
+import InputSelect from "./InputSelect";
 
 export default function ProvaCategories({
   tagValues,

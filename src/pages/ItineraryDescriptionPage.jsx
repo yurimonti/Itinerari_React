@@ -2,12 +2,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
-import ErrorPage from "../pages/ErrorPage";
-import { printArray } from "../utils/utilFunctions";
-import MapComponent from "./map-components/MapComponent";
+import ErrorPage from "./ErrorPage";
+import { printArray,mToKmRounded } from "../utils/utilFunctions";
+import MapComponent from "../components/map-components/MapComponent";
 import { calculateCenter } from "../utils/map-utils/coordsManager";
 
 const initialData = {
+  id: 0,
+  name:"",
+  description:"",
   categories: [],
   timeToVisit: 0.0,
   points: [],
@@ -30,8 +33,8 @@ export default function DescriptionLists() {
         params: { id: id },
       })
       .then((res) => {
-        let data = res.data;
-        data === initialData ? setError(true) : setItinerary(data);
+        const data = res.data;
+        data.geoJson === "" ? setError(true) : setItinerary(data);
       })
       .catch((err) => console.log(err));
   }
@@ -39,14 +42,19 @@ export default function DescriptionLists() {
     getDataById();
     return () => {
       setItinerary(initialData);
-      setError(false);
     };
   }, [id]);
 
   function renderMap() {
     return (
       itinerary.geoJson !== "" && (
-        <MapComponent data={JSON.parse(itinerary.geoJson)} zoom={12} center={calculateCenter(JSON.parse(itinerary.geoJson).metadata.query.coordinates[0])} />
+        <MapComponent
+          data={JSON.parse(itinerary.geoJson)}
+          zoom={12}
+          center={calculateCenter(
+            JSON.parse(itinerary.geoJson).metadata.query.coordinates[0]
+          )}
+        />
       )
     );
   }
@@ -60,38 +68,56 @@ export default function DescriptionLists() {
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Nome</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              Inserire Nome
+              {itinerary?.name}
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Descrizione</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {itinerary?.description}
+            </dd>
+          </div>
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Città</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {printArray(itinerary.cities.map((c) => c.name))}
             </dd>
           </div>
-          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">
               Punti di visita
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {printArray(itinerary.points.map((p) => p.name))}
+              {itinerary.points.map((point) => {
+                return <li> {point.name}</li>;
+              })}
             </dd>
           </div>
-          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">
               Tempo di visita totale
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {Math.round(itinerary.timeToVisit / 60)} minuti
+              {Math.round(itinerary.timeToVisit / 60)} minuti (automobile)
+            </dd>
+          </div>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              Km percorrenza totale
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {itinerary.geoJson!=="" && mToKmRounded(JSON.parse(itinerary.geoJson).features[0].properties.summary.distance)} km
             </dd>
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Categorie</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {printArray(itinerary.categories.map((c) => c.name))}
+            {itinerary.categories.map((category) => {
+              return <li> {category.name}</li>;
+            })}
             </dd>
           </div>
-          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Mappa</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {renderMap()}

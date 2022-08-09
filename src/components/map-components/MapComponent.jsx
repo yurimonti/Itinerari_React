@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, GeoJSON } from "react-leaflet";
+import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../../api/axiosInstance";
 import "./MapComponent.css";
 import MyMarker from "./MyMarker";
 
-export default function MapComponent({ data, zoom, renderAll, center }) {
+export default function MapComponent({ zoom, renderAll, center }) {
   const [pois, setPois] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fillPois();
@@ -13,12 +15,6 @@ export default function MapComponent({ data, zoom, renderAll, center }) {
       setPois([]);
     };
   }, []);
-
-  function provaRenderMarker() {
-    return data?.metadata?.query?.coordinates.map((c) => {
-      return <Marker key={c} position={[c[1], c[0]]} />;
-    });
-  }
 
   function fillPois() {
     publicInstance
@@ -36,7 +32,9 @@ export default function MapComponent({ data, zoom, renderAll, center }) {
       renderAll &&
       pois.map((poi) => {
         return (
-          <MyMarker key={poi.id} isPoiIcon={true} poi={poi} popup={true} />
+          <MyMarker popUpEffect={{name:"modifica",action:() => {
+            navigate("/poi-form", { state: { poi: poi } });
+          }}} key={poi.id} isPoiIcon={true} poi={poi} popup={true} />
         );
       })
     );
@@ -53,8 +51,6 @@ export default function MapComponent({ data, zoom, renderAll, center }) {
           attribution={"https://www.openstreetmap.org/copyright"}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <GeoJSON data={data} />
-        {provaRenderMarker()}
         {renderMarkers()}
       </MapContainer>
     </div>
