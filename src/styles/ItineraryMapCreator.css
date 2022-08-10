@@ -1,13 +1,14 @@
-.leaflet-container {
-    margin-left:2vw;
-    margin-right:2vw;
+#itineraryMap .leaflet-container {
+    margin-left: 2vw;
+    margin-right: 2vw;
     height: 60vh;
 }
 
-.leaflet-touch{
+#itineraryMap .leaflet-touch {
     margin: 0;
 }
-.leaflet-map-pane,
+
+#itineraryMap .leaflet-map-pane,
 .leaflet-tile,
 .leaflet-marker-icon,
 .leaflet-marker-shadow,
@@ -20,16 +21,16 @@
 .leaflet-overlay-pane svg,
 .leaflet-zoom-box,
 .leaflet-image-layer,
-.leaflet-layer{
+.leaflet-layer {
     position: absolute;
     left: 0;
-	top: 0;
+    top: 0;
     z-index: 1;
 }
 
-.leaflet-top,
+#itineraryMap .leaflet-top,
 .leaflet-bottom {
-	position: absolute;
-	z-index: 9;
-	pointer-events: none;
-	}
+    position: absolute;
+    z-index: 9;
+    pointer-events: none;
+}

@@ -89,7 +89,7 @@ export default function DescriptionLists() {
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {itinerary.points.map((point) => {
-                return <li> {point.name}</li>;
+                return <li> {point.poi.name}</li>;
               })}
             </dd>
           </div>

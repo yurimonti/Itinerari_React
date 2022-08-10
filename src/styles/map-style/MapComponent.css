@@ -1,4 +1,4 @@
-.leaflet-container {
+#map .leaflet-container {
     /* height: 40rem; */
     /* width: 100vw; */
     margin:0;

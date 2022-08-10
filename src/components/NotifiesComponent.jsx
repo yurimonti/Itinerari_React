@@ -151,96 +151,98 @@ export default function NotifiesComponent({ role }) {
           Richieste
         </h2>
         {/* card container */}
-        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {/* card content */}
-          {requests.map((requests) => (
-            <button
-              key={requests.id}
-              onClick={() => {
-                setOpen(true);
-              }}
+        {requests.length ===0 ? <h3 className="flex justify-center m-auto">Nessuna Richiesta</h3> : (<div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        {/* card content */}
+        {requests.map((requests) => (
+          <button
+            key={requests.id}
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            <div
+              /* className="group relative w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none" */
+              className={
+                getRequestInfo(requests).color +
+                " " +
+                "group relative w-full min-h-80 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75"
+              }
             >
-              <div
-                /* className="group relative w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none" */
-                className={
-                  getRequestInfo(requests).color +
-                  " " +
-                  "group relative w-full min-h-80 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75"
-                }
-              >
-                <h3 className="text-center mt-2">
-                  {getRequestInfo(requests).type.toUpperCase()}
-                </h3>
-                <div className="h-5 border-b-2 border-black" />
+              <h3 className="text-center mt-2">
+                {getRequestInfo(requests).type.toUpperCase()}
+              </h3>
+              <div className="h-5 border-b-2 border-black" />
 
-                {/* <div className="mt-4 flex justify-center"> */}
-                <div className="mt-4 justify-center">
-                  {/* nome aggiunta */}
-                  <div className="m-2">
-                    <h2 className="text-md text-black-700 text-center">
-                      {/* <span aria-hidden="true" className="absolute inset-0" /> */}
-                      {requests.name}
-                    </h2>
-                    {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
-                  </div>
-                  <div className="m-2">
-                    <h2 className="text-sm text-gray-700 text-center">
-                      {/* <span aria-hidden="true" className="absolute inset-0" /> */}
-                      {requests.description.slice(0, 32) + "..."}
-                    </h2>
-                    {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
-                  </div>
-                  {/* <p className="text-sm font-medium text-gray-900">
-                  {requests.coordinate.lat + " " + requests.coordinate.lon}
-                </p> */}
-                  <div className="m-2">
-                    <h2 className="text-md text-black-700 text-center">
-                      {"lat: " +
-                        requests.coordinate.lat +
-                        " lng: " +
-                        requests.coordinate.lon}
-                    </h2>
-                    {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
-                  </div>
+              {/* <div className="mt-4 flex justify-center"> */}
+              <div className="mt-4 justify-center">
+                {/* nome aggiunta */}
+                <div className="m-2">
+                  <h2 className="text-md text-black-700 text-center">
+                    {/* <span aria-hidden="true" className="absolute inset-0" /> */}
+                    {requests.name}
+                  </h2>
+                  {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
                 </div>
-                <div className="text-right justify-end">
-                  <h3 className="text-sm text-gray-700">
-                    da {requests.username}
-                  </h3>
+                <div className="m-2">
+                  <h2 className="text-sm text-gray-700 text-center">
+                    {/* <span aria-hidden="true" className="absolute inset-0" /> */}
+                    {requests.description.slice(0, 32) + "..."}
+                  </h2>
+                  {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
+                </div>
+                {/* <p className="text-sm font-medium text-gray-900">
+                {requests.coordinate.lat + " " + requests.coordinate.lon}
+              </p> */}
+                <div className="m-2">
+                  <h2 className="text-md text-black-700 text-center">
+                    {"lat: " +
+                      requests.coordinate.lat +
+                      " lng: " +
+                      requests.coordinate.lon}
+                  </h2>
+                  {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
                 </div>
               </div>
-              <ModalComponent
-                role={role}
-                open={open}
-                onClose={() => {
-                  setOpen(false);
-                }}
-                deny={() => {
-                  setRequestTo(false, requests.id, "cancellata".toUpperCase());
-                  setOpen(false);
-                }}
-                accept={() => {
-                  setRequestTo(true, requests.id, "accettata".toUpperCase());
-                  setOpen(false);
-                }}
-                modify={() => {
-                  setOpen(false);
-                  navigate("/poi-form",{ state: { poi: requests } });
-                }}
-                title={getRequestInfo(requests).type.toUpperCase()}
-              >
-                <p>{requests?.name}</p>
-                <p>{requests?.description}</p>
-                <p>{printTypes(requests)}</p>
-                <p>{"lat: " + requests?.coordinate?.lat}</p>
-                <p>{"lng: " + requests?.coordinate?.lon}</p>
-                {renderhours(requests)}
-                {renderTags(requests)}
-                <p>{"Da :" + requests?.username}</p>
-              </ModalComponent>
-            </button>
-          ))}
-        </div>
+              <div className="text-right justify-end">
+                <h3 className="text-sm text-gray-700">
+                  da {requests.username}
+                </h3>
+              </div>
+            </div>
+            <ModalComponent
+              role={role}
+              open={open}
+              onClose={() => {
+                setOpen(false);
+              }}
+              deny={() => {
+                setRequestTo(false, requests.id, "cancellata".toUpperCase());
+                setOpen(false);
+              }}
+              accept={() => {
+                setRequestTo(true, requests.id, "accettata".toUpperCase());
+                setOpen(false);
+              }}
+              modify={() => {
+                setOpen(false);
+                navigate("/poi-form",{ state: { poi: requests } });
+              }}
+              title={getRequestInfo(requests).type.toUpperCase()}
+            >
+              <p>{requests?.name}</p>
+              <p>{requests?.description}</p>
+              <p>{printTypes(requests)}</p>
+              <p>{"lat: " + requests?.coordinate?.lat}</p>
+              <p>{"lng: " + requests?.coordinate?.lon}</p>
+              {renderhours(requests)}
+              {renderTags(requests)}
+              <p>{"Da :" + requests?.username}</p>
+            </ModalComponent>
+          </button>
+        ))}
+      </div>)}
+        
+        
       </div>
     </div>
   );

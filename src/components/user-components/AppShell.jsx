@@ -29,29 +29,39 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+const userRoutes = [
+  { name: "Home", href: "/", current: true },
+  { name: "Map", href: "/map", current: false },
+  { name: "Add Poi", href: "/poi-form", current: false },
+  { name: "Notifies", href: "/notifies", current: false },
+  { name: "Itineraries", href: "/itineraries", current: false },
+];
+
+const enteRoutes = [
+  { name: "Home", href: "/", current: true },
+  { name: "Map", href: "/map", current: false },
+  { name: "Add Poi", href: "/poi-form", current: false },
+  { name: "Notifies", href: "/notifies", current: false },
+  { name: "Itinerary", href: "/itinerary", current: false },
+  { name: "Itineraries", href: "/itineraries", current: false },
+];
+
 export default function AppShell({ children }) {
   const role = useMyContext();
   const setRole = useUpdateMyContext();
   const roles = ["user", "ente"];
   const navigate = useNavigate();
   //TODO: cambiare il href e modificare le rotte ed elementi
-  const [navigation, setNavigation] = useState(
-    role === "user"
-      ? [
-          { name: "Home", href: "/", current: true },
-          { name: "Map", href: "/map", current: false },
-          { name: "Add Poi", href: "/poi-form", current: false },
-          { name: "Itinerary", href: "/itinerary", current: false },
-          { name: "Itineraries", href: "/itineraries", current: false }
-        ]
-      : [
-          { name: "Home", href: "/", current: true },
-          { name: "Map", href: "/map", current: false },
-          { name: "Add Poi", href: "/poi-form", current: false },
-          { name: "Notifies", href: "/notifies", current: false },
-          { name: "Itineraries", href: "/itineraries", current: false }
-        ]
-  );
+  const [navigation, setNavigation] = useState([]);
+  const [user, setUser] = useState({});
+  
+  
+  useEffect(() => {
+    role === "user" ? setNavigation(userRoutes) : setNavigation(enteRoutes);
+    return () => {
+      setNavigation([]);
+    };
+  }, [role]);
 
   /*   const [navigation, setNavigation] = useState([
     { name: "Home", href: "#", current: true },
@@ -73,9 +83,6 @@ export default function AppShell({ children }) {
     { name: "Sign out", href: "#" },
     { name: "Dashboard", href: "#" },
   ]); */
-
-  const [user, setUser] = useState({});
-
 
   function getCurrentNav() {
     return navigation.filter((nav) => {
@@ -181,8 +188,15 @@ export default function AppShell({ children }) {
                         <div>
                           {user.name === undefined ? (
                             <>
-                              <label className="text-white mr-2" for="roles">Choose a role:</label>
-                              <select value={role} onChange={(e)=> setRole(e.target.value)} name="roles" id="roles">
+                              <label className="text-white mr-2" for="roles">
+                                Choose a role:
+                              </label>
+                              <select
+                                value={role}
+                                onChange={(e) => setRole(e.target.value)}
+                                name="roles"
+                                id="roles"
+                              >
                                 <option value={roles[0]}>User</option>
                                 <option value={roles[1]}>Ente</option>
                               </select>

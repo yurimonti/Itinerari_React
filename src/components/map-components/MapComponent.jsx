@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, GeoJSON } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../../api/axiosInstance";
-import "../../styles/MapComponent.css";
+import "../../styles/map-style/MapComponent.css";
 import MyMarker from "./MyMarker";
 
 export default function MapComponent({ data,zoom, renderAll, center }) {
@@ -61,7 +61,7 @@ export default function MapComponent({ data,zoom, renderAll, center }) {
   } */
 
   return (
-    <div className="leaflet-container">
+    <div id="map" className="leaflet-container">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={true}>
         <TileLayer
           attribution={"https://www.openstreetmap.org/copyright"}

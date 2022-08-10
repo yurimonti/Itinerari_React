@@ -41,7 +41,7 @@ function ItineraryMapCreator({ zoom, renderAll, center,handleClick }) {
     }
 
     return (
-      <div className="leaflet-container">
+      <div id="itineraryMap" className="leaflet-container">
         <MapContainer center={center} zoom={zoom} scrollWheelZoom={true}>
           <TileLayer
             attribution={"https://www.openstreetmap.org/copyright"}
