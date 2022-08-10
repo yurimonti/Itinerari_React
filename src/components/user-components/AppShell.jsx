@@ -41,7 +41,7 @@ export default function AppShell({ children }) {
           { name: "Home", href: "/", current: true },
           { name: "Map", href: "/map", current: false },
           { name: "Add Poi", href: "/poi-form", current: false },
-          { name: "Notifies", href: "/notifies", current: false },
+          { name: "Itinerary", href: "/itinerary", current: false },
           { name: "Itineraries", href: "/itineraries", current: false }
         ]
       : [

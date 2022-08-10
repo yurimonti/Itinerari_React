@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, GeoJSON } from "react-leaflet";
 import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../../api/axiosInstance";
-import "./MapComponent.css";
+import "../../styles/MapComponent.css";
 import MyMarker from "./MyMarker";
 
-export default function MapComponent({ zoom, renderAll, center }) {
+export default function MapComponent({ data,zoom, renderAll, center }) {
   const [pois, setPois] = useState([]);
   const navigate = useNavigate();
 
@@ -27,6 +27,12 @@ export default function MapComponent({ zoom, renderAll, center }) {
       });
   }
 
+  function renderMarkerData() {
+    return data?.metadata?.query?.coordinates.map((c) => {
+      return <Marker key={c} position={[c[1], c[0]]} />;
+    });
+  }
+
   function renderMarkers() {
     return (
       renderAll &&
@@ -40,6 +46,16 @@ export default function MapComponent({ zoom, renderAll, center }) {
     );
   }
 
+  function renderData(){
+    if(data){
+      return (
+        <>
+        <GeoJSON data={data}/>
+        {renderMarkerData()}</>
+      );
+    }
+  }
+
   /* function calculateCenter(coords){
     return [coords[1],coords[0]];
   } */
@@ -51,6 +67,7 @@ export default function MapComponent({ zoom, renderAll, center }) {
           attribution={"https://www.openstreetmap.org/copyright"}
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
+        {renderData()}
         {renderMarkers()}
       </MapContainer>
     </div>

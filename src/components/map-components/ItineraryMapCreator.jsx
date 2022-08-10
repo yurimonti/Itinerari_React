@@ -1,14 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { publicInstance } from "../../api/axiosInstance";
 import { useNavigate } from 'react-router-dom';
-import "./ItineraryMapCreator.css";
+import "../../styles/ItineraryMapCreator.css";
 import MyMarker from "./MyMarker";
 
 function ItineraryMapCreator({ zoom, renderAll, center,handleClick }) {
     const [pois, setPois] = useState([]);
-    const navigate = useNavigate();
   
     useEffect(() => {
       fillPois();
