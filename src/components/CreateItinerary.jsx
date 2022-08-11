@@ -6,7 +6,7 @@ import ModalComponent from "./ente-components/ModalComponent";
 
 const initialInputs = { name: "", description: "" };
 
-export default function CreateItinerary() {
+export default function CreateItinerary({role}) {
   const [addedPois, setAddedPois] = useState([]);
   const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState(initialInputs);
@@ -17,14 +17,14 @@ export default function CreateItinerary() {
     return () => {
       setInputs(initialInputs);
     };
-  }, []);
+  }, [role]);
 
   //---------------------------------Apis----------------------------
 
   function createNewItinerary() {
     createGeoJson().then((data) => {
       publicInstance.post(
-        "/api/ente/itinerary",
+        "/api/"+role+"/itinerary",
         {
           poiIds: addedPois.map((p) => p.id.toString()),
           geojson: JSON.stringify(data),
@@ -33,9 +33,9 @@ export default function CreateItinerary() {
           description: inputs.description,
         },
         {
-          params: { username: "ente_camerino" },
+          params: { username: role ==="ente" ? "ente_camerino" :"an_user" },
         }
-      ).then(res => console.log(res)).catch(err => console.log(err));
+      ).then(res => console.log(res.status)).catch(err => console.log(err));
     }).catch(err => console.log(err));
   }
 

@@ -11,23 +11,56 @@ import ItinerariesPage from "../pages/ItinerariesPage";
 import ItineraryDescriptionPage from "../pages/ItineraryDescriptionPage";
 import ErrorPage from "../pages/ErrorPage";
 import CreateItinerary from "./CreateItinerary";
+import PoiDescriptionPage from "../pages/PoiDescriptionPage";
 
 export default function MyRoutes() {
   const role = useMyContext();
   //FIXME: rivedere perche non funziona
   //TODO: completare
-  const routes = useRoutes([
-    { path: "/", element: <HomePage /> },
-    { path: "map", element: <MapComponent renderAll zoom={15} center={[43.13629626765269, 13.06711823898054]}/> },
-    { path: "poi-form", element: <ProvaForm role={role} /> },
-    { path: "notifies", element: <NotifiesComponent role={role} /> },
-    { path: "login", element: <LoginForm /> },
-    { path:"itinerary",element:<CreateItinerary />},
-    { path: "itineraries",element: <ItinerariesPage role={"ente"} />},
-    { path:'/itineraries/:id',element:<ItineraryDescriptionPage />}, 
-    { path:'*',element:<ErrorPage />},
-    role === "ente" && { path: "itinerary", element: <MapComponent /> },
-  ]);
+  const routes =
+    role === "user"
+      ? useRoutes([
+          { path: "/", element: <HomePage /> },
+          {
+            path: "map",
+            element: (
+              <MapComponent
+                renderAll
+                zoom={15}
+                center={[43.13629626765269, 13.06711823898054]}
+              />
+            ),
+          },
+          { path: "/pois/:id", element: <PoiDescriptionPage /> },
+          { path: "poi-form", element: <ProvaForm role="user" /> },
+          { path: "notifies", element: <NotifiesComponent role="user" /> },
+          { path: "login", element: <LoginForm /> },
+          { path: "itinerary", element: <CreateItinerary role="user"/> },
+          { path: "itineraries", element: <ItinerariesPage role="user" /> },
+          { path: "/itineraries/:id", element: <ItineraryDescriptionPage /> },
+          { path: "*", element: <ErrorPage /> },
+        ])
+      : useRoutes([
+          { path: "/", element: <HomePage /> },
+          {
+            path: "map",
+            element: (
+              <MapComponent
+                renderAll
+                zoom={15}
+                center={[43.13629626765269, 13.06711823898054]}
+              />
+            ),
+          },
+          { path: "/pois/:id", element: <PoiDescriptionPage /> },
+          { path: "poi-form", element: <ProvaForm role="ente" /> },
+          { path: "notifies", element: <NotifiesComponent role="ente" /> },
+          { path: "login", element: <LoginForm /> },
+          { path: "itinerary", element: <CreateItinerary role="ente"/> },
+          { path: "itineraries", element: <ItinerariesPage role="ente" /> },
+          { path: "/itineraries/:id", element: <ItineraryDescriptionPage /> },
+          { path: "*", element: <ErrorPage /> },
+        ]);
 
   return routes;
 }

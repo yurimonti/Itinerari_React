@@ -5,18 +5,22 @@ import { printArray, mToKmRounded } from "../utils/utilFunctions.js";
 
 const ItinerariesComponent = ({ role }) => {
   const [itineraries, setItineraries] = useState([]);
+  const [selectedCity, setSelectedCity] = useState({ id: 0, name: "" });
+  const [cities, setCities] = useState([]);
   const navigate = useNavigate();
+  const params = (owned)=>{
+    if(role === "user"){
+      if(owned) return { username: "an_user"}
+      else return { username: "an_user", cityId: selectedCity.id }
+    } else return { username: "ente_camerino" };
+  }
   //const location = useLocation();
 
-  function getItineraries() {
-    let baseUrl = "/api/" + role + "/itinerary";
-    let params =
-      role === "user"
-        ? { username: "an_user", cityId: 107 /*location?.state?.cityId*/ }
-        : { username: "ente_camerino" };
+  function getItineraries(owned) {
+    let baseUrl = (role==="user" && owned)? "/api/" + role + "/itinerary/owner" :"/api/" + role + "/itinerary";
     publicInstance
       .get(baseUrl, {
-        params: params,
+        params: params(owned),
       })
       .then((res) => {
         setItineraries(res.data);
@@ -24,12 +28,20 @@ const ItinerariesComponent = ({ role }) => {
       .catch((err) => console.log(err));
   }
 
+  function fetchCities() {
+    publicInstance
+      .get("/api/city/all")
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  }
+
   useEffect(() => {
-    getItineraries();
+    getItineraries(true);
+    if (role === "user") fetchCities();
     return () => {
       setItineraries([]);
     };
-  }, []);
+  }, [role]);
 
   return (
     <div className="bg-white">
@@ -62,7 +74,7 @@ const ItinerariesComponent = ({ role }) => {
                     <p className="mt-1 text-sm text-gray-500">
                       {/* FIXME: vedere perche non funziona */}
                       {itinerary.cities.map((c) => {
-                        return <li>{c.name}</li>;
+                        return <li key={c.name}>{c.name}</li>;
                       })}
                     </p>
                   </h3>
@@ -71,7 +83,7 @@ const ItinerariesComponent = ({ role }) => {
                     <p className="mt-1 text-sm text-gray-500">
                       {/* FIXME: vedere perche non funziona */}
                       {itinerary.categories.map((c) => {
-                        return <li>{c.name}</li>;
+                        return <li key={c.name}>{c.name}</li>;
                       })}
                     </p>
                   </h3>

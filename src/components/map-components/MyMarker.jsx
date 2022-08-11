@@ -1,14 +1,11 @@
 import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
-import ModifyModalComponent from "../ModifyModalComponent";
 import { useNavigate } from "react-router-dom";
-import PoiFormComponent from "../ente-components/PoiFormComponent";
-import { useState } from "react";
+
 
 const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
   const info = {
     title: poi.name,
@@ -23,40 +20,12 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     phone: poi?.contact?.cellNumber,
   };
 
-  function renderMoreInfo() {
-    return (
-      <>
-        <h4>{"descrizione: " + info.subtitle}</h4>
-        <p>
-          coordinate: {poi.coordinate.lat} , {poi.coordinate.lon}
-        </p>
-        <p>email: {info.email}</p>
-        <p>phone: {info.phone}</p>
-        <p>fax: {info.fax}</p>
-        {renderTags(poi)}
-      </>
-    );
-  }
-
   function printTypes(poi) {
     let result = "";
     poi.types.forEach((t) => {
       result += t.name + " ";
     });
     return result;
-  }
-
-  function renderTags(poi) {
-    return poi.tagValues.map((tv) => {
-      return (
-        <p key={tv.tag.name}>
-          {tv.tag.name}:{" "}
-          {tv.tag.isBooleanType
-            ? tv?.booleanValue?.toString()
-            : tv?.stringValue?.toString()}
-        </p>
-      );
-    });
   }
 
   function renderInfoOfAPoi(poi) {
@@ -72,15 +41,10 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
           )}
           <h4>{"tempo visita: " + info.visit}minuti</h4>
           <h4>{info.isOpen ? "APERTO" : "CHIUSO"}</h4>
-          {open && renderMoreInfo()}
         </div>
-        {/*TODO: mapre il modal per info estese*/}
         <button
           onClick={() => {
-            setOpen((prev) => {
-              prev = !prev;
-              return prev;
-            });
+            navigate("/pois/" + poi.id);
           }}
           className="border bg-red-400"
         >

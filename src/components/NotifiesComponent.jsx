@@ -87,7 +87,7 @@ export default function NotifiesComponent({ role }) {
   }, [clicked]);
 
   function printHours(day, hours) {
-    if (hours.length === 0) return day + " - chiuso";
+    if (hours.length !== 2 && hours.length !== 4 ) return day + " - chiuso";
     if (hours.length === 2) return day + ": " + hours[0] + " - " + hours[1];
     if (hours.length === 4)
       return (

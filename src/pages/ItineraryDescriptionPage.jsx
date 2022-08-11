@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
 import ErrorPage from "./ErrorPage";
-import { printArray,mToKmRounded } from "../utils/utilFunctions";
+import { printArray, mToKmRounded } from "../utils/utilFunctions";
 import MapComponent from "../components/map-components/MapComponent";
 import { calculateCenter } from "../utils/map-utils/coordsManager";
+import InstructionsComponent from "../components/InstructionsComponent";
 
 const initialData = {
   id: 0,
-  name:"",
-  description:"",
+  name: "",
+  description: "",
   categories: [],
   timeToVisit: 0.0,
   points: [],
@@ -50,7 +51,7 @@ export default function DescriptionLists() {
       itinerary.geoJson !== "" && (
         <MapComponent
           data={JSON.parse(itinerary.geoJson)}
-          zoom={12}
+          zoom={13}
           center={calculateCenter(
             JSON.parse(itinerary.geoJson).metadata.query.coordinates[0]
           )}
@@ -89,7 +90,7 @@ export default function DescriptionLists() {
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {itinerary.points.map((point) => {
-                return <li> {point.poi.name}</li>;
+                return <li key={point.poi.id}> {point.poi.name}</li>;
               })}
             </dd>
           </div>
@@ -106,18 +107,29 @@ export default function DescriptionLists() {
               Km percorrenza totale
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {itinerary.geoJson!=="" && mToKmRounded(JSON.parse(itinerary.geoJson).features[0].properties.summary.distance)} km
+              {itinerary.geoJson !== "" &&
+                mToKmRounded(
+                  JSON.parse(itinerary.geoJson).features[0].properties.summary
+                    .distance
+                )}{" "}
+              km
             </dd>
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Categorie</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {itinerary.categories.map((category) => {
-              return <li> {category.name}</li>;
-            })}
+              {itinerary.categories.map((category) => {
+                return <li key={category.name}> {category.name}</li>;
+              })}
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Istruzioni</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            {itinerary.geoJson !== "" && <InstructionsComponent geojson={JSON.parse(itinerary.geoJson)} />}
+            </dd>
+          </div>
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Mappa</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {renderMap()}
