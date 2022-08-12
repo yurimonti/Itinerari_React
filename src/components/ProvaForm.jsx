@@ -100,7 +100,7 @@ export default function ProvaForm({ role }) {
       phone: inputsString.phoneContacts.toString(),
       email: inputsString.emailContacts,
       fax: inputsString.faxContacts,
-      timeToVisit: inputsString.timeTovisit.toString(),
+      timeToVisit: inputsString.timeToVisit.toString(),
       price: inputsString.ticket.toString(),
       username: null,
     };
@@ -174,7 +174,7 @@ export default function ProvaForm({ role }) {
         lon: location.state.poi.coordinate.lon,
         street: location.state.poi.address.street,
         number: location.state.poi.address.number,
-        ticket: location.state.poi.ticket,
+        ticket: location.state.poi.ticketPrice,
         timeToVisit: location.state.poi.timeToVisit,
         emailContacts: location.state.poi.contact.email,
         phoneContacts: location.state.poi.contact.cellNumber,
