@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { getDirections } from "../utils/map-utils/directionService";
+import { getDirections, profiles } from "../utils/map-utils/directionService";
 import ItineraryMapCreator from "./map-components/ItineraryMapCreator";
 import { publicInstance } from "../api/axiosInstance";
 import ModalComponent from "./ente-components/ModalComponent";
+import { reverseLatLng } from "../utils/map-utils/coordsManager";
 
 const initialInputs = { name: "", description: "" };
 
-export default function CreateItinerary({role}) {
+export default function CreateItinerary({ role }) {
   const [addedPois, setAddedPois] = useState([]);
   const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState(initialInputs);
@@ -22,21 +23,32 @@ export default function CreateItinerary({role}) {
   //---------------------------------Apis----------------------------
 
   function createNewItinerary() {
-    createGeoJson().then((data) => {
-      publicInstance.post(
-        "/api/"+role+"/itinerary",
-        {
-          poiIds: addedPois.map((p) => p.id.toString()),
-          geojson: JSON.stringify(data),
-          travelTime: data.features[0].properties.summary.duration.toString(),
-          name: inputs.name,
-          description: inputs.description,
-        },
-        {
-          params: { username: role ==="ente" ? "ente_camerino" :"an_user" },
-        }
-      ).then(res => console.log(res.status)).catch(err => console.log(err));
-    }).catch(err => console.log(err));
+    createGeoJsonList()
+      .then((data) => {
+        const stringGeoJson = data.map((geo) => JSON.stringify(geo));
+        return stringGeoJson;
+      })
+      .then((data) => {
+        console.log(data);
+        publicInstance
+          .post(
+            "/api/" + role + "/itinerary",
+            {
+              poiIds: addedPois.map((p) => p.id.toString()),
+              geoJsonList: data,
+              name: inputs.name,
+              description: inputs.description,
+            },
+            {
+              params: {
+                username: role === "ente" ? "ente_camerino" : "an_user",
+              },
+            }
+          )
+          .then((res) => console.log(res.data))
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   }
 
   //----------------------------handle modal inputs---------------------------
@@ -45,7 +57,6 @@ export default function CreateItinerary({role}) {
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
-    console.log(inputs);
   }
 
   //---------------------------------some functions-------------------------
@@ -54,7 +65,6 @@ export default function CreateItinerary({role}) {
     setAddedPois((prev) => {
       return [...prev, poi];
     });
-    console.log(addedPois);
   }
 
   function deletePoiFromAdded(poi) {
@@ -98,12 +108,18 @@ export default function CreateItinerary({role}) {
 
   //------------------------------------------create GeoJson-----------------------------
 
-  async function createGeoJson() {
+  async function createGeoJsonList() {
     let coords = addedPois.map((p) => p.coordinate);
-    coords = coords.map(c =>[c.lat,c.lon]);
-    console.log(coords);
-    const geoJson = await getDirections(coords);
-    return geoJson;
+    coords = coords.map((c) => [c.lat, c.lon]);
+    coords = reverseLatLng(coords);
+    let result = [];
+    for (let index = 0; index < profiles.length; index++) {
+      let element = profiles[index];
+      let geoJson = await getDirections(coords, element);
+      result.push(geoJson);
+    }
+    //const geoJson = await getDirections(coords);
+    return result;
   }
 
   //-------------------------------return Component--------------------------------------
@@ -137,12 +153,10 @@ export default function CreateItinerary({role}) {
           }}
           deny={() => {
             //settare eliminato richiesta
-            console.log(inputs);
             setOpen(false);
           }}
           accept={() => {
             //aggiungere metodo consensus
-            console.log(addedPois);
             createNewItinerary();
             setOpen(false);
           }}

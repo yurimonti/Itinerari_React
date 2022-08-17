@@ -84,7 +84,7 @@ export default function NotifiesComponent({ role }) {
     return () => {
       setRequests([]);
     };
-  }, [clicked]);
+  }, [clicked,role]);
 
   function printHours(day, hours) {
     if (hours.length !== 2 && hours.length !== 4 ) return day + " - chiuso";
@@ -225,7 +225,7 @@ export default function NotifiesComponent({ role }) {
               }}
               modify={() => {
                 setOpen(false);
-                navigate("/poi-form",{ state: { poi: requests } });
+                navigate("/poi-form/request/"+requests.id,{ state: { poi: false } });
               }}
               title={getRequestInfo(requests).type.toUpperCase()}
             >

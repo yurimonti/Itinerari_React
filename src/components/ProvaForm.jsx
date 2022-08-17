@@ -3,7 +3,7 @@ import { publicInstance } from "../api/axiosInstance";
 import InputSelect from "./InputSelect";
 import ProvaCategories from "./ProvaCategories";
 import OraProva from "./OraProva";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import ClassicInput from "./ClassicInput";
 
 const initialStateInputsString = {
@@ -21,6 +21,7 @@ const initialStateInputsString = {
 };
 
 export default function ProvaForm({ role }) {
+  const { id } = useParams();
   const [tagValues, setTagValues] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryValues, setCategoryValues] = useState([]);
@@ -48,20 +49,140 @@ export default function ProvaForm({ role }) {
   const [saturday, setSaturday] = useState([]);
   const [sunday, setSunday] = useState([]);
 
+  const [data, setData] = useState({});
+
   /*  const [ticket, setTicket] = useState("0.00");
   const [timeTovisit, setTimeToVisit] = useState("0");
   const [emailContacts, setEmailContacts] = useState("");
   const [phoneContacts, setPhoneContacts] = useState("");
   const [faxContacts, setFaxContacts] = useState(""); */
-  //-------------------------------------------handle inputs string----------------------------------------------
+  //-------------------------------------------handle inputs----------------------------------------------
   function handleInputsString(e) {
     setInputsString((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
-    console.log(inputsString);
+  }
+  //-------------------------------------------handle poi or request----------------------------------------------
+
+  function getDataFromId() {
+    let url = "";
+    if (id !== undefined) {
+      if (location.state?.poi) url = "/api/poi";
+      else url = "/api/request";
+    }
+    publicInstance
+      .get(url, {
+        params: { id: id },
+      })
+      .then((res) => {
+        setData(res.data);
+        renderFormIfIsPreFilled(res.data);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function newPoi(isToModify) {
+    let typesName = typeValues.map((t) => {
+      return t.name;
+    });
+    let url = !isToModify ? "/api/ente/createPoi" : "/api/ente/poi";
+    let payload = {
+      name: inputsString.name,
+      description: inputsString.description,
+      lat: inputsString.lat.toString(),
+      lon: inputsString.lon.toString(),
+      street: inputsString.street,
+      number: inputsString.number.toString(),
+      types: typesName,
+      tags: tagValues,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
+      phone: inputsString.phoneContacts.toString(),
+      email: inputsString.emailContacts,
+      fax: inputsString.faxContacts,
+      timeToVisit: inputsString.timeToVisit.toString(),
+      price: inputsString.ticket.toString(),
+    };
+    let params = !isToModify
+      ? { username: "ente_camerino" }
+      : { username: "ente_camerino", id: id };
+    let result = !isToModify
+      ? publicInstance.post(url, payload, {
+          params: params,
+        })
+      : publicInstance.patch(url, payload, {
+          params: params,
+        });
+    result
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function modifyRequest() {
+    let typesName = typeValues.map((t) => {
+      return t.name;
+    });
+    let payload = {
+      name: inputsString.name,
+      description: inputsString.description,
+      lat: inputsString.lat.toString(),
+      lon: inputsString.lon.toString(),
+      street: inputsString.street,
+      number: inputsString.number.toString(),
+      types: typesName,
+      tags: tagValues,
+      monday: monday,
+      tuesday: tuesday,
+      wednesday: wednesday,
+      thursday: thursday,
+      friday: friday,
+      saturday: saturday,
+      sunday: sunday,
+      phone: inputsString.phoneContacts.toString(),
+      email: inputsString.emailContacts,
+      fax: inputsString.faxContacts,
+      timeToVisit: inputsString.timeToVisit.toString(),
+      price: inputsString.ticket.toString(),
+      username: data.username,
+    };
+    console.log(payload);
+    publicInstance
+      .post("/api/ente/notifies/modify", payload, {
+        params: { username: "ente_camerino", id: id },
+      })
+      .then((res) => {
+        console.log(res.status);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  function handleSaveButtonClick() {
+    if (role === "user") {
+      if (id === undefined) postCreatePoiRequest(true);
+      else postCreatePoiRequest(false);
+    } else {
+      if (id === undefined) {
+        newPoi(false);
+      } else {
+        if (location?.state?.poi) {
+          newPoi(true);
+        } else {
+          console.log("entrato");
+          modifyRequest();
+        }
+      }
+    }
   }
 
   //--------------------------------------------APIs call------------------------------------------
+
   function getCities() {
     publicInstance
       .get("/api/city/all")
@@ -69,16 +190,16 @@ export default function ProvaForm({ role }) {
       .catch((err) => console.log(err.message));
   }
 
-  function createPoi() {
+  function createPoi(idParam) {
     let typesName = typeValues.map((t) => {
       return t.name;
     });
     let params =
-      location?.state?.poi === undefined
+      idParam === undefined
         ? { username: "ente_camerino" }
-        : { username: "ente_camerino", id: location.state.poi.id };
+        : { username: "ente_camerino", id: idParam };
     let url =
-      location?.state?.poi === undefined
+      idParam === undefined
         ? "/api/ente/createPoi"
         : "/api/ente/notifies/modify";
     let payload = {
@@ -153,7 +274,7 @@ export default function ProvaForm({ role }) {
         })
         .catch((err) => console.log(err));
     } else {
-      payload.poi = location.state.poi.id.toString();
+      payload.poi = id.toString();
       publicInstance
         .post("/api/user/modifyPoi", payload)
         .then((res) => {
@@ -165,20 +286,21 @@ export default function ProvaForm({ role }) {
 
   //-----------------------------------useEffect-------------------------------------------------
 
-  function renderFormIfIsPreFilled() {
-    if (location?.state?.poi !== undefined) {
+  function renderFormIfIsPreFilled(info) {
+    if (id !== undefined) {
+      let sourceInfo = location.state.poi === true ? info.poi : info;
       let poiState = {
-        name: location.state.poi.name,
-        description: location.state.poi.description,
-        lat: location.state.poi.coordinate.lat,
-        lon: location.state.poi.coordinate.lon,
-        street: location.state.poi.address.street,
-        number: location.state.poi.address.number,
-        ticket: location.state.poi.ticketPrice,
-        timeToVisit: location.state.poi.timeToVisit,
-        emailContacts: location.state.poi.contact.email,
-        phoneContacts: location.state.poi.contact.cellNumber,
-        faxContacts: location.state.poi.contact.fax,
+        name: sourceInfo.name,
+        description: sourceInfo.description,
+        lat: sourceInfo.coordinate.lat,
+        lon: sourceInfo.coordinate.lon,
+        street: sourceInfo.address.street,
+        number: sourceInfo.address.number,
+        ticket: sourceInfo.ticketPrice,
+        timeToVisit: sourceInfo.timeToVisit,
+        emailContacts: sourceInfo.contact.email,
+        phoneContacts: sourceInfo.contact.cellNumber,
+        faxContacts: sourceInfo.contact.fax,
       };
       setInputsString(poiState);
       /* setEmailContacts(location.state.poi.contact.email);
@@ -188,24 +310,25 @@ export default function ProvaForm({ role }) {
       setDescription(location.state.poi.description);
       setLat(location.state.poi.coordinate.lat);
       setLon(location.state.poi.coordinate.lon); */
-      location.state.poi.hours.monday.length !== 0 &&
-        setMonday(location.state.poi.hours.monday);
-      location.state.poi.hours.tuesday.length !== 0 &&
-        setTuesday(location.state.poi.hours.tuesday);
-      location.state.poi.hours.wednesday.length !== 0 &&
-        setWednesday(location.state.poi.hours.wednesday);
-      location.state.poi.hours.thursday.length !== 0 &&
-        setThursday(location.state.poi.hours.thursday);
-      location.state.poi.hours.friday.length !== 0 &&
-        setFriday(location.state.poi.hours.friday);
-      location.state.poi.hours.saturday.length !== 0 &&
-        setSaturday(location.state.poi.hours.saturday);
-      location.state.poi.hours.sunday.length !== 0 &&
-        setSunday(location.state.poi.hours.sunday);
-      setTypeValues(location.state.poi.types);
+      sourceInfo.hours.monday.length !== 0 &&
+        setMonday(sourceInfo.hours.monday);
+      sourceInfo.hours.tuesday.length !== 0 &&
+        setTuesday(sourceInfo.hours.tuesday);
+      sourceInfo.hours.wednesday.length !== 0 &&
+        setWednesday(sourceInfo.hours.wednesday);
+      sourceInfo.hours.thursday.length !== 0 &&
+        setThursday(sourceInfo.hours.thursday);
+      sourceInfo.hours.friday.length !== 0 &&
+        setFriday(sourceInfo.hours.friday);
+      sourceInfo.hours.saturday.length !== 0 &&
+        setSaturday(sourceInfo.hours.saturday);
+      sourceInfo.hours.sunday.length !== 0 &&
+        setSunday(sourceInfo.hours.sunday);
+      setTypeValues(sourceInfo.types);
       /* setStreet(location.state.poi.address.street);
       setNumber(location.state.poi.address.number); */
-      location.state.poi.tagValues.forEach((tv) => {
+      console.log(info);
+      sourceInfo.tagValues.forEach((tv) => {
         setTagValues((previous) => {
           if (tv.tag.isBooleanType)
             previous.push({ tag: tv.tag.name, value: tv.booleanValue });
@@ -217,8 +340,8 @@ export default function ProvaForm({ role }) {
   }
 
   useEffect(() => {
-    renderFormIfIsPreFilled();
-    if (role === "user" && location?.state?.poi === undefined) {
+    id !== undefined && getDataFromId();
+    if (role === "user" && id === undefined) {
       getCities();
     }
     return () => {
@@ -241,7 +364,7 @@ export default function ProvaForm({ role }) {
         setCities([]);
       }
     };
-  }, [clicked]);
+  }, [clicked, role]);
   //---------------------------------------------input render-------------------------------
 
   return (
@@ -511,11 +634,7 @@ export default function ProvaForm({ role }) {
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
-                  if (role === "user") {
-                    if (location?.state?.poi === undefined)
-                      postCreatePoiRequest(true);
-                    else postCreatePoiRequest(false);
-                  } else createPoi();
+                  handleSaveButtonClick();
                   setClicked((c) => {
                     c = !c;
                     return c;
@@ -523,15 +642,6 @@ export default function ProvaForm({ role }) {
                 }}
               >
                 Salva
-              </button>
-              <button
-                type="button"
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={() => {
-                  console.log(inputsString);
-                }}
-              >
-                Stampa Valori
               </button>
             </div>
           </div>

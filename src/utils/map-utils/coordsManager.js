@@ -1,6 +1,7 @@
 function reverseLatLng(coords){
+    let toTurn = [...coords];
     let result = [];
-    coords.forEach(c => {
+    toTurn.forEach(c => {
         result.push(c);
     });
     result.forEach(r=> r.reverse());

@@ -31,13 +31,15 @@ export default function MyRoutes() {
               />
             ),
           },
-          { path: "/pois/:id", element: <PoiDescriptionPage /> },
+          { path: "pois/:id", element: <PoiDescriptionPage /> },
           { path: "poi-form", element: <ProvaForm role="user" /> },
+          { path: "poi-form/poi/:id", element: <ProvaForm role="user" /> },
+          { path: "poi-form/request/:id", element: <ProvaForm role="user" /> },
           { path: "notifies", element: <NotifiesComponent role="user" /> },
           { path: "login", element: <LoginForm /> },
           { path: "itinerary", element: <CreateItinerary role="user"/> },
           { path: "itineraries", element: <ItinerariesPage role="user" /> },
-          { path: "/itineraries/:id", element: <ItineraryDescriptionPage /> },
+          { path: "itineraries/:id", element: <ItineraryDescriptionPage /> },
           { path: "*", element: <ErrorPage /> },
         ])
       : useRoutes([
@@ -54,6 +56,8 @@ export default function MyRoutes() {
           },
           { path: "/pois/:id", element: <PoiDescriptionPage /> },
           { path: "poi-form", element: <ProvaForm role="ente" /> },
+          { path: "poi-form/poi/:id", element: <ProvaForm role="ente" /> },
+          { path: "poi-form/request/:id", element: <ProvaForm role="ente" /> },
           { path: "notifies", element: <NotifiesComponent role="ente" /> },
           { path: "login", element: <LoginForm /> },
           { path: "itinerary", element: <CreateItinerary role="ente"/> },

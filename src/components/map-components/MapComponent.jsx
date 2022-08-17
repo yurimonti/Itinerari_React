@@ -39,7 +39,7 @@ export default function MapComponent({ data,zoom, renderAll, center }) {
       pois.map((poi) => {
         return (
           <MyMarker popUpEffect={{name:"modifica",action:() => {
-            navigate("/poi-form", { state: { poi: poi } });
+            navigate("/poi-form/poi/"+poi.id, { state: { poi: true } });
           }}} key={poi.id} isPoiIcon={true} poi={poi} popup={true} />
         );
       })

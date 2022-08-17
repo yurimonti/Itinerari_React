@@ -17,7 +17,7 @@ const initialData = {
   points: [],
   createdBy: "",
   cities: [],
-  geoJson: "",
+  geoJsonList: [],
 };
 
 export default function DescriptionLists() {
@@ -27,6 +27,7 @@ export default function DescriptionLists() {
   const { id } = useParams();
   const [itinerary, setItinerary] = useState(initialData);
   const [error, setError] = useState(false);
+  const [geoJsonSelect,setGeoJsonSelect] = useState([itinerary.geoJsonList]);
 
   function getDataById() {
     publicInstance
@@ -50,10 +51,10 @@ export default function DescriptionLists() {
     return (
       itinerary.geoJson !== "" && (
         <MapComponent
-          data={JSON.parse(itinerary.geoJson)}
+          data={JSON.parse(itinerary.geoJsonList[0])}
           zoom={13}
           center={calculateCenter(
-            JSON.parse(itinerary.geoJson).metadata.query.coordinates[0]
+            JSON.parse(itinerary.geoJsonList[0]).metadata.query.coordinates[0]
           )}
         />
       )
@@ -99,7 +100,8 @@ export default function DescriptionLists() {
               Tempo di visita totale
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {Math.round(itinerary.timeToVisit / 60)} minuti (automobile)
+              {Math.round((itinerary.timeToVisit + JSON.parse(itinerary.geoJsonList[0]).features[0].properties.summary
+                .duration) / 60)} minuti (automobile)
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -107,9 +109,9 @@ export default function DescriptionLists() {
               Km percorrenza totale
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {itinerary.geoJson !== "" &&
+              {itinerary.geoJsonList.length !== 0 &&
                 mToKmRounded(
-                  JSON.parse(itinerary.geoJson).features[0].properties.summary
+                  JSON.parse(itinerary.geoJsonList[0]).features[0].properties.summary
                     .distance
                 )}{" "}
               km
@@ -126,11 +128,12 @@ export default function DescriptionLists() {
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Istruzioni</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {itinerary.geoJson !== "" && <InstructionsComponent geojson={JSON.parse(itinerary.geoJson)} />}
+            {itinerary.geoJsonList.length !== 0 && <InstructionsComponent geojson={JSON.parse(itinerary.geoJson)} />}
             </dd>
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Mappa</dt>
+            <input type="select" > Ciao </input>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {renderMap()}
             </dd>
