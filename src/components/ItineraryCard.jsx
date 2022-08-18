@@ -1,18 +1,14 @@
 import React from "react";
 import { mToKmRounded } from "../utils/utilFunctions.js";
 
-
-function ItineraryCard({itinerary,onClick}) {
+function ItineraryCard({ itinerary, onClick }) {
   return (
     <div
       key={itinerary.id}
       className="group relative p-2 border-4 rounded-md border-gray-300 hover:border-blue-400"
     >
       <h2 className="text-md text-center text-gray-700">
-        <a
-          className="text-"
-          onClick={onClick}
-        >
+        <a className="text-" onClick={onClick}>
           <span aria-hidden="true" className="absolute inset-0" />
           {itinerary.name === null ? "Itinerario" : itinerary?.name}
         </a>
@@ -39,19 +35,27 @@ function ItineraryCard({itinerary,onClick}) {
         <div>
           <h3 className="text-sm">
             Durata:{" "}
-            <p className="text-sm font-medium text-gray-900">
-              {Math.round(itinerary.timeToVisit / 60)} minuti
-            </p>
+            {itinerary.geoJsonList.length !== 0 && (
+              <p className="text-sm font-medium text-gray-900">
+                {Math.round(
+                  (itinerary.timeToVisit +
+                    JSON.parse(itinerary.geoJsonList[0]).features[0].properties
+                      .summary.duration) /
+                    60
+                )}{" "}
+                minuti
+              </p>
+            )}
           </h3>
           <h3 className="text-sm">
             Distanza:
-            <p className="text-sm font-medium text-gray-900">
+            {itinerary.geoJsonList.length !== 0 && <p className="text-sm font-medium text-gray-900">
               {mToKmRounded(
-                JSON.parse(itinerary.geoJson).features[0].properties.summary
-                  .distance
+                JSON.parse(itinerary.geoJsonList[0]).features[0].properties
+                  .summary.distance
               )}{" "}
               km
-            </p>
+            </p>}
           </h3>
         </div>
       </div>

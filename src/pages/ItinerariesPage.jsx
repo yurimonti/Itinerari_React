@@ -6,7 +6,7 @@ import { mToKmRounded } from "../utils/utilFunctions.js";
 import { CheckIcon, XIcon } from "@heroicons/react/solid";
 import ItineraryCard from "../components/ItineraryCard";
 
-const ItinerariesComponent = ({ role }) => {
+const ItinerariesPage = ({ role }) => {
   const [itineraries, setItineraries] = useState([]);
   const [itinerariesFiltered, setItinerariesFiltered] = useState([]);
   const [selectedCity, setSelectedCity] = useState({ name: "" });
@@ -68,6 +68,7 @@ const ItinerariesComponent = ({ role }) => {
           {itineraries.map((itinerary) => (
             <ItineraryCard
               itinerary={itinerary}
+              key={itinerary.id}
               onClick={() => {
                 navigate("./" + itinerary.id);
               }}
@@ -109,6 +110,7 @@ const ItinerariesComponent = ({ role }) => {
               {itinerariesFiltered.map((itinerary) => (
                 <ItineraryCard
                   itinerary={itinerary}
+                  key={itinerary.id}
                   onClick={() => {
                     navigate("./" + itinerary.id);
                   }}
@@ -122,4 +124,4 @@ const ItinerariesComponent = ({ role }) => {
   );
 };
 
-export default ItinerariesComponent;
+export default ItinerariesPage;

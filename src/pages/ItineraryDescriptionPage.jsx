@@ -6,7 +6,10 @@ import ErrorPage from "./ErrorPage";
 import { printArray, mToKmRounded } from "../utils/utilFunctions";
 import MapComponent from "../components/map-components/MapComponent";
 import { calculateCenter } from "../utils/map-utils/coordsManager";
+import { Listbox } from "@headlessui/react";
+import { SelectorIcon } from "@heroicons/react/solid";
 import InstructionsComponent from "../components/InstructionsComponent";
+
 
 const initialData = {
   id: 0,
@@ -27,7 +30,9 @@ export default function DescriptionLists() {
   const { id } = useParams();
   const [itinerary, setItinerary] = useState(initialData);
   const [error, setError] = useState(false);
-  const [geoJsonSelect,setGeoJsonSelect] = useState([itinerary.geoJsonList]);
+  const [geoJsonSelect, setGeoJsonSelect] = useState([]);
+  const [currentGeoJson, setCurrentGeoJson] = useState({});
+  const [click,setClick] = useState(false);
 
   function getDataById() {
     publicInstance
@@ -36,7 +41,25 @@ export default function DescriptionLists() {
       })
       .then((res) => {
         const data = res.data;
-        data.geoJson === "" ? setError(true) : setItinerary(data);
+        if (data.geoJsonList.length === 0) {
+          setError(true);
+        } else {
+          setItinerary(data);
+          /* setGeoJsonSelect({data.geoJsonList.map((geo) => JSON.parse(geo))});
+          setCurrentGeoJson(JSON.parse(data.geoJsonList[0])); */
+        }
+        return data.geoJsonList.map((geo) => JSON.parse(geo));
+      })
+      .then((res) => {
+        setGeoJsonSelect(
+          res.map((r) => {
+            return { name: r.metadata.query.profile, data: r };
+          })
+        );
+        setCurrentGeoJson({
+          name: res[0].metadata.query.profile,
+          data: res[0],
+        });
       })
       .catch((err) => console.log(err));
   }
@@ -44,21 +67,28 @@ export default function DescriptionLists() {
     getDataById();
     return () => {
       setItinerary(initialData);
+      setGeoJsonSelect([]);
+      setCurrentGeoJson({});
     };
   }, [id]);
 
   function renderMap() {
     return (
-      itinerary.geoJson !== "" && (
+      click && (
         <MapComponent
-          data={JSON.parse(itinerary.geoJsonList[0])}
+          data={currentGeoJson.data}
           zoom={13}
           center={calculateCenter(
-            JSON.parse(itinerary.geoJsonList[0]).metadata.query.coordinates[0]
+            currentGeoJson.data.metadata.query.coordinates[0]
           )}
         />
       )
     );
+  }
+
+  function handleChangeSelect(value){
+    setClick(false);
+    setCurrentGeoJson(value);
   }
 
   return error ? (
@@ -67,6 +97,37 @@ export default function DescriptionLists() {
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
       <div className="border-t border-gray-200">
         <dl>
+        <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">Seleziona Profilo: </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <Listbox value={currentGeoJson} onChange={handleChangeSelect}>
+              <div className="mt-1 relative">
+                <Listbox.Button
+                  className="relative bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default
+            focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  {currentGeoJson.name}
+                  <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                    <SelectorIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Listbox.Button>
+                <Listbox.Options
+                  className="z-10 mt-1 w-full bg-white shadow-lg max-h-56 rounded-md py-1 text-base
+            ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm"
+                >
+                  {geoJsonSelect.map((geo) => (
+                    <Listbox.Option key={geo.name} value={geo}>
+                      {geo.name}
+                    </Listbox.Option>
+                  ))}
+                </Listbox.Options>
+              </div>
+            </Listbox>
+            </dd>
+          </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Nome</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
@@ -100,8 +161,13 @@ export default function DescriptionLists() {
               Tempo di visita totale
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-              {Math.round((itinerary.timeToVisit + JSON.parse(itinerary.geoJsonList[0]).features[0].properties.summary
-                .duration) / 60)} minuti (automobile)
+              {itinerary.geoJsonList.length !== 0 &&
+                Math.round(
+                  (itinerary.timeToVisit +
+                    currentGeoJson.data.features[0].properties.summary.duration) /
+                    60
+                )}{" "}
+              minuti
             </dd>
           </div>
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -111,8 +177,7 @@ export default function DescriptionLists() {
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {itinerary.geoJsonList.length !== 0 &&
                 mToKmRounded(
-                  JSON.parse(itinerary.geoJsonList[0]).features[0].properties.summary
-                    .distance
+                  currentGeoJson.data.features[0].properties.summary.distance
                 )}{" "}
               km
             </dd>
@@ -128,13 +193,23 @@ export default function DescriptionLists() {
           <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Istruzioni</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {itinerary.geoJsonList.length !== 0 && <InstructionsComponent geojson={JSON.parse(itinerary.geoJson)} />}
+              {itinerary.geoJsonList.length !== 0 && (
+                <InstructionsComponent geojson={currentGeoJson.data} />
+              )}
             </dd>
           </div>
           <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Mappa</dt>
-            <input type="select" > Ciao </input>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+            <button 
+            type="button" 
+            className="bg-gray-400" 
+            onClick={()=>{
+              setClick((prev)=>{
+                return !prev;
+              });
+            }}
+            >{click ? "chiudi mappa": "apri mappa"}</button>
               {renderMap()}
             </dd>
           </div>

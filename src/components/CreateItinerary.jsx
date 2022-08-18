@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { getDirections, profiles } from "../utils/map-utils/directionService";
+import { provaGetDirections } from "../utils/map-utils/directionService";
 import ItineraryMapCreator from "./map-components/ItineraryMapCreator";
 import { publicInstance } from "../api/axiosInstance";
 import ModalComponent from "./ente-components/ModalComponent";
 import { reverseLatLng } from "../utils/map-utils/coordsManager";
 
 const initialInputs = { name: "", description: "" };
+const profiles = [
+  "driving-car",
+  "wheelchair",
+  "cycling-electric",
+  "foot-walking",
+];
 
 export default function CreateItinerary({ role }) {
   const [addedPois, setAddedPois] = useState([]);
@@ -29,7 +35,6 @@ export default function CreateItinerary({ role }) {
         return stringGeoJson;
       })
       .then((data) => {
-        console.log(data);
         publicInstance
           .post(
             "/api/" + role + "/itinerary",
@@ -48,7 +53,7 @@ export default function CreateItinerary({ role }) {
           .then((res) => console.log(res.data))
           .catch((err) => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err)); 
   }
 
   //----------------------------handle modal inputs---------------------------
@@ -108,7 +113,7 @@ export default function CreateItinerary({ role }) {
 
   //------------------------------------------create GeoJson-----------------------------
 
-  async function createGeoJsonList() {
+  /* async function createGeoJsonList() {
     let coords = addedPois.map((p) => p.coordinate);
     coords = coords.map((c) => [c.lat, c.lon]);
     coords = reverseLatLng(coords);
@@ -120,6 +125,22 @@ export default function CreateItinerary({ role }) {
     }
     //const geoJson = await getDirections(coords);
     return result;
+  } */
+
+  async function createGeoJsonList() {
+    let coords = addedPois.map((p) => p.coordinate);
+    coords = coords.map((c) => [c.lat, c.lon]);
+    coords = reverseLatLng(coords);
+    let result = [];
+    for (const profile of profiles) {
+      try {
+        const res = await provaGetDirections(coords, profile);
+        result.push(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+      return result;
   }
 
   //-------------------------------return Component--------------------------------------
