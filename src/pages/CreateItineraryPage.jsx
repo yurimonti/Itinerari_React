@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { provaGetDirections } from "../utils/map-utils/directionService";
-import ItineraryMapCreator from "./map-components/ItineraryMapCreator";
+import ItineraryMapCreator from "../components/map-components/ItineraryMapCreator";
 import { publicInstance } from "../api/axiosInstance";
-import ModalComponent from "./ente-components/ModalComponent";
+import ModalComponent from "../components/ente-components/ModalComponent";
 import { reverseLatLng } from "../utils/map-utils/coordsManager";
 
 const initialInputs = { name: "", description: "" };
@@ -13,7 +13,7 @@ const profiles = [
   "foot-walking",
 ];
 
-export default function CreateItinerary({ role }) {
+export default function CreateItineraryPage({ role }) {
   const [addedPois, setAddedPois] = useState([]);
   const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState(initialInputs);

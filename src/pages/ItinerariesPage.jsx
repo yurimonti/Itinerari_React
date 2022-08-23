@@ -5,12 +5,14 @@ import SelectComponent from "../components/SelectComponent";
 import { mToKmRounded } from "../utils/utilFunctions.js";
 import { CheckIcon, XIcon } from "@heroicons/react/solid";
 import ItineraryCard from "../components/ItineraryCard";
+import ItineraryRequestsComponent from "../components/ItineraryRequestsComponent";
 
 const ItinerariesPage = ({ role }) => {
   const [itineraries, setItineraries] = useState([]);
   const [itinerariesFiltered, setItinerariesFiltered] = useState([]);
   const [selectedCity, setSelectedCity] = useState({ name: "" });
   const [cities, setCities] = useState([]);
+  const [click, setClicked] = useState(false);
   const navigate = useNavigate();
   const params = (owned) => {
     if (role === "user") {
@@ -55,7 +57,54 @@ const ItinerariesPage = ({ role }) => {
     return () => {
       setItineraries([]);
     };
-  }, [role]);
+  }, [role,click]);
+
+  function renderUserOrEnte() {
+    if (role === "user")
+      return (
+        <>
+          <h2 className=" mt-5 text-2xl font-extrabold tracking-tight text-gray-900">
+            Itinerari Predefiniti
+          </h2>
+          <div className="mt-5 justify-left">
+            <SelectComponent
+              values={cities}
+              selected={selectedCity}
+              setSelected={setSelectedCity}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                selectedCity.name !== "" && getItineraries(false);
+              }}
+              className="bg-green-300"
+            >
+              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setItinerariesFiltered([]);
+                setSelectedCity({ name: "" });
+              }}
+              className="bg-red-400"
+            >
+              <XIcon className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {itinerariesFiltered.map((itinerary) => (
+              <ItineraryCard
+                itinerary={itinerary}
+                key={itinerary.id}
+                reload={setClicked}
+              />
+            ))}
+          </div>
+        </>
+      );
+      else return <div className="mt-6"><ItineraryRequestsComponent reload={{dependency:click,action:setClicked}} /></div>;
+  }
 
   return (
     <div className="bg-white">
@@ -69,56 +118,11 @@ const ItinerariesPage = ({ role }) => {
             <ItineraryCard
               itinerary={itinerary}
               key={itinerary.id}
-              onClick={() => {
-                navigate("./" + itinerary.id);
-              }}
+              reload={setClicked}
             />
           ))}
         </div>
-        {role === "user" && (
-          <>
-            <h2 className=" mt-5 text-2xl font-extrabold tracking-tight text-gray-900">
-              Itinerari Predefiniti
-            </h2>
-            <div className="mt-5 justify-left">
-              <SelectComponent
-                values={cities}
-                selected={selectedCity}
-                setSelected={setSelectedCity}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  selectedCity.name !== "" && getItineraries(false);
-                }}
-                className="bg-green-300"
-              >
-                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setItinerariesFiltered([]);
-                  setSelectedCity({ name: "" });
-                }}
-                className="bg-red-400"
-              >
-                <XIcon className="h-5 w-5" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {itinerariesFiltered.map((itinerary) => (
-                <ItineraryCard
-                  itinerary={itinerary}
-                  key={itinerary.id}
-                  onClick={() => {
-                    navigate("./" + itinerary.id);
-                  }}
-                />
-              ))}
-            </div>
-          </>
-        )}
+        {renderUserOrEnte()}
       </div>
     </div>
   );

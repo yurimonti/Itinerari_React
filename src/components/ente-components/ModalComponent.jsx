@@ -73,7 +73,7 @@ export default function ModalComponent({
                   </div>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button
+                 {deny && <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-red shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={deny}
@@ -82,8 +82,8 @@ export default function ModalComponent({
                       className="h-6 w-6 text-red-600"
                       aria-hidden="true"
                     />
-                  </button>
-                  <button
+                  </button>}
+                  {accept && <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-green shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={accept}
@@ -92,7 +92,7 @@ export default function ModalComponent({
                       className="h-6 w-6 text-green-600"
                       aria-hidden="true"
                     />
-                  </button>
+                  </button>}
                   {/* modifica */}
                   {role === "ente" && (
                     <button

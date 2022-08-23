@@ -13,8 +13,9 @@ const OraProva = ({keyValue,value,setValue}) => {
           value={value[0]}
           onChange={(e) => {
             setValue((prev) => {
-              prev[0] = e.target.value;
-              return prev;
+              let result = [...prev];
+              result[0] = e.target.value;
+              return result;
             });
           }}
         />
@@ -27,8 +28,9 @@ const OraProva = ({keyValue,value,setValue}) => {
           value={value[1]}
           onChange={(e) => {
             setValue((prev) => {
-              prev[1] = e.target.value;
-              return prev;
+              let result = [...prev];
+              result[1] = e.target.value;
+              return result;
             });
           }}
         />
@@ -43,8 +45,9 @@ const OraProva = ({keyValue,value,setValue}) => {
           value={value[2]}
           onChange={(e) => {
             setValue((prev) => {
-              prev[2] = e.target.value;
-              return prev;
+              let result = [...prev];
+              result[2] = e.target.value;
+              return result;
             });
           }}
         />
@@ -57,8 +60,9 @@ const OraProva = ({keyValue,value,setValue}) => {
           value={value[3]}
           onChange={(e) => {
             setValue((prev) => {
-              prev[3] = e.target.value;
-              return prev;
+              let result = [...prev];
+              result[3] = e.target.value;
+              return result;
             });
           }}
         />
