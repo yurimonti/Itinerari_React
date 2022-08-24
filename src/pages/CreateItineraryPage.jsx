@@ -172,16 +172,12 @@ export default function CreateItineraryPage({ role }) {
           onClose={() => {
             setOpen(false);
           }}
-          deny={() => {
-            //settare eliminato richiesta
-            setOpen(false);
-          }}
-          accept={() => {
+          accept={(inputs.name!=="" && inputs.description!=="") ? {title:"conferma itinerario",action:() => {
             //aggiungere metodo consensus
             createNewItinerary();
             setOpen(false);
-          }}
-          title="TITOLO"
+          }} : undefined}
+          title="Conferma?"
         >
           <input
             className="block"

@@ -2,7 +2,7 @@ const OraProva = ({keyValue,value,setValue}) => {
 
   return (
     <>
-    <label>{keyValue}</label>
+    <label className="text-sm font-medium text-gray-700">{keyValue}</label>
       <div className="justify-center flex">
         <label className="block text-sm font-medium text-gray-700 mr-2">
           Dalle
@@ -26,6 +26,7 @@ const OraProva = ({keyValue,value,setValue}) => {
           type="time"
           className="hover:bg-indigo-200"
           value={value[1]}
+
           onChange={(e) => {
             setValue((prev) => {
               let result = [...prev];
@@ -43,6 +44,7 @@ const OraProva = ({keyValue,value,setValue}) => {
           type="time"
           className="hover:bg-indigo-200"
           value={value[2]}
+
           onChange={(e) => {
             setValue((prev) => {
               let result = [...prev];

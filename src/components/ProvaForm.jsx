@@ -30,14 +30,7 @@ export default function ProvaForm({ role }) {
   //-------------------------------------dopo-------------------
   const location = useLocation();
   const [inputsString, setInputsString] = useState(initialStateInputsString);
-  /* const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [lat, setLat] = useState("0");
-  const [lon, setLon] = useState("0"); */
   const [clicked, setClicked] = useState(false);
-  /*   const [address, setAddress] = useState({}); */
-  /*   const [street, setStreet] = useState("");
-  const [number, setNumber] = useState("0"); */
   const [cities, setCities] = useState([]);
   const [city, setCity] = useState({});
 
@@ -50,12 +43,6 @@ export default function ProvaForm({ role }) {
   const [sunday, setSunday] = useState([]);
 
   const [data, setData] = useState({});
-
-  /*  const [ticket, setTicket] = useState("0.00");
-  const [timeTovisit, setTimeToVisit] = useState("0");
-  const [emailContacts, setEmailContacts] = useState("");
-  const [phoneContacts, setPhoneContacts] = useState("");
-  const [faxContacts, setFaxContacts] = useState(""); */
   //-------------------------------------------handle inputs----------------------------------------------
   function handleInputsString(e) {
     setInputsString((prev) => {
@@ -63,6 +50,36 @@ export default function ProvaForm({ role }) {
     });
   }
   //-------------------------------------------handle poi or request----------------------------------------------
+
+  function resetHours() {
+    setMonday(["", "", "", ""]);
+    setTuesday(["", "", "", ""]);
+    setWednesday(["", "", "", ""]);
+    setThursday(["", "", "", ""]);
+    setFriday(["", "", "", ""]);
+    setSaturday(["", "", "", ""]);
+    setSunday(["", "", "", ""]);
+  }
+
+  function wrapDay(day) {
+    let result = [];
+    for (const hour of day) {
+      if (hour !== "") result.push(hour);
+    }
+    return result;
+  }
+
+  function reset() {
+    setTagValues([]);
+    setCategories([]);
+    setCategoryValues([]);
+    setTypes([]);
+    setTypeValues([]);
+    setCity({});
+    setCities([]);
+    setInputsString(initialStateInputsString);
+    resetHours();
+  }
 
   function getDataFromId() {
     let url = "";
@@ -95,13 +112,13 @@ export default function ProvaForm({ role }) {
       number: inputsString.number.toString(),
       types: typesName,
       tags: tagValues,
-      monday: monday,
-      tuesday: tuesday,
-      wednesday: wednesday,
-      thursday: thursday,
-      friday: friday,
-      saturday: saturday,
-      sunday: sunday,
+      monday: wrapDay(monday),
+      tuesday: wrapDay(tuesday),
+      wednesday: wrapDay(wednesday),
+      thursday: wrapDay(thursday),
+      friday: wrapDay(friday),
+      saturday: wrapDay(saturday),
+      sunday: wrapDay(sunday),
       phone: inputsString.phoneContacts.toString(),
       email: inputsString.emailContacts,
       fax: inputsString.faxContacts,
@@ -138,13 +155,13 @@ export default function ProvaForm({ role }) {
       number: inputsString.number.toString(),
       types: typesName,
       tags: tagValues,
-      monday: monday,
-      tuesday: tuesday,
-      wednesday: wednesday,
-      thursday: thursday,
-      friday: friday,
-      saturday: saturday,
-      sunday: sunday,
+      monday: wrapDay(monday),
+      tuesday: wrapDay(tuesday),
+      wednesday: wrapDay(wednesday),
+      thursday: wrapDay(thursday),
+      friday: wrapDay(friday),
+      saturday: wrapDay(saturday),
+      sunday: wrapDay(sunday),
       phone: inputsString.phoneContacts.toString(),
       email: inputsString.emailContacts,
       fax: inputsString.faxContacts,
@@ -211,13 +228,13 @@ export default function ProvaForm({ role }) {
       number: inputsString.number.toString(),
       types: typesName,
       tags: tagValues,
-      monday: monday,
-      tuesday: tuesday,
-      wednesday: wednesday,
-      thursday: thursday,
-      friday: friday,
-      saturday: saturday,
-      sunday: sunday,
+      monday: wrapDay(monday),
+      tuesday: wrapDay(tuesday),
+      wednesday: wrapDay(wednesday),
+      thursday: wrapDay(thursday),
+      friday: wrapDay(friday),
+      saturday: wrapDay(saturday),
+      sunday: wrapDay(sunday),
       phone: inputsString.phoneContacts.toString(),
       email: inputsString.emailContacts,
       fax: inputsString.faxContacts,
@@ -251,13 +268,13 @@ export default function ProvaForm({ role }) {
       number: inputsString.number.toString(),
       types: typesName,
       tags: tagValues,
-      monday: monday,
-      tuesday: tuesday,
-      wednesday: wednesday,
-      thursday: thursday,
-      friday: friday,
-      saturday: saturday,
-      sunday: sunday,
+      monday: wrapDay(monday),
+      tuesday: wrapDay(tuesday),
+      wednesday: wrapDay(wednesday),
+      thursday: wrapDay(thursday),
+      friday: wrapDay(friday),
+      saturday: wrapDay(saturday),
+      sunday: wrapDay(sunday),
       phone: inputsString.phoneContacts.toString(),
       email: inputsString.emailContacts,
       fax: inputsString.faxContacts,
@@ -390,7 +407,6 @@ export default function ProvaForm({ role }) {
                 {/* Nome POI */}
                 <ClassicInput
                   name="name"
-                  symbol={null}
                   value={inputsString.name}
                   setValue={handleInputsString}
                   label="name"
@@ -474,7 +490,6 @@ export default function ProvaForm({ role }) {
                 <div>
                   <ClassicInput
                     name="lat"
-                    symbol={null}
                     value={inputsString.lat}
                     setValue={handleInputsString}
                     label="lat"
@@ -487,7 +502,6 @@ export default function ProvaForm({ role }) {
                 <div>
                   <ClassicInput
                     name="lon"
-                    symbol={null}
                     value={inputsString.lon}
                     setValue={handleInputsString}
                     label="lon"
@@ -529,7 +543,6 @@ export default function ProvaForm({ role }) {
                 {/* time to visit input */}
                 <ClassicInput
                   name="timeToVisit"
-                  symbol={null}
                   value={inputsString.timeToVisit}
                   setValue={handleInputsString}
                   label="timeToVisit"
@@ -544,7 +557,6 @@ export default function ProvaForm({ role }) {
                 {/* email input */}
                 <ClassicInput
                   name="emailContacts"
-                  symbol={null}
                   value={inputsString.emailContacts}
                   setValue={handleInputsString}
                   label="emailContacts"
@@ -566,7 +578,7 @@ export default function ProvaForm({ role }) {
                 {/* fax input */}
                 <ClassicInput
                   name="faxContacts"
-                  symbol="+39"
+                  //symbol="+39"
                   value={inputsString.faxContacts}
                   setValue={handleInputsString}
                   label="faxContacts"
@@ -579,6 +591,14 @@ export default function ProvaForm({ role }) {
               {/* timepicker */}
               <br />
               <p>Orari</p>
+              <button
+                  type="button"
+                  onClick={resetHours}
+                  className="bg-sky-300 flex m-auto justify-center"
+                >
+                  {" "}
+                  clear hours{" "}
+                </button>
               <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-2">
                 <OraProva
                   keyValue="Lunedì"
@@ -622,10 +642,14 @@ export default function ProvaForm({ role }) {
                 type="button"
                 className="inline-flex mr-3 justify-center py-2 px-4 border border-gray shadow-sm text-sm font-medium rounded-md text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-200"
                 onClick={() => {
-                  setClicked((c) => {
-                    c = !c;
-                    return c;
-                  });
+                  location?.state?.poi === undefined
+                    ? setClicked((c) => {
+                        c = !c;
+                        return c;
+                      })
+                    : reset();
+                  console.log(monday);
+                  console.log(wednesday);
                 }}
               >
                 Reset

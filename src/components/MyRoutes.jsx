@@ -31,7 +31,7 @@ export default function MyRoutes() {
               />
             ),
           },
-          { path: "pois/:id", element: <PoiDescriptionPage /> },
+          { path: "pois/:id", element: <PoiDescriptionPage role="user"/> },
           { path: "poi-form", element: <ProvaForm role="user" /> },
           { path: "poi-form/poi/:id", element: <ProvaForm role="user" /> },
           { path: "poi-form/request/:id", element: <ProvaForm role="user" /> },
@@ -54,7 +54,7 @@ export default function MyRoutes() {
               />
             ),
           },
-          { path: "/pois/:id", element: <PoiDescriptionPage /> },
+          { path: "/pois/:id", element: <PoiDescriptionPage role="ente"/> },
           { path: "poi-form", element: <ProvaForm role="ente" /> },
           { path: "poi-form/poi/:id", element: <ProvaForm role="ente" /> },
           { path: "poi-form/request/:id", element: <ProvaForm role="ente" /> },

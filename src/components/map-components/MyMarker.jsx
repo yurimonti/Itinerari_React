@@ -3,7 +3,6 @@ import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
 import { useNavigate } from "react-router-dom";
 
-
 const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   const navigate = useNavigate();
 
@@ -51,7 +50,9 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
           INFO
         </button>
         <button
-          onClick={()=>{popUpEffect.action(poi)}}
+          onClick={() => {
+            popUpEffect.action(poi);
+          }}
           className="border bg-sky-500 block float-right"
         >
           {popUpEffect?.name}
@@ -84,12 +85,43 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
       case "Basilica":
       case "Chiesa":
       case "Monastero":
-        result = getIcon([35, 35], "christian-cross.png");
+      case "Cattedrale":
+      case "Santuario":
+      case "Tempio":
+        result = getIcon([40, 40], "spiritual-marker.svg");
+        break;
+      case "Lago":
+        result = getIcon([40, 40], "lake-marker.svg");
         break;
       case "Bosco":
       case "Giardino":
       case "Parco":
-        result = getIcon([38, 38], "park.svg");
+      case "Parco Giochi":
+      case "Mulino":
+        result = getIcon([40, 40], "natural-marker.svg");
+        break;
+      case "Biblioteca":
+      case "Teatro":
+      case "Statua":
+      case "Museo":
+        result = getIcon([40, 40], "cultural-marker.svg");
+        break;
+      case "Palazzo":
+      case "Monumento":
+      case "Piazza":
+      case "Rocca":
+        result = getIcon([40, 40], "architectural-marker.svg");
+        break;
+      case "Fontanella":
+        result = getIcon([40, 40], "drinking-fountain-marker.svg");
+        break;
+      case "Ristorante":
+      case "Enoteca":
+        result = getIcon([40, 40], "ristorazione.svg");
+        break;
+      case "Sosta Macchine":
+      case "Sosta Camper":
+        result = getIcon([40, 40], "services.svg");
         break;
       default:
         result = getStandardIcon();

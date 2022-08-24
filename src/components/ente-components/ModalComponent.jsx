@@ -17,7 +17,7 @@ export default function ModalComponent({
   accept,
   onClose,
   modify,
-  role
+  //role
 }) {
   const cancelButtonRef = useRef(null);
 
@@ -76,7 +76,8 @@ export default function ModalComponent({
                  {deny && <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-red shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={deny}
+                    onClick={deny.action}
+                    title={deny.title}
                   >
                     <XCircleIcon
                       className="h-6 w-6 text-red-600"
@@ -86,7 +87,8 @@ export default function ModalComponent({
                   {accept && <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-green shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={accept}
+                    onClick={accept.action}
+                    title={accept.title}
                   >
                     <CheckCircleIcon
                       className="h-6 w-6 text-green-600"
@@ -94,11 +96,12 @@ export default function ModalComponent({
                     />
                   </button>}
                   {/* modifica */}
-                  {role === "ente" && (
+                  {/* role === "ente" */ modify && (
                     <button
                       type="button"
                       className="w-full inline-flex justify-center rounded-md border border-gray shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:ml-3 sm:w-auto sm:text-sm"
-                      onClick={modify}
+                      onClick={modify.action}
+                      title={modify.title}
                       ref={cancelButtonRef}
                     >
                       <ClipboardListIcon

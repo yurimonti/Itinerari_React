@@ -180,25 +180,25 @@ function PoiRequestCard({ request,reload,role }) {
         </div>
       </button>
       <ModalComponent
-        role={role}
+        /* role={role} */
         open={open}
         onClose={() => {
           setOpen(false);
         }}
-        deny={() => {
+        deny={role==="ente" ? {title:"rifiuta richiesta",action:() => {
           setRequestTo(false, request.id, "cancellata".toUpperCase());
           setOpen(false);
-        }}
-        accept={() => {
+        }} : undefined}
+        accept={role==="ente" ? {title:"accetta richiesta",action:() => {
           setRequestTo(true, request.id, "accettata".toUpperCase());
           setOpen(false);
-        }}
-        modify={() => {
+        } }: undefined}
+        modify={role==="ente" ? {title:"modifica richiesta",action:() => {
           setOpen(false);
           navigate("/poi-form/request/" + request.id, {
             state: { poi: false },
           });
-        }}
+        }}: undefined}
         title={getRequestInfo(request).type.toUpperCase()}
       >
         <p>{request?.name}</p>

@@ -58,21 +58,19 @@ function ItineraryRequestCard({ request, reload }) {
         onClose={() => {
           setOpen(false);
         }}
-        accept={() => {
-          request.status === "PENDING" &&
-            setConsensusToRequest(request.id, true);
+        accept={request.status ==="PENDING" ? {title:"accetta richiesta",action:() => {
+          setConsensusToRequest(request.id, true);
           setOpen(false);
-        }}
-        deny={() => {
-          request.status === "PENDING" &&
-            setConsensusToRequest(request.id, false);
+        }} : undefined}
+        deny={request.status ==="PENDING" ? {title:"rifiuta richiesta",action:() => {
+          setConsensusToRequest(request.id, false);
           setOpen(false);
-        }}
+        }} : undefined}
         role="ente"
         title={request.name}
-        modify={() => {
+        modify={{title:"vedi richiesta",action:() => {
           navigate("/itinerary-request/" + request.id, {state: { isRequest: true },});
-        }}
+        }}}
       >
         <p>{request.description}</p>
       </ModalComponent>

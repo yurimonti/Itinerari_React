@@ -189,34 +189,32 @@ export default function DescriptionLists() {
               km
             </dd>
           </div>
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              {state?.isRequest ? "Richiesta effettuata da:" : "Creato da : "}
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {itinerary.createdBy}
+            </dd>
+          </div>
           {state?.isRequest ? (
-            <>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">
-                  Richiesta effettuata da:{" "}
-                </dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {itinerary.createdBy}
-                </dd>
-              </div>
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Consensi</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {itinerary.consensus && (
-                    <ul>
-                      {itinerary?.consensus.map((c) => {
-                        return <li key={c}>{c}</li>;
-                      })}
-                      {itinerary.consensus.length +
-                        " / " +
-                        itinerary.cities.length}
-                    </ul>
-                  )}
-                </dd>
-              </div>
-            </>
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Consensi</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                {itinerary.consensus && (
+                  <ul>
+                    {itinerary?.consensus.map((c) => {
+                      return <li key={c}>{c}</li>;
+                    })}
+                    {itinerary.consensus.length +
+                      " / " +
+                      itinerary.cities.length}
+                  </ul>
+                )}
+              </dd>
+            </div>
           ) : (
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Categorie</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {itinerary.categories.map((category) => {
@@ -225,7 +223,7 @@ export default function DescriptionLists() {
               </dd>
             </div>
           )}
-          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Istruzioni</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {itinerary.geoJsonList.length !== 0 && (
@@ -233,7 +231,7 @@ export default function DescriptionLists() {
               )}
             </dd>
           </div>
-          <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
             <dt className="text-sm font-medium text-gray-500">Mappa</dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               <button

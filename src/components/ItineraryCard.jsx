@@ -12,7 +12,10 @@ function ItineraryCard({ itinerary, reload }) {
 
   function deleteItinerary() {
     let url = role === "ente" ? "/api/ente/itinerary" : "/api/user/itinerary";
-    let params = role === "ente" ? { itineraryId: itinerary.id, username: "ente_camerino" }:{ itineraryId: itinerary.id, username: "an_user" }
+    let params =
+      role === "ente"
+        ? { itineraryId: itinerary.id, username: "ente_camerino" }
+        : { itineraryId: itinerary.id, username: "an_user" };
     publicInstance
       .delete(url, {
         params: params,
@@ -24,6 +27,20 @@ function ItineraryCard({ itinerary, reload }) {
         });
       })
       .catch((err) => console.log(err.status));
+  }
+
+  function createRequestItinerary() {
+    publicInstance
+      .post("api/user/itinerary/owner", null, {
+        params: { username: "an_user", id: itinerary.id },
+      })
+      .then((res) => {
+        console.log(res);
+        reload((prev) => {
+          return !prev;
+        });
+      })
+      .catch((err) => console.log(err));
   }
 
   return (
@@ -96,17 +113,31 @@ function ItineraryCard({ itinerary, reload }) {
         onClose={() => {
           setOpen(false);
         }}
-        deny={(role ==="ente" || !itinerary.isDefault) ? () => {
-          deleteItinerary();
-          setOpen(false);
-        }: undefined}
-        role="ente"
+        accept={
+          role === "user"
+            ? { title: "proponi itinerario", action: createRequestItinerary }
+            : undefined
+        }
+        deny={
+          role === "ente" || !itinerary.isDefault
+            ? {
+                title: "elimina itinerario",
+                action: () => {
+                  deleteItinerary();
+                  setOpen(false);
+                },
+              }
+            : undefined
+        }
         title={itinerary.name}
-        modify={() => {
-          navigate("./" + itinerary.id);
+        modify={{
+          title: "vedi info",
+          action: () => {
+            navigate("./" + itinerary.id);
+          },
         }}
       >
-        <p>{itinerary.description}</p>
+        <h2 className="text-lg">Che cosa vuoi fare?</h2>
       </ModalComponent>
     </div>
   );

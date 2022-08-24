@@ -14,8 +14,8 @@ const ClassicInput = ({
         {label}
       </label>
       <div className="mt-1 flex rounded-md shadow-sm">
-        {symbol !== null && (
-          <div className="mr-2 inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+        {symbol && (
+          <div className="mr-1 inset-y-0 left-0 pl-1 flex items-center pointer-events-none">
             <span className="text-black-500 md:text-l sm:text-sm">
               {symbol}
             </span>
@@ -28,7 +28,7 @@ const ClassicInput = ({
           min={min}
           name={name}
           id={name}
-          className="focus:outline-none focus:ring-2 pl-3 pr-12 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
+          className="focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-600"
           placeholder={placeholder}
         />
       </div>
