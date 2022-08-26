@@ -43,7 +43,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
         </div>
         <button
           onClick={() => {
-            navigate("/pois/" + poi.id);
+            navigate("/pois/" + poi.id,{state:{poi:true}});
           }}
           className="border bg-red-400"
         >

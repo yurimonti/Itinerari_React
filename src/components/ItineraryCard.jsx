@@ -115,7 +115,7 @@ function ItineraryCard({ itinerary, reload }) {
         }}
         accept={
           role === "user"
-            ? { title: "proponi itinerario", action: createRequestItinerary }
+            ? { title: "proponi itinerario", action: ()=>{createRequestItinerary()} }
             : undefined
         }
         deny={

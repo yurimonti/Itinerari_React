@@ -126,7 +126,7 @@ function PoiRequestCard({ request,reload,role }) {
         key={request.id}
         disabled={request.status === "REJECTED"}
         onClick={() => {
-          request.status === "PENDING" ? setOpen(true) : navigate("/pois/"+request.poiId, {
+          request.status === "PENDING" ? setOpen(true) : navigate("/pois/"+request.id, {
             state: { poi: false },
           });
         }}
