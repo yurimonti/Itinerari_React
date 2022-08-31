@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import CheckBoxComponent from "./CheckBoxComponent";
-import { publicInstance } from "../api/axiosInstance";
-import InputSelect from "./InputSelect";
+import { useEffect } from "react";
+import CheckBoxComponent from "../CheckBoxComponent";
+import { publicInstance } from "../../api/axiosInstance";
+import InputSelect from "../InputSelect";
 
-export default function ProvaCategories({
+export default function CategoriesComponent({
   tagValues,
   setTagValues,
   categories,
@@ -15,14 +15,12 @@ export default function ProvaCategories({
   typeValues,
   setTypeValues,
 }) {
-  //const [click, setClick] = useState(false);
-  /* const [tagValues, setTagValues] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [categoryValues, setCategoryValues] = useState([]);
-  const [types, setTypes] = useState([]);
-  const [typeValues, setTypeValues] = useState([]); */
+
   //---------------------------------------APIs call----------------------------------
 
+  /**
+   * get all categories from server
+   */
   function getAllCategories() {
     publicInstance
       .get("/api/category/all")
@@ -35,6 +33,11 @@ export default function ProvaCategories({
       });
   }
 
+  /**
+   * 
+   * @param {Object[]} filter : array of categories to apply the filter for types contained in;
+   * Filtered types from server
+   */
   function getTypesFiltered(filter) {
     let payload = filter;
     publicInstance
@@ -49,7 +52,6 @@ export default function ProvaCategories({
   //--------------------------------------useEffect----------------------------------
   useEffect(() => {
     getAllCategories();
-    /*     getTypesFiltered(categories); */
     return () => {
       setCategoryValues([]);
       setCategories([]);
@@ -61,6 +63,11 @@ export default function ProvaCategories({
 
   //---------------------------------------some functions----------------------------------
 
+  /**
+   * 
+   * @param {string | boolean} typeValuesToAdd values to add to default;
+   * initializes tags with default values. 
+   */
   function initTagsFromSelectedTypes(typeValuesToAdd) {
     if (typeValuesToAdd.length === 0) setTagValues([]);
     else {
@@ -98,6 +105,12 @@ export default function ProvaCategories({
     );
   }
 
+  /**
+   * 
+   * @param {InputEvent} event of input change 
+   * @param {string ! boolean} tagValue
+   * change value from onChange 
+   */
   function handleTextTagInput(event, tagValue) {
     let currentValue = event.target.value;
     setTagValues(
@@ -110,6 +123,11 @@ export default function ProvaCategories({
     );
   }
 
+  /**
+   * 
+   * @returns all Tags HtmlElement
+   * CheckBok if is a boolean type, textarea otherwise
+   */
   function renderAllTags() {
     return tagValues.map((v) => {
       if (typeof v.value == "boolean") {

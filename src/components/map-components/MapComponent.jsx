@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../../api/axiosInstance";
 import "../../styles/map-style/MapComponent.css";
 import MyMarker from "./MyMarker";
-import L from "leaflet";
 
 export default function MapComponent({ data,zoom, renderAll, center }) {
   const [pois, setPois] = useState([]);

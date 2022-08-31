@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ModalComponent from "./ente-components/ModalComponent";
-import { publicInstance } from "../api/axiosInstance";
+import ModalComponent from "../ModalComponent";
+import { publicInstance } from "../../api/axiosInstance";
 
 function PoiRequestCard({ request,reload,role }) {
   const navigate = useNavigate();
@@ -132,7 +131,6 @@ function PoiRequestCard({ request,reload,role }) {
         }}
       >
         <div
-          /* className="group relative w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none" */
           className={
             getRequestInfo(request).color +
             " " +
@@ -143,27 +141,18 @@ function PoiRequestCard({ request,reload,role }) {
             {getRequestInfo(request).type.toUpperCase()}
           </h3>
           <div className="h-5 border-b-2 border-black" />
-
-          {/* <div className="mt-4 flex justify-center"> */}
           <div className="mt-4 justify-center">
             {/* nome aggiunta */}
             <div className="m-2">
               <h2 className="text-md text-black-700 text-center">
-                {/* <span aria-hidden="true" className="absolute inset-0" /> */}
                 {request.name}
               </h2>
-              {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
             </div>
             <div className="m-2">
               <h2 className="text-sm text-gray-700 text-center">
-                {/* <span aria-hidden="true" className="absolute inset-0" /> */}
                 {request.description.slice(0, 32) + "..."}
               </h2>
-              {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
             </div>
-            {/* <p className="text-sm font-medium text-gray-900">
-                {requests.coordinate.lat + " " + requests.coordinate.lon}
-              </p> */}
             <div className="m-2">
               <h2 className="text-md text-black-700 text-center">
                 {"lat: " +
@@ -171,7 +160,6 @@ function PoiRequestCard({ request,reload,role }) {
                   " lng: " +
                   request.coordinate.lon}
               </h2>
-              {/* <p className="mt-1 text-sm text-gray-500">{requests.color}</p> */}
             </div>
           </div>
           <div className="text-right justify-end">
@@ -180,7 +168,6 @@ function PoiRequestCard({ request,reload,role }) {
         </div>
       </button>
       <ModalComponent
-        /* role={role} */
         open={open}
         onClose={() => {
           setOpen(false);

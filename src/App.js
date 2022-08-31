@@ -1,20 +1,18 @@
 import React from "react";
 import "./App.css";
-import AppShell from "./components/user-components/AppShell";
+import AppShell from "./components/AppShell";
 import { BrowserRouter } from "react-router-dom";
 import "./Material.css";
 import MyRoutes from "./components/MyRoutes";
-import { MyProvider } from "./utils/MyProvider";
-import ProvaItinerario from "./components/prova/ProvaItinerario";
+import { UserInfoProvider } from "./utils/UserInfoProvider";
+import AppContent from "./components/AppContent";
 
 function App() {
   return (
     <BrowserRouter>
-      <MyProvider>
-        <AppShell>
-          <MyRoutes />
-        </AppShell>
-      </MyProvider>
+      <UserInfoProvider>
+        <AppContent />
+      </UserInfoProvider>
     </BrowserRouter>
   );
 }

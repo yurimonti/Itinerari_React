@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CardComponent from "./CardComponent";
-import ModalComponent from "./ente-components/ModalComponent";
-import { publicInstance } from "../api/axiosInstance";
+import CardComponent from "../CardComponent";
+import ModalComponent from "../ModalComponent";
+import { publicInstance } from "../../api/axiosInstance";
+import { useUserContext } from "../../utils/UserInfoProvider";
 
 const colors = {
   pending: "border-yellow-200 hover:border-yellow-400 bg-yellow-200",
@@ -13,6 +14,7 @@ const colors = {
 function ItineraryRequestCard({ request, reload }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const {username} = useUserContext();
 
   function getColorFromStatus(status) {
     let result = "";
@@ -36,7 +38,7 @@ function ItineraryRequestCard({ request, reload }) {
     publicInstance
       .patch("/api/ente/itinerary/consensus", null, {
         params: {
-          username: "ente_castel_raimondo",
+          username: username,
           consensus: consensus,
           idRequest: requestId,
         },

@@ -1,21 +1,21 @@
 import { useState } from "react";
-import { mToKmRounded } from "../utils/utilFunctions.js";
-import ModalComponent from "./ente-components/ModalComponent.jsx";
-import { useMyContext } from "../utils/MyProvider.jsx";
-import { publicInstance } from "../api/axiosInstance.js";
+import { mToKmRounded } from "../../utils/utilFunctions.js";
+import ModalComponent from "../ModalComponent.jsx";
+import { useUserContext } from "../../utils/UserInfoProvider";
+import { publicInstance } from "../../api/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
 
 function ItineraryCard({ itinerary, reload }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const role = useMyContext();
+  const {role,username} = useUserContext();
 
   function deleteItinerary() {
     let url = role === "ente" ? "/api/ente/itinerary" : "/api/user/itinerary";
-    let params =
-      role === "ente"
-        ? { itineraryId: itinerary.id, username: "ente_camerino" }
-        : { itineraryId: itinerary.id, username: "an_user" };
+    let params = { itineraryId: itinerary.id, username: username };
+      /* role === "ente"
+        ? { itineraryId: itinerary.id, username: username }
+        : { itineraryId: itinerary.id, username: username }; */
     publicInstance
       .delete(url, {
         params: params,
@@ -32,7 +32,7 @@ function ItineraryCard({ itinerary, reload }) {
   function createRequestItinerary() {
     publicInstance
       .post("api/user/itinerary/owner", null, {
-        params: { username: "an_user", id: itinerary.id },
+        params: { username: username, id: itinerary.id },
       })
       .then((res) => {
         console.log(res);

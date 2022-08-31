@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
 import SelectComponent from "../components/SelectComponent";
-import { mToKmRounded } from "../utils/utilFunctions.js";
 import { CheckIcon, XIcon } from "@heroicons/react/solid";
-import ItineraryCard from "../components/ItineraryCard";
-import ItineraryRequestsComponent from "../components/ItineraryRequestsComponent";
+import ItineraryCard from "../components/itinerary-components/ItineraryCard";
+import ItineraryRequestsComponent from "../components/itinerary-components/ItineraryRequestsComponent";
+import { useUserContext } from "../utils/UserInfoProvider";
 
 const ItinerariesPage = ({ role }) => {
   const [itineraries, setItineraries] = useState([]);
@@ -13,12 +12,13 @@ const ItinerariesPage = ({ role }) => {
   const [selectedCity, setSelectedCity] = useState({ name: "" });
   const [cities, setCities] = useState([]);
   const [click, setClicked] = useState(false);
-  const navigate = useNavigate();
+  const {username} = useUserContext();
+
   const params = (owned) => {
     if (role === "user") {
-      if (owned) return { username: "an_user" };
-      else return { username: "an_user", cityId: selectedCity.id };
-    } else return { username: "ente_camerino" };
+      if (owned) return { username: username };
+      else return { username: username, cityId: selectedCity.id };
+    } else return { username: username };
   };
 
   const returnThen = (owned, data) => {
@@ -27,7 +27,6 @@ const ItinerariesPage = ({ role }) => {
       else return setItinerariesFiltered(data);
     } else return setItineraries(data);
   };
-  //const location = useLocation();
 
   function getItineraries(owned) {
     let baseUrl =

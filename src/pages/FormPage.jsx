@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { publicInstance } from "../api/axiosInstance";
-import InputSelect from "./InputSelect";
-import ProvaCategories from "./ProvaCategories";
-import OraProva from "./OraProva";
+import InputSelect from "../components/InputSelect";
+import CategoriesComponent from "../components/form-components/CategoriesComponent";
+import DayHoursComponent from "../components/form-components/DayHoursComponent";
 import { useLocation, useParams } from "react-router-dom";
-import ClassicInput from "./ClassicInput";
+import ClassicInput from "../components/ClassicInput";
+import { useUserContext } from "../utils/UserInfoProvider";
 
 const initialStateInputsString = {
   name: "",
@@ -20,7 +21,8 @@ const initialStateInputsString = {
   faxContacts: "",
 };
 
-export default function ProvaForm({ role }) {
+export default function FormPage({ role }) {
+  const {username} = useUserContext();
   const { id } = useParams();
   const [tagValues, setTagValues] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -126,8 +128,8 @@ export default function ProvaForm({ role }) {
       price: inputsString.ticket.toString(),
     };
     let params = !isToModify
-      ? { username: "ente_camerino" }
-      : { username: "ente_camerino", id: id };
+      ? { username: username }
+      : { username: username, id: id };
     let result = !isToModify
       ? publicInstance.post(url, payload, {
           params: params,
@@ -172,7 +174,7 @@ export default function ProvaForm({ role }) {
     console.log(payload);
     publicInstance
       .post("/api/ente/notifies/modify", payload, {
-        params: { username: "ente_camerino", id: id },
+        params: { username: username, id: id },
       })
       .then((res) => {
         console.log(res.status);
@@ -207,53 +209,6 @@ export default function ProvaForm({ role }) {
       .catch((err) => console.log(err.message));
   }
 
-  function createPoi(idParam) {
-    let typesName = typeValues.map((t) => {
-      return t.name;
-    });
-    let params =
-      idParam === undefined
-        ? { username: "ente_camerino" }
-        : { username: "ente_camerino", id: idParam };
-    let url =
-      idParam === undefined
-        ? "/api/ente/createPoi"
-        : "/api/ente/notifies/modify";
-    let payload = {
-      name: inputsString.name,
-      description: inputsString.description,
-      lat: inputsString.lat.toString(),
-      lon: inputsString.lon.toString(),
-      street: inputsString.street,
-      number: inputsString.number.toString(),
-      types: typesName,
-      tags: tagValues,
-      monday: wrapDay(monday),
-      tuesday: wrapDay(tuesday),
-      wednesday: wrapDay(wednesday),
-      thursday: wrapDay(thursday),
-      friday: wrapDay(friday),
-      saturday: wrapDay(saturday),
-      sunday: wrapDay(sunday),
-      phone: inputsString.phoneContacts.toString(),
-      email: inputsString.emailContacts,
-      fax: inputsString.faxContacts,
-      timeToVisit: inputsString.timeToVisit.toString(),
-      price: inputsString.ticket.toString(),
-      username: null,
-    };
-    if (location?.state?.poi !== undefined)
-      payload.username = location.state.poi.username;
-    publicInstance
-      .post(url, payload, {
-        params: params,
-      })
-      .then((res) => {
-        console.log(res.status);
-      })
-      .catch((err) => console.log(err));
-  }
-
   function postCreatePoiRequest(isToAdd) {
     let typesName = typeValues.map((t) => {
       return t.name;
@@ -281,7 +236,7 @@ export default function ProvaForm({ role }) {
       timeToVisit: inputsString.timeToVisit.toString(),
       price: inputsString.ticket.toString(),
       poi: null,
-      username: "an_user",
+      username:username,
     };
     if (isToAdd === true) {
       publicInstance
@@ -320,13 +275,6 @@ export default function ProvaForm({ role }) {
         faxContacts: sourceInfo.contact.fax,
       };
       setInputsString(poiState);
-      /* setEmailContacts(location.state.poi.contact.email);
-      setFaxContacts(location.state.poi.contact.fax);
-      setPhoneContacts(location.state.poi.contact.cellNumber);
-      setName(location.state.poi.name);
-      setDescription(location.state.poi.description);
-      setLat(location.state.poi.coordinate.lat);
-      setLon(location.state.poi.coordinate.lon); */
       sourceInfo.hours.monday.length !== 0 &&
         setMonday(sourceInfo.hours.monday);
       sourceInfo.hours.tuesday.length !== 0 &&
@@ -342,8 +290,6 @@ export default function ProvaForm({ role }) {
       sourceInfo.hours.sunday.length !== 0 &&
         setSunday(sourceInfo.hours.sunday);
       setTypeValues(sourceInfo.types);
-      /* setStreet(location.state.poi.address.street);
-      setNumber(location.state.poi.address.number); */
       console.log(info);
       sourceInfo.tagValues.forEach((tv) => {
         setTagValues((previous) => {
@@ -365,17 +311,6 @@ export default function ProvaForm({ role }) {
       setCategoryValues([]);
       setTypeValues([]);
       setTagValues([]);
-      /* setName("");
-      setDescription("");
-      setLat("0");
-      setLon("0"); */
-      /* setStreet("");
-      setNumber("0"); */
-      /* setEmailContacts("");
-      setFaxContacts("");
-      setPhoneContacts("");
-      setTicket("0.00");
-      setTimeToVisit("0"); */
       if (role === "user") {
         setCity({});
         setCities([]);
@@ -513,7 +448,7 @@ export default function ProvaForm({ role }) {
               </div>
 
               {/* categories input select */}
-              <ProvaCategories
+              <CategoriesComponent
                 categories={categories}
                 setCategories={setCategories}
                 categoryValues={categoryValues}
@@ -600,37 +535,37 @@ export default function ProvaForm({ role }) {
                   clear hours{" "}
                 </button>
               <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-2">
-                <OraProva
+                <DayHoursComponent
                   keyValue="Lunedì"
                   value={monday}
                   setValue={setMonday}
                 />
-                <OraProva
+                <DayHoursComponent
                   keyValue="Martedì"
                   value={tuesday}
                   setValue={setTuesday}
                 />
-                <OraProva
+                <DayHoursComponent
                   keyValue="Mercoledì"
                   value={wednesday}
                   setValue={setWednesday}
                 />
-                <OraProva
+                <DayHoursComponent
                   keyValue="Giovedì"
                   value={thursday}
                   setValue={setThursday}
                 />
-                <OraProva
+                <DayHoursComponent
                   keyValue="Venerdì"
                   value={friday}
                   setValue={setFriday}
                 />
-                <OraProva
+                <DayHoursComponent
                   keyValue="Sabato"
                   value={saturday}
                   setValue={setSaturday}
                 />
-                <OraProva
+                <DayHoursComponent
                   keyValue="Domenica"
                   value={sunday}
                   setValue={setSunday}

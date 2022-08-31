@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { publicInstance } from "../api/axiosInstance";
+import { useState, useEffect } from "react";
+import { publicInstance } from "../../api/axiosInstance";
 import ItineraryRequestCard from "./ItineraryRequestCard";
+import { useUserContext } from "../../utils/UserInfoProvider";
 
 function ItineraryRequestsComponent({ reload }) {
   const [requests, setRequests] = useState([]);
+  const {username} = useUserContext();
 
   function getItineraryRequests() {
     publicInstance
       .get("/api/ente/itinerary/requests", {
-        params: { username: "ente_camerino" },
+        params: { username: username },
       })
       .then((res) => setRequests(res.data))
       .catch((err) => console.log(err));

@@ -1,4 +1,4 @@
-const OraProva = ({keyValue,value,setValue}) => {
+const DayHoursComponent = ({keyValue,value,setValue}) => {
 
   return (
     <>
@@ -72,4 +72,4 @@ const OraProva = ({keyValue,value,setValue}) => {
     </>
   );
 };
-export default OraProva;
+export default DayHoursComponent;

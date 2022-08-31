@@ -15,7 +15,6 @@ export default function InputSelect({
     else return value.toString();
   }
 
-  //FIXME: rivedere metodo.. da errore negli input per i tag.
   function toSet(value) {
     if (value===null || value===undefined || value.length === 0 || Object.keys(value).length === 0) return "Nessuna";
     if (multiple) {

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
 import ErrorPage from "./ErrorPage";
 import { printArray, renderHours } from "../utils/utilFunctions";
-import { renderhours } from "../utils/utilFunctions.js";
-import MarkerIcon from "../components/MarkerIcon";
+import { useUserContext } from "../utils/UserInfoProvider";
 
 const initialPoiData = {
   id: 0,
@@ -27,14 +26,13 @@ const initialCityData = {
 };
 
 export default function PoiDescriptionPage({ role }) {
-  //TODO:completare
-
   const { id } = useParams();
   const [poi, setPoi] = useState(initialPoiData);
   const [city, setCity] = useState(initialCityData);
   const [error, setError] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
+  const {username} = useUserContext();
 
   function getDataById() {
     state.poi
@@ -69,7 +67,7 @@ export default function PoiDescriptionPage({ role }) {
   function deletePoi() {
     publicInstance
       .delete("/api/ente/poi", {
-        params: { username: "ente_camerino", id: poi.id },
+        params: { username: username, id: poi.id },
       })
       .then((res) => {
         console.log(res);
@@ -78,7 +76,7 @@ export default function PoiDescriptionPage({ role }) {
       })
       .catch((err) => {
         alert(
-          err.response.status === 404
+          err.response.status === 400
             ? "Errore nell'eliminazione Poi \nesistono itinerari con questo Poi"
             : "Errore nell'eliminazione Poi"
         );
@@ -151,7 +149,6 @@ export default function PoiDescriptionPage({ role }) {
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Orari</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {/* //TODO:inserire orari */}
                 <p className="mb-3">
                   Oggi è {poi?.hours?.open ? "Aperto" : "Chiuso"}
                 </p>

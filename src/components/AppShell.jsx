@@ -3,7 +3,10 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMyContext, useUpdateMyContext } from "../../utils/MyProvider";
+import {
+  useUserContext,
+  useUpdateUserContext,
+} from "../utils/UserInfoProvider";
 //TODO: cambiare con le informazioni dell'utente.
 /* const user = {
   name: "Tom Haff",
@@ -47,22 +50,29 @@ const enteRoutes = [
   { name: "Itineraries", href: "/itineraries", current: false },
 ];
 
+const publicRoutes = [
+  { name: "Home", href: "/", current: true },
+  { name: "Map", href: "/map", current: false },
+];
+
 export default function AppShell({ children }) {
-  const role = useMyContext();
-  const setRole = useUpdateMyContext();
-  const roles = ["user", "ente"];
+  const userInfo = useUserContext();
+  const setUserInfo = useUpdateUserContext();
   const navigate = useNavigate();
   //TODO: cambiare il href e modificare le rotte ed elementi
   const [navigation, setNavigation] = useState([]);
   const [user, setUser] = useState({});
-  
-  
+
   useEffect(() => {
-    role === "user" ? setNavigation(userRoutes) : setNavigation(enteRoutes);
+    userInfo.isAuth
+      ? userInfo.role === "user"
+        ? setNavigation(userRoutes)
+        : setNavigation(enteRoutes)
+      : setNavigation(publicRoutes);
     return () => {
       setNavigation([]);
     };
-  }, [role]);
+  }, [userInfo.isAuth]);
 
   /*   const [navigation, setNavigation] = useState([
     { name: "Home", href: "#", current: true },
@@ -189,10 +199,38 @@ export default function AppShell({ children }) {
                         <div>
                           {user.name === undefined ? (
                             <>
-                              <label className="text-white mr-2" for="roles">
-                                Choose a role:
-                              </label>
-                              <select
+                              {userInfo?.isAuth && (
+                                <label className="text-white mr-2" for="roles">
+                                  {userInfo.username}
+                                </label>
+                              )}
+                              {userInfo?.isAuth ? (
+                                <button
+                                  type="button"
+                                  className="text-white"
+                                  onClick={() => {
+                                    setUserInfo({
+                                      isAuth: false,
+                                      username: "",
+                                      role: "",
+                                    });
+                                    navigate("/");
+                                  }}
+                                >
+                                  Logout
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="text-white"
+                                  onClick={() => {
+                                    navigate("/login");
+                                  }}
+                                >
+                                  Login
+                                </button>
+                              )}
+                              {/* <select
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
                                 name="roles"
@@ -200,7 +238,7 @@ export default function AppShell({ children }) {
                               >
                                 <option value={roles[0]}>User</option>
                                 <option value={roles[1]}>Ente</option>
-                              </select>
+                              </select> */}
                             </>
                           ) : (
                             <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">

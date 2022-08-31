@@ -1,4 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { publicInstance } from "../api/axiosInstance";
@@ -8,7 +7,7 @@ import MapComponent from "../components/map-components/MapComponent";
 import { calculateCenter } from "../utils/map-utils/coordsManager";
 import { Listbox } from "@headlessui/react";
 import { SelectorIcon } from "@heroicons/react/solid";
-import InstructionsComponent from "../components/InstructionsComponent";
+import InstructionsComponent from "../components/itinerary-components/InstructionsComponent";
 
 const initialData = {
   id: 0,
@@ -23,9 +22,6 @@ const initialData = {
 };
 
 export default function DescriptionLists() {
-  //TODO: aggiungere quando request
-  //FIXME: vedere perche non funziona
-
   const { id } = useParams();
   const [itinerary, setItinerary] = useState(initialData);
   const [error, setError] = useState(false);
@@ -46,8 +42,6 @@ export default function DescriptionLists() {
           setError(true);
         } else {
           setItinerary(data);
-          /* setGeoJsonSelect({data.geoJsonList.map((geo) => JSON.parse(geo))});
-          setCurrentGeoJson(JSON.parse(data.geoJsonList[0])); */
         }
         return data.geoJsonList.map((geo) => JSON.parse(geo));
       })

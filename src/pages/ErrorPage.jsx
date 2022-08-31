@@ -1,5 +1,3 @@
-import React from "react";
-
 function ErrorPage() {
   return (
     <div class="relative flex items-top justify-center min-h-screen sm:items-center sm:pt-0">

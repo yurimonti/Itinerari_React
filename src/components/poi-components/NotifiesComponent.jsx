@@ -1,25 +1,26 @@
 import { useEffect, useState } from "react";
-import { publicInstance } from "../api/axiosInstance";
-import { useMyContext } from "../utils/MyProvider";
+import { publicInstance } from "../../api/axiosInstance";
 import PoiRequestCard from "./PoiRequestCard";
+import { useUserContext } from "../../utils/UserInfoProvider";
 
 export default function NotifiesComponent({ role }) {
   const [requests, setRequests] = useState([]);
   const [clicked, setClicked] = useState(false);
+  const {username} = useUserContext();
 
   function getAllNotifies() {
     if (role === "ente") {
       publicInstance
         .get("/api/ente/notifies", {
-          params: { username: "ente_camerino" },
+          params: { username: username },
         })
         .then((res) => setRequests(res.data))
         .catch((err) => console.log(err));
-    } //TODO:mettere mettodo per user
+    }
     else {
       publicInstance
         .get("/api/user/notifies", {
-          params: { username: "an_user" },
+          params: { username: username },
         })
         .then((res) => setRequests(res.data))
         .catch((err) => console.log(err));

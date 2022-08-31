@@ -34,7 +34,6 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
           <h1 className="text-lg">{info.title}</h1>
           <h4>{info.types}</h4>
           <h4>{info.address}</h4>
-          {/* <h4>{info.subtitle.slice(0, 32) + "..."}</h4> */}
           {info.price !== 0 && info.price !== null && (
             <h4>{"prezzo: " + info.price}</h4>
           )}

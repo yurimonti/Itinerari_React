@@ -1,4 +1,3 @@
-/* This example requires Tailwind CSS v2.0+ */
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
@@ -16,8 +15,7 @@ export default function ModalComponent({
   deny,
   accept,
   onClose,
-  modify,
-  //role
+  modify
 }) {
   const cancelButtonRef = useRef(null);
 
@@ -95,8 +93,7 @@ export default function ModalComponent({
                       aria-hidden="true"
                     />
                   </button>}
-                  {/* modifica */}
-                  {/* role === "ente" */ modify && (
+                  {modify && (
                     <button
                       type="button"
                       className="w-full inline-flex justify-center rounded-md border border-gray shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 sm:ml-3 sm:w-auto sm:text-sm"
@@ -110,7 +107,6 @@ export default function ModalComponent({
                       />
                     </button>
                   )}
-                  {/* fine */}
                   <button
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-gray shadow-sm px-4 py-2 bg-white-600 text-base font-medium text-white hover:border-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"

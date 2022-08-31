@@ -1,5 +1,3 @@
-import React from "react";
-
 function CardComponent({ name, children, onClick,color,disabled }) {
   return (
     <div 

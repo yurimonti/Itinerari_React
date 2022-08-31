@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { provaGetDirections } from "../utils/map-utils/directionService";
 import ItineraryMapCreator from "../components/map-components/ItineraryMapCreator";
 import { publicInstance } from "../api/axiosInstance";
-import ModalComponent from "../components/ente-components/ModalComponent";
+import ModalComponent from "../components/ModalComponent";
 import { reverseLatLng } from "../utils/map-utils/coordsManager";
+import { useUserContext } from "../utils/UserInfoProvider";
 
 const initialInputs = { name: "", description: "" };
 const profiles = [
@@ -17,7 +18,7 @@ export default function CreateItineraryPage({ role }) {
   const [addedPois, setAddedPois] = useState([]);
   const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState(initialInputs);
-  /* const [addedPois, setAddedPois] = useState({}); */
+  const {username} = useUserContext();
 
   //---------------------------------use Effect----------------------------
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function CreateItineraryPage({ role }) {
             },
             {
               params: {
-                username: role === "ente" ? "ente_camerino" : "an_user",
+                username: username,
               },
             }
           )
@@ -86,7 +87,6 @@ export default function CreateItineraryPage({ role }) {
   //--------------------------render functions----------------------------------------------
 
   function renderList() {
-    /* return <li>{addedPois.name}</li> */
     return (
       <ol className="ml-5" style={{ listStyleType: "number" }}>
         {addedPois.map((poi) => {
@@ -112,21 +112,6 @@ export default function CreateItineraryPage({ role }) {
   }
 
   //------------------------------------------create GeoJson-----------------------------
-
-  /* async function createGeoJsonList() {
-    let coords = addedPois.map((p) => p.coordinate);
-    coords = coords.map((c) => [c.lat, c.lon]);
-    coords = reverseLatLng(coords);
-    let result = [];
-    for (let index = 0; index < profiles.length; index++) {
-      let element = profiles[index];
-      let geoJson = await getDirections(coords, element);
-      result.push(geoJson);
-    }
-    //const geoJson = await getDirections(coords);
-    return result;
-  } */
-
   async function createGeoJsonList() {
     let coords = addedPois.map((p) => p.coordinate);
     coords = coords.map((c) => [c.lat, c.lon]);
@@ -155,13 +140,12 @@ export default function CreateItineraryPage({ role }) {
         handleClick={addPoiToItinerary}
       />
       <br />
-      <div /* className="flex m-auto" */>
+      <div>
         {renderList()}
         <button
           type="button"
           className="flex m-auto border border-4 p-1 rounded-md hover:border-sky-500 border-sky-300"
           onClick={() => {
-            //TODO: mettere chiamata creazione Poi
             setOpen(true);
           }}
         >
@@ -173,7 +157,6 @@ export default function CreateItineraryPage({ role }) {
             setOpen(false);
           }}
           accept={(inputs.name!=="" && inputs.description!=="") ? {title:"conferma itinerario",action:() => {
-            //aggiungere metodo consensus
             createNewItinerary();
             setOpen(false);
           }} : undefined}
