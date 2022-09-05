@@ -12,10 +12,9 @@ import CreateItineraryPage from "../pages/CreateItineraryPage";
 import PoiDescriptionPage from "../pages/PoiDescriptionPage";
 import UserSelectorPage from "./UserSelectorPage";
 
-
+//Routes authorized for each role
 export default function MyRoutes() {
   const { isAuth, role } = useUserContext();
-  console.log(isAuth);
   const routes =
     isAuth === true
       ? role === "user"

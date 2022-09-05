@@ -1,5 +1,6 @@
 import React from "react";
 
+//Component that render instructions for a direction
 function InstructionsComponent({ geojson }) {
   function directive() {
     return geojson.features[0].properties.segments.map((segment) => {

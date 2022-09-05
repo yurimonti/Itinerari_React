@@ -4,18 +4,26 @@ import CardComponent from "../CardComponent";
 import ModalComponent from "../ModalComponent";
 import { publicInstance } from "../../api/axiosInstance";
 import { useUserContext } from "../../utils/UserInfoProvider";
+import LoadingComponent from "../LoadingComponent";
+
 
 const colors = {
   pending: "border-yellow-200 hover:border-yellow-400 bg-yellow-200",
   rejected: "border-red-200 hover:border-red-400 bg-red-200",
   accepted: "border-green-200 hover:border-green-400 bg-green-200",
 };
-
+//component for render a card for a itinerary request
 function ItineraryRequestCard({ request, reload }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const {username} = useUserContext();
+  const { username } = useUserContext();
+  const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * 
+   * @param {string} status of a request
+   * @returns a text status for a request
+   */
   function getColorFromStatus(status) {
     let result = "";
     switch (status) {
@@ -34,7 +42,13 @@ function ItineraryRequestCard({ request, reload }) {
     return result;
   }
 
+  /**
+   * 
+   * @param {number} requestId of a itinerary request to set consensus 
+   * @param {boolean} consensus to set 
+   */
   function setConsensusToRequest(requestId, consensus) {
+    setIsLoading(true);
     publicInstance
       .patch("/api/ente/itinerary/consensus", null, {
         params: {
@@ -45,13 +59,23 @@ function ItineraryRequestCard({ request, reload }) {
       })
       .then((res) => {
         console.log(res.data);
+      })
+      .then(() => {
+        setIsLoading(false);
         reload.action((prev) => {
           return !prev;
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
+  /**
+   * 
+   * @returns a Modal component for a request
+   */
   function renderModal() {
     return (
       <ModalComponent
@@ -60,19 +84,38 @@ function ItineraryRequestCard({ request, reload }) {
         onClose={() => {
           setOpen(false);
         }}
-        accept={request.status ==="PENDING" ? {title:"accetta richiesta",action:() => {
-          setConsensusToRequest(request.id, true);
-          setOpen(false);
-        }} : undefined}
-        deny={request.status ==="PENDING" ? {title:"rifiuta richiesta",action:() => {
-          setConsensusToRequest(request.id, false);
-          setOpen(false);
-        }} : undefined}
+        accept={
+          request.status === "PENDING"
+            ? {
+                title: "accetta richiesta",
+                action: () => {
+                  setConsensusToRequest(request.id, true);
+                  setOpen(false);
+                },
+              }
+            : undefined
+        }
+        deny={
+          request.status === "PENDING"
+            ? {
+                title: "rifiuta richiesta",
+                action: () => {
+                  setConsensusToRequest(request.id, false);
+                  setOpen(false);
+                },
+              }
+            : undefined
+        }
         role="ente"
         title={request.name}
-        modify={{title:"vedi richiesta",action:() => {
-          navigate("/itinerary-request/" + request.id, {state: { isRequest: true },});
-        }}}
+        modify={{
+          title: "vedi richiesta",
+          action: () => {
+            navigate("/itinerary-request/" + request.id, {
+              state: { isRequest: true },
+            });
+          },
+        }}
       >
         <p>{request.description}</p>
       </ModalComponent>
@@ -87,7 +130,6 @@ function ItineraryRequestCard({ request, reload }) {
         disabled={request.status === "REJECTED"}
         onClick={() => {
           setOpen(true);
-          console.log(request.name);
         }}
       >
         <div>
@@ -123,6 +165,12 @@ function ItineraryRequestCard({ request, reload }) {
         </div>
       </CardComponent>
       {renderModal(request)}
+      <LoadingComponent
+        isLoading={isLoading}
+        onClose={() => {
+          setIsLoading(false);
+        }}
+      />
     </div>
   );
 }

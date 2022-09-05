@@ -2,10 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ModalComponent from "../ModalComponent";
 import { publicInstance } from "../../api/axiosInstance";
+import MyAlert from '../MyAlert';
+import LoadingComponent from '../LoadingComponent';
 
+// Component for a Request Card
 function PoiRequestCard({ request,reload,role }) {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [isOpen,setIsOpen] = useState(false);
+  const [messages,setMessages] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   
 
   const styles =
@@ -41,21 +47,23 @@ function PoiRequestCard({ request,reload,role }) {
    * @param {string} toRead string to set in the message
    */
   function setRequestTo(toSet,id ,toRead) {
+    setIsLoading(true);
     if (role === "ente") {
       publicInstance
         .post("/api/ente/notifies", null, {
           //TODO:cambiare toSet isAccepted id in idPoiRequests
           params: { toSet: toSet, id: id },
         })
-        .then((res) => {
-          console.log(res.status);
-          alert("richiesta " + toRead);
-          reload((p) => {
-            p = !p;
-            return p;
-          });
+        .then(()=>setIsLoading(false))
+        .then(() => {
+          setMessages({title:"SUCCESSO",content:"Richiesta "+toRead});
+          setIsOpen(true);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          setIsLoading(false);
+          setMessages({title:"ERRORE",content:"Errore nella richiesta "+err.response.status});
+          setIsOpen(true);
+        });
     } //TODO: mettere metodo per user
   }
 
@@ -197,6 +205,19 @@ function PoiRequestCard({ request,reload,role }) {
         {renderTags()}
         <p>{"Da :" + request?.username}</p>
       </ModalComponent>
+      <MyAlert
+        trigger={isOpen}
+        close={() => {
+            setIsOpen(false);
+            reload((p) => {
+              p = !p;
+              return p;
+            });
+          }
+        }
+        messages={{...messages ,result: "OK" }}
+      />
+      <LoadingComponent onClose={()=>{setIsLoading(false);}} isLoading={isLoading} />
     </>
   );
 }

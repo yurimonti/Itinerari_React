@@ -1,3 +1,4 @@
+//Card Component
 function CardComponent({ name, children, onClick,color,disabled }) {
   return (
     <div 

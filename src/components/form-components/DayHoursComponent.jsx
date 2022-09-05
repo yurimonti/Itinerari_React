@@ -1,3 +1,4 @@
+//Component that render a line of 4 input time for a day hours.
 const DayHoursComponent = ({keyValue,value,setValue}) => {
 
   return (

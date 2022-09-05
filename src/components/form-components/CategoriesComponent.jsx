@@ -80,7 +80,6 @@ export default function CategoriesComponent({
               prev.push({ tag: t.name, value: defaultTagValue });
               return prev;
             });
-            console.log(tagValues);
           }
         });
       });

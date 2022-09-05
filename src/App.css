@@ -22,3 +22,22 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+/*----------------------------------------------*/
+.App-load{
+  width: 200px;
+  height: 200px;
+  overflow-x: hidden;
+  flex: center;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.load-logo {
+  animation: load-logo-spin infinite 20s linear;
+}
+
+@keyframes load-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

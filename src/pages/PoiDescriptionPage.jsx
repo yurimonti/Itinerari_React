@@ -4,6 +4,7 @@ import { publicInstance } from "../api/axiosInstance";
 import ErrorPage from "./ErrorPage";
 import { printArray, renderHours } from "../utils/utilFunctions";
 import { useUserContext } from "../utils/UserInfoProvider";
+import LoadingComponent from "../components/LoadingComponent";
 
 const initialPoiData = {
   id: 0,
@@ -32,9 +33,11 @@ export default function PoiDescriptionPage({ role }) {
   const [error, setError] = useState(false);
   const { state } = useLocation();
   const navigate = useNavigate();
-  const {username} = useUserContext();
+  const { username } = useUserContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   function getDataById() {
+    setIsLoading(true);
     state.poi
       ? publicInstance
           .get("/api/poi", {
@@ -45,7 +48,13 @@ export default function PoiDescriptionPage({ role }) {
             data.poi.name === "" ? setError(true) : setPoi(data.poi);
             data.city.name === "" ? setError(true) : setCity(data.city);
           })
-          .catch((err) => console.log(err))
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          })
       : publicInstance
           .get("/api/request", {
             params: { id: id },
@@ -55,7 +64,13 @@ export default function PoiDescriptionPage({ role }) {
             data.poi.name === "" ? setError(true) : setPoi(data.poi);
             data.city.name === "" ? setError(true) : setCity(data.city);
           })
-          .catch((err) => console.log(err));
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
   }
   useEffect(() => {
     getDataById();
@@ -65,16 +80,21 @@ export default function PoiDescriptionPage({ role }) {
   }, [id, role]);
 
   function deletePoi() {
+    setIsLoading(true);
     publicInstance
       .delete("/api/ente/poi", {
         params: { username: username, id: poi.id },
       })
       .then((res) => {
         console.log(res);
+        setIsLoading(false);
+      })
+      .then(() => {
         alert("Poi Eliminato correttamente");
         navigate("/map");
       })
       .catch((err) => {
+        setIsLoading(false);
         alert(
           err.response.status === 400
             ? "Errore nell'eliminazione Poi \nesistono itinerari con questo Poi"
@@ -97,16 +117,18 @@ export default function PoiDescriptionPage({ role }) {
             Elimina Poi
           </button>
         )}
-        {state.poi && <button
-          type="button"
-          className="float-left ml-3 bg-grey-200 border border-sky-400 hover:bg-sky-400 mb-4 "
-          onClick={() => {
-            state.poi &&
-              navigate("/poi-form/poi/" + poi.id, { state: { poi: true } });
-          }}
-        >
-          Modifica Poi
-        </button>}
+        {state.poi && (
+          <button
+            type="button"
+            className="float-left ml-3 bg-grey-200 border border-sky-400 hover:bg-sky-400 mb-4 "
+            onClick={() => {
+              state.poi &&
+                navigate("/poi-form/poi/" + poi.id, { state: { poi: true } });
+            }}
+          >
+            Modifica Poi
+          </button>
+        )}
       </div>
       <div className="bg-white clear-both shadow overflow-hidden sm:rounded-lg">
         <div className="border-t border-gray-200">
@@ -206,9 +228,7 @@ export default function PoiDescriptionPage({ role }) {
               </div>
             ) : (
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">
-                  Creata da
-                </dt>
+                <dt className="text-sm font-medium text-gray-500">Creata da</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {poi?.username}
                 </dd>
@@ -247,6 +267,12 @@ export default function PoiDescriptionPage({ role }) {
           </dl>
         </div>
       </div>
+      <LoadingComponent
+        onClose={() => {
+          setIsLoading(false);
+        }}
+        isLoading={isLoading}
+      />
     </>
   );
 }

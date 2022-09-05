@@ -3,9 +3,10 @@ import { publicInstance } from "../api/axiosInstance";
 import InputSelect from "../components/InputSelect";
 import CategoriesComponent from "../components/form-components/CategoriesComponent";
 import DayHoursComponent from "../components/form-components/DayHoursComponent";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ClassicInput from "../components/ClassicInput";
 import { useUserContext } from "../utils/UserInfoProvider";
+import LoadingComponent from "../components/LoadingComponent";
 
 const initialStateInputsString = {
   name: "",
@@ -22,7 +23,7 @@ const initialStateInputsString = {
 };
 
 export default function FormPage({ role }) {
-  const {username} = useUserContext();
+  const { username } = useUserContext();
   const { id } = useParams();
   const [tagValues, setTagValues] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -43,8 +44,10 @@ export default function FormPage({ role }) {
   const [friday, setFriday] = useState([]);
   const [saturday, setSaturday] = useState([]);
   const [sunday, setSunday] = useState([]);
+  const navigate = useNavigate();
 
   const [data, setData] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   //-------------------------------------------handle inputs----------------------------------------------
   function handleInputsString(e) {
     setInputsString((prev) => {
@@ -84,6 +87,7 @@ export default function FormPage({ role }) {
   }
 
   function getDataFromId() {
+    setIsLoading(true);
     let url = "";
     if (id !== undefined) {
       if (location.state?.poi) url = "/api/poi";
@@ -97,10 +101,17 @@ export default function FormPage({ role }) {
         setData(res.data);
         renderFormIfIsPreFilled(res.data);
       })
-      .catch((err) => console.log(err));
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   function newPoi(isToModify) {
+    setIsLoading(true);
     let typesName = typeValues.map((t) => {
       return t.name;
     });
@@ -141,10 +152,19 @@ export default function FormPage({ role }) {
       .then((res) => {
         console.log(res);
       })
-      .catch((err) => console.log(err));
+      .then(() => {
+        setIsLoading(false);
+        navigate("/notifies");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+        alert("ERROR!");
+      });
   }
 
   function modifyRequest() {
+    setIsLoading(true);
     let typesName = typeValues.map((t) => {
       return t.name;
     });
@@ -171,15 +191,22 @@ export default function FormPage({ role }) {
       price: inputsString.ticket.toString(),
       username: data.username,
     };
-    console.log(payload);
     publicInstance
       .post("/api/ente/notifies/modify", payload, {
         params: { username: username, id: id },
       })
       .then((res) => {
         console.log(res.status);
+        navigate("/notifies");
       })
-      .catch((err) => console.log(err));
+      .then(() => {
+        setIsLoading(false);
+        navigate("/notifies");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   function handleSaveButtonClick() {
@@ -193,7 +220,6 @@ export default function FormPage({ role }) {
         if (location?.state?.poi) {
           newPoi(true);
         } else {
-          console.log("entrato");
           modifyRequest();
         }
       }
@@ -210,6 +236,7 @@ export default function FormPage({ role }) {
   }
 
   function postCreatePoiRequest(isToAdd) {
+    setIsLoading(true);
     let typesName = typeValues.map((t) => {
       return t.name;
     });
@@ -236,7 +263,7 @@ export default function FormPage({ role }) {
       timeToVisit: inputsString.timeToVisit.toString(),
       price: inputsString.ticket.toString(),
       poi: null,
-      username:username,
+      username: username,
     };
     if (isToAdd === true) {
       publicInstance
@@ -244,7 +271,16 @@ export default function FormPage({ role }) {
         .then((res) => {
           console.log(res.status);
         })
-        .catch((err) => console.log(err));
+        .then(() => {
+          setIsLoading(false);
+        })
+        .then(() => {
+          navigate("/notifies");
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
     } else {
       payload.poi = id.toString();
       publicInstance
@@ -252,13 +288,24 @@ export default function FormPage({ role }) {
         .then((res) => {
           console.log(res.status);
         })
-        .catch((err) => console.log(err));
+        .then(() => {
+          setIsLoading(false);
+        })
+        .then(() => {
+          navigate("/notifies");
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+          alert("ERROR!");
+        });
     }
   }
 
   //-----------------------------------useEffect-------------------------------------------------
 
   function renderFormIfIsPreFilled(info) {
+    //setIsLoading(true);
     if (id !== undefined) {
       let sourceInfo = location.state.poi === true ? info.poi : info;
       let poiState = {
@@ -290,7 +337,6 @@ export default function FormPage({ role }) {
       sourceInfo.hours.sunday.length !== 0 &&
         setSunday(sourceInfo.hours.sunday);
       setTypeValues(sourceInfo.types);
-      console.log(info);
       sourceInfo.tagValues.forEach((tv) => {
         setTagValues((previous) => {
           if (tv.tag.isBooleanType)
@@ -300,6 +346,7 @@ export default function FormPage({ role }) {
         });
       });
     }
+    //setIsLoading(false);
   }
 
   useEffect(() => {
@@ -527,13 +574,13 @@ export default function FormPage({ role }) {
               <br />
               <p>Orari</p>
               <button
-                  type="button"
-                  onClick={resetHours}
-                  className="bg-sky-300 flex m-auto justify-center"
-                >
-                  {" "}
-                  clear hours{" "}
-                </button>
+                type="button"
+                onClick={resetHours}
+                className="bg-sky-300 flex m-auto justify-center"
+              >
+                {" "}
+                clear hours{" "}
+              </button>
               <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-2">
                 <DayHoursComponent
                   keyValue="Lunedì"
@@ -583,8 +630,6 @@ export default function FormPage({ role }) {
                         return c;
                       })
                     : reset();
-                  console.log(monday);
-                  console.log(wednesday);
                 }}
               >
                 Reset
@@ -593,11 +638,12 @@ export default function FormPage({ role }) {
                 type="button"
                 className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
+                  setIsLoading(true);
                   handleSaveButtonClick();
-                  setClicked((c) => {
+                  /* setClicked((c) => {
                     c = !c;
                     return c;
-                  });
+                  }); */
                 }}
               >
                 Salva
@@ -606,6 +652,12 @@ export default function FormPage({ role }) {
           </div>
         </form>
       </div>
+      <LoadingComponent
+        onClose={() => {
+          setIsLoading(false);
+        }}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

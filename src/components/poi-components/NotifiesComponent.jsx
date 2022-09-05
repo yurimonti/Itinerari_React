@@ -2,28 +2,50 @@ import { useEffect, useState } from "react";
 import { publicInstance } from "../../api/axiosInstance";
 import PoiRequestCard from "./PoiRequestCard";
 import { useUserContext } from "../../utils/UserInfoProvider";
+import LoadingComponent from "../LoadingComponent";
 
+//Component that renders all requests
 export default function NotifiesComponent({ role }) {
   const [requests, setRequests] = useState([]);
   const [clicked, setClicked] = useState(false);
-  const {username} = useUserContext();
+  const { username } = useUserContext();
+  const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * get all request from server
+   */
   function getAllNotifies() {
+    setIsLoading(true);
     if (role === "ente") {
       publicInstance
         .get("/api/ente/notifies", {
           params: { username: username },
         })
-        .then((res) => setRequests(res.data))
-        .catch((err) => console.log(err));
-    }
-    else {
+        .then((res) => {
+          setRequests(res.data);
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
+    } else {
       publicInstance
         .get("/api/user/notifies", {
           params: { username: username },
         })
-        .then((res) => setRequests(res.data))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          setRequests(res.data);
+        })
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
     }
   }
 
@@ -47,11 +69,24 @@ export default function NotifiesComponent({ role }) {
           <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {/* card content */}
             {requests.map((request) => {
-              return <PoiRequestCard request={request} reload={setClicked} role={role} />;
+              return (
+                <PoiRequestCard
+                  key={request.id}
+                  request={request}
+                  reload={setClicked}
+                  role={role}
+                />
+              );
             })}
           </div>
         )}
       </div>
+      <LoadingComponent
+        isLoading={isLoading}
+        onClose={() => {
+          setIsLoading(false);
+        }}
+      />
     </div>
   );
 }

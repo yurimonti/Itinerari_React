@@ -5,6 +5,7 @@ import { CheckIcon, XIcon } from "@heroicons/react/solid";
 import ItineraryCard from "../components/itinerary-components/ItineraryCard";
 import ItineraryRequestsComponent from "../components/itinerary-components/ItineraryRequestsComponent";
 import { useUserContext } from "../utils/UserInfoProvider";
+import LoadingComponent from "../components/LoadingComponent";
 
 const ItinerariesPage = ({ role }) => {
   const [itineraries, setItineraries] = useState([]);
@@ -12,7 +13,8 @@ const ItinerariesPage = ({ role }) => {
   const [selectedCity, setSelectedCity] = useState({ name: "" });
   const [cities, setCities] = useState([]);
   const [click, setClicked] = useState(false);
-  const {username} = useUserContext();
+  const { username } = useUserContext();
+  const [isLoading, setIsLoading] = useState(false);
 
   const params = (owned) => {
     if (role === "user") {
@@ -29,6 +31,7 @@ const ItinerariesPage = ({ role }) => {
   };
 
   function getItineraries(owned) {
+    setIsLoading(true);
     let baseUrl =
       role === "user" && owned
         ? "/api/" + role + "/itinerary/owner"
@@ -40,7 +43,13 @@ const ItinerariesPage = ({ role }) => {
       .then((res) => {
         returnThen(owned, res.data);
       })
-      .catch((err) => console.log(err));
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   function fetchCities() {
@@ -56,7 +65,7 @@ const ItinerariesPage = ({ role }) => {
     return () => {
       setItineraries([]);
     };
-  }, [role,click]);
+  }, [role, click]);
 
   function renderUserOrEnte() {
     if (role === "user")
@@ -102,7 +111,14 @@ const ItinerariesPage = ({ role }) => {
           </div>
         </>
       );
-      else return <div className="mt-6"><ItineraryRequestsComponent reload={{dependency:click,action:setClicked}} /></div>;
+    else
+      return (
+        <div className="mt-6">
+          <ItineraryRequestsComponent
+            reload={{ dependency: click, action: setClicked }}
+          />
+        </div>
+      );
   }
 
   return (

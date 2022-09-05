@@ -8,6 +8,7 @@ import { calculateCenter } from "../utils/map-utils/coordsManager";
 import { Listbox } from "@headlessui/react";
 import { SelectorIcon } from "@heroicons/react/solid";
 import InstructionsComponent from "../components/itinerary-components/InstructionsComponent";
+import LoadingComponent from "../components/LoadingComponent";
 
 const initialData = {
   id: 0,
@@ -29,8 +30,10 @@ export default function DescriptionLists() {
   const [currentGeoJson, setCurrentGeoJson] = useState({});
   const [click, setClick] = useState(false);
   const { state } = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   function getDataById() {
+    setIsLoading(true);
     let url = state?.isRequest ? "/api/itinerary-request" : "/api/itinerary";
     publicInstance
       .get(url, {
@@ -56,7 +59,11 @@ export default function DescriptionLists() {
           data: res[0],
         });
       })
+      .then(() => {
+        setIsLoading(false);
+      })
       .catch((err) => {
+        setIsLoading(false);
         setError(true);
         console.log(err);
       });
@@ -244,6 +251,12 @@ export default function DescriptionLists() {
           </div>
         </dl>
       </div>
+      <LoadingComponent
+        onClose={() => {
+          setIsLoading(false);
+        }}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

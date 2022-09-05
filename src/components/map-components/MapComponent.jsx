@@ -5,7 +5,8 @@ import { publicInstance } from "../../api/axiosInstance";
 import "../../styles/map-style/MapComponent.css";
 import MyMarker from "./MyMarker";
 
-export default function MapComponent({ data,zoom, renderAll, center }) {
+//Component that renders a Leaflet Map
+export default function MapComponent({ data, zoom, renderAll, center }) {
   const [pois, setPois] = useState([]);
   const navigate = useNavigate();
 
@@ -16,6 +17,9 @@ export default function MapComponent({ data,zoom, renderAll, center }) {
     };
   }, []);
 
+  /**
+   * get all pois from server
+   */
   function fillPois() {
     publicInstance
       .get("/api/poi/all")
@@ -27,6 +31,10 @@ export default function MapComponent({ data,zoom, renderAll, center }) {
       });
   }
 
+  /**
+   *
+   * @returns a component that render all Marker from a GeoJson
+   */
   function renderMarkerData() {
     return data?.metadata?.query?.coordinates.map((c) => {
       return <Marker key={c} position={[c[1], c[0]]} />;
@@ -38,28 +46,42 @@ export default function MapComponent({ data,zoom, renderAll, center }) {
       renderAll &&
       pois.map((poi) => {
         return (
-          <MyMarker popUpEffect={{name:"modifica",action:() => {
-            navigate("/poi-form/poi/"+poi.id, { state: { poi: true } });
-          }}} key={poi.id} isPoiIcon={true} poi={poi} popup={true} />
+          <MyMarker
+            popUpEffect={{
+              name: "modifica",
+              action: () => {
+                navigate("/poi-form/poi/" + poi.id, { state: { poi: true } });
+              },
+            }}
+            key={poi.id}
+            isPoiIcon={true}
+            poi={poi}
+            popup={true}
+          />
         );
       })
     );
   }
 
-  function renderData(){
-    if(data){
+  /**
+   * render all marker and data from GeoJson
+   */
+  function renderData() {
+    if (data) {
       return (
         <>
-        <GeoJSON data={data}/>
-        {renderMarkerData()}
+          <GeoJSON data={data} />
+          {renderMarkerData()}
         </>
       );
     }
   }
 
-  /* function calculateCenter(coords){
+  /* 
+  function calculateCenter(coords){
     return [coords[1],coords[0]];
-  } */
+  } 
+  */
 
   return (
     <div id="map" className="leaflet-container">

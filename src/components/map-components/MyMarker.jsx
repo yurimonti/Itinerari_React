@@ -3,6 +3,7 @@ import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
 import { useNavigate } from "react-router-dom";
 
+//Component that renders a Marker in a Map
 const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   const navigate = useNavigate();
 
@@ -18,7 +19,12 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     fax: poi?.contact?.fax,
     phone: poi?.contact?.cellNumber,
   };
-
+  
+  /**
+   * 
+   * @param {Object} poi types to render
+   * @returns text types
+   */
   function printTypes(poi) {
     let result = "";
     poi.types.forEach((t) => {
@@ -27,6 +33,11 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     return result;
   }
 
+  /**
+   * 
+   * @param {Object} poi that contains info to render
+   * @returns component that render info
+   */
   function renderInfoOfAPoi(poi) {
     return (
       <>
@@ -60,6 +71,12 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     );
   }
 
+  /**
+   * 
+   * @param {number[]} iconSize width and height to set to an icon marker
+   * @param {*} image to set for a marker
+   * @returns icon to set
+   */
   function getIcon(iconSize, image) {
     return L.icon({
       iconUrl: require("../../static/" + image),
@@ -71,10 +88,17 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     });
   }
 
+  /**
+   * 
+   * @returns standard Marker Icon of leaflet
+   */
   function getStandardIcon() {
     return new IconDefault();
   }
 
+  /**
+   * icon according the type of a poi to render its marker
+   */
   function adjustIcon(poi) {
     let typesPoi = poi.types.map((t) => {
       return t.name;

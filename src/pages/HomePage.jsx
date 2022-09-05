@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 export default function HomePage() {
   const navigate = useNavigate();
 
-
   return (
     <div className="relative bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto">
@@ -20,8 +19,7 @@ export default function HomePage() {
           </svg>
 
           <Popover>
-            <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
-            </div>
+            <div className="relative pt-6 px-4 sm:px-6 lg:px-8"></div>
           </Popover>
 
           <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">

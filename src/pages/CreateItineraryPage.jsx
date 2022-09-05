@@ -5,6 +5,8 @@ import { publicInstance } from "../api/axiosInstance";
 import ModalComponent from "../components/ModalComponent";
 import { reverseLatLng } from "../utils/map-utils/coordsManager";
 import { useUserContext } from "../utils/UserInfoProvider";
+import { useNavigate } from "react-router-dom";
+import LoadingComponent from "../components/LoadingComponent";
 
 const initialInputs = { name: "", description: "" };
 const profiles = [
@@ -18,7 +20,9 @@ export default function CreateItineraryPage({ role }) {
   const [addedPois, setAddedPois] = useState([]);
   const [open, setOpen] = useState(false);
   const [inputs, setInputs] = useState(initialInputs);
-  const {username} = useUserContext();
+  const { username } = useUserContext();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   //---------------------------------use Effect----------------------------
   useEffect(() => {
@@ -30,8 +34,10 @@ export default function CreateItineraryPage({ role }) {
   //---------------------------------Apis----------------------------
 
   function createNewItinerary() {
+    setIsLoading(true);
     createGeoJsonList()
       .then((data) => {
+        setIsLoading(true);
         const stringGeoJson = data.map((geo) => JSON.stringify(geo));
         return stringGeoJson;
       })
@@ -51,10 +57,21 @@ export default function CreateItineraryPage({ role }) {
               },
             }
           )
-          .then((res) => console.log(res.data))
-          .catch((err) => console.log(err));
+          .then((res) => {
+            console.log(res.data);
+            setIsLoading(false);
+            alert("OK");
+            navigate("/itineraries");
+          })
+          .catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+          });
       })
-      .catch((err) => console.log(err)); 
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   }
 
   //----------------------------handle modal inputs---------------------------
@@ -125,7 +142,7 @@ export default function CreateItineraryPage({ role }) {
         console.log(err);
       }
     }
-      return result;
+    return result;
   }
 
   //-------------------------------return Component--------------------------------------
@@ -156,10 +173,17 @@ export default function CreateItineraryPage({ role }) {
           onClose={() => {
             setOpen(false);
           }}
-          accept={(inputs.name!=="" && inputs.description!=="") ? {title:"conferma itinerario",action:() => {
-            createNewItinerary();
-            setOpen(false);
-          }} : undefined}
+          accept={
+            inputs.name !== "" && inputs.description !== ""
+              ? {
+                  title: "conferma itinerario",
+                  action: () => {
+                    createNewItinerary();
+                    setOpen(false);
+                  },
+                }
+              : undefined
+          }
           title="Conferma?"
         >
           <input
@@ -179,6 +203,7 @@ export default function CreateItineraryPage({ role }) {
           />
         </ModalComponent>
       </div>
+      <LoadingComponent onClose={()=>{setIsLoading(false)}} isLoading={isLoading} />
     </div>
   );
 }

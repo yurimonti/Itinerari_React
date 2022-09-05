@@ -4,16 +4,23 @@ import ModalComponent from "../ModalComponent.jsx";
 import { useUserContext } from "../../utils/UserInfoProvider";
 import { publicInstance } from "../../api/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
+import LoadingComponent from "../LoadingComponent";
 
+//Component for an Itinerary Card
 function ItineraryCard({ itinerary, reload }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const {role,username} = useUserContext();
+  const { role, username } = useUserContext();
+  const [isLoading, setIsLoading] = useState(false);
 
+  /**
+   * delete an itinerary from server
+   */
   function deleteItinerary() {
+    setIsLoading(true);
     let url = role === "ente" ? "/api/ente/itinerary" : "/api/user/itinerary";
     let params = { itineraryId: itinerary.id, username: username };
-      /* role === "ente"
+    /* role === "ente"
         ? { itineraryId: itinerary.id, username: username }
         : { itineraryId: itinerary.id, username: username }; */
     publicInstance
@@ -22,25 +29,41 @@ function ItineraryCard({ itinerary, reload }) {
       })
       .then((res) => {
         console.log(res.status);
+      })
+      .then(() => {
+        setIsLoading(false);
         reload((prev) => {
           return !prev;
         });
       })
-      .catch((err) => console.log(err.status));
+      .catch((err) => {
+        console.log(err.status);
+        setIsLoading(false);
+      });
   }
 
+  /**
+   * create an itinerary request
+   */
   function createRequestItinerary() {
+    setIsLoading(true);
     publicInstance
       .post("api/user/itinerary/owner", null, {
         params: { username: username, id: itinerary.id },
       })
       .then((res) => {
         console.log(res);
+      })
+      .then(() => {
+        setIsLoading(false);
         reload((prev) => {
           return !prev;
         });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err)
+        setIsLoading(false);
+      });
   }
 
   return (
@@ -115,7 +138,12 @@ function ItineraryCard({ itinerary, reload }) {
         }}
         accept={
           role === "user"
-            ? { title: "proponi itinerario", action: ()=>{createRequestItinerary()} }
+            ? {
+                title: "proponi itinerario",
+                action: () => {
+                  createRequestItinerary();
+                },
+              }
             : undefined
         }
         deny={
@@ -139,6 +167,12 @@ function ItineraryCard({ itinerary, reload }) {
       >
         <h2 className="text-lg">Che cosa vuoi fare?</h2>
       </ModalComponent>
+      <LoadingComponent
+        isLoading={isLoading}
+        onClose={() => {
+          setIsLoading(false);
+        }}
+      />
     </div>
   );
 }

@@ -9,7 +9,7 @@ const users = [
   { username: "ente_camerino", role:"ente"},
   { username: "ente_castel_raimondo", role: "ente" },
 ];
-
+//Page for a fake login, used for presentation
 function UserSelectorPage() {
   const setUserInfo = useUpdateUserContext();
   const userInfo = useUserContext();
