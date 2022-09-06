@@ -48,7 +48,6 @@ function ItineraryRequestCard({ request, reload }) {
    * @param {boolean} consensus to set 
    */
   function setConsensusToRequest(requestId, consensus) {
-    setIsLoading(true);
     publicInstance
       .patch("/api/ente/itinerary/consensus", null, {
         params: {
@@ -58,6 +57,7 @@ function ItineraryRequestCard({ request, reload }) {
         },
       })
       .then((res) => {
+        setIsLoading(true);
         console.log(res.data);
       })
       .then(() => {

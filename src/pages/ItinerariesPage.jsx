@@ -31,7 +31,6 @@ const ItinerariesPage = ({ role }) => {
   };
 
   function getItineraries(owned) {
-    setIsLoading(true);
     let baseUrl =
       role === "user" && owned
         ? "/api/" + role + "/itinerary/owner"
@@ -41,7 +40,11 @@ const ItinerariesPage = ({ role }) => {
         params: params(owned),
       })
       .then((res) => {
-        returnThen(owned, res.data);
+        setIsLoading(true);
+        return res.data;
+      })
+      .then((data) => {
+        returnThen(owned, data);
       })
       .then(() => {
         setIsLoading(false);
@@ -134,11 +137,18 @@ const ItinerariesPage = ({ role }) => {
               itinerary={itinerary}
               key={itinerary.id}
               reload={setClicked}
+              withModal
             />
           ))}
         </div>
         {renderUserOrEnte()}
       </div>
+      <LoadingComponent
+        onClose={() => {
+          setIsLoading(false);
+        }}
+        isLoading={isLoading}
+      />
     </div>
   );
 };

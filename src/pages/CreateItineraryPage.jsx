@@ -34,14 +34,13 @@ export default function CreateItineraryPage({ role }) {
   //---------------------------------Apis----------------------------
 
   function createNewItinerary() {
-    setIsLoading(true);
     createGeoJsonList()
       .then((data) => {
-        setIsLoading(true);
         const stringGeoJson = data.map((geo) => JSON.stringify(geo));
         return stringGeoJson;
       })
       .then((data) => {
+        setIsLoading(true);
         publicInstance
           .post(
             "/api/" + role + "/itinerary",
@@ -59,8 +58,9 @@ export default function CreateItineraryPage({ role }) {
           )
           .then((res) => {
             console.log(res.data);
+          })
+          .then(() => {
             setIsLoading(false);
-            alert("OK");
             navigate("/itineraries");
           })
           .catch((err) => {
@@ -203,7 +203,12 @@ export default function CreateItineraryPage({ role }) {
           />
         </ModalComponent>
       </div>
-      <LoadingComponent onClose={()=>{setIsLoading(false)}} isLoading={isLoading} />
+      <LoadingComponent
+        onClose={() => {
+          setIsLoading(false);
+        }}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

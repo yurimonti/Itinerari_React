@@ -7,6 +7,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ClassicInput from "../components/ClassicInput";
 import { useUserContext } from "../utils/UserInfoProvider";
 import LoadingComponent from "../components/LoadingComponent";
+import MyAlert from "../components/MyAlert";
 
 const initialStateInputsString = {
   name: "",
@@ -48,6 +49,7 @@ export default function FormPage({ role }) {
 
   const [data, setData] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   //-------------------------------------------handle inputs----------------------------------------------
   function handleInputsString(e) {
     setInputsString((prev) => {
@@ -111,7 +113,6 @@ export default function FormPage({ role }) {
   }
 
   function newPoi(isToModify) {
-    setIsLoading(true);
     let typesName = typeValues.map((t) => {
       return t.name;
     });
@@ -148,6 +149,7 @@ export default function FormPage({ role }) {
       : publicInstance.patch(url, payload, {
           params: params,
         });
+    setIsLoading(true);
     result
       .then((res) => {
         console.log(res);
@@ -159,12 +161,11 @@ export default function FormPage({ role }) {
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
-        alert("ERROR!");
+        setIsOpen(true);
       });
   }
 
   function modifyRequest() {
-    setIsLoading(true);
     let typesName = typeValues.map((t) => {
       return t.name;
     });
@@ -196,6 +197,7 @@ export default function FormPage({ role }) {
         params: { username: username, id: id },
       })
       .then((res) => {
+        setIsLoading(true);
         console.log(res.status);
         navigate("/notifies");
       })
@@ -236,7 +238,6 @@ export default function FormPage({ role }) {
   }
 
   function postCreatePoiRequest(isToAdd) {
-    setIsLoading(true);
     let typesName = typeValues.map((t) => {
       return t.name;
     });
@@ -266,6 +267,7 @@ export default function FormPage({ role }) {
       username: username,
     };
     if (isToAdd === true) {
+      setIsLoading(true);
       publicInstance
         .post("/api/user/addPoi", payload)
         .then((res) => {
@@ -297,7 +299,7 @@ export default function FormPage({ role }) {
         .catch((err) => {
           console.log(err);
           setIsLoading(false);
-          alert("ERROR!");
+          setIsOpen(true);
         });
     }
   }
@@ -657,6 +659,17 @@ export default function FormPage({ role }) {
           setIsLoading(false);
         }}
         isLoading={isLoading}
+      />
+      <MyAlert
+        trigger={isOpen}
+        close={() => {
+          setIsOpen(false);
+        }}
+        messages={{
+          title: "ERRORE",
+          content: "Si è verificato un errore",
+          result: "indietro",
+        }}
       />
     </div>
   );

@@ -5,6 +5,7 @@ import ErrorPage from "./ErrorPage";
 import { printArray, renderHours } from "../utils/utilFunctions";
 import { useUserContext } from "../utils/UserInfoProvider";
 import LoadingComponent from "../components/LoadingComponent";
+import MyAlert from "../components/MyAlert";
 
 const initialPoiData = {
   id: 0,
@@ -35,6 +36,8 @@ export default function PoiDescriptionPage({ role }) {
   const navigate = useNavigate();
   const { username } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState({});
 
   function getDataById() {
     setIsLoading(true);
@@ -86,21 +89,26 @@ export default function PoiDescriptionPage({ role }) {
         params: { username: username, id: poi.id },
       })
       .then((res) => {
+        setMessages({
+          title: "SUCCESSO",
+          content: "POI Eliminato Correttamente",
+          result: "OK",
+        });
         console.log(res);
-        setIsLoading(false);
       })
       .then(() => {
-        alert("Poi Eliminato correttamente");
-        navigate("/map");
+        setIsLoading(false);
+        setOpen(true);
       })
       .catch((err) => {
+        let content = "";
+        err.response.status === 400
+          ? (content ="Esistono itinerari con questo POI: elimina gli itinerari che lo contengono")
+          : (content = "Non è possibile eliminare il POI");
+        setMessages({ title: "Errore nell'eliminazione Poi", content: content, result: "ERRORE" });
         setIsLoading(false);
-        alert(
-          err.response.status === 400
-            ? "Errore nell'eliminazione Poi \nesistono itinerari con questo Poi"
-            : "Errore nell'eliminazione Poi"
-        );
-      });
+        setOpen(true);
+      })
   }
 
   return error ? (
@@ -109,13 +117,23 @@ export default function PoiDescriptionPage({ role }) {
     <>
       <div className="inline-block justify-center m-auto flex align-center">
         {role === "ente" && (
-          <button
-            type="button"
-            className="float-left ml-3 bg-red-200 border border-red-400 hover:bg-red-400 mb-4 "
-            onClick={deletePoi}
-          >
-            Elimina Poi
-          </button>
+          <>
+            <button
+              type="button"
+              className="float-left ml-3 bg-red-200 border border-red-400 hover:bg-red-400 mb-4 "
+              onClick={deletePoi}
+            >
+              Elimina Poi
+            </button>
+            <MyAlert
+              trigger={open}
+              close={() => {
+                setOpen(false);
+                navigate("/map");
+              }}
+              messages={messages}
+            />
+          </>
         )}
         {state.poi && (
           <button

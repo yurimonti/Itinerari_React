@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingComponent from "../LoadingComponent";
 
 //Component for an Itinerary Card
-function ItineraryCard({ itinerary, reload }) {
+function ItineraryCard({ itinerary, reload, withModal }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const { role, username } = useUserContext();
@@ -46,12 +46,12 @@ function ItineraryCard({ itinerary, reload }) {
    * create an itinerary request
    */
   function createRequestItinerary() {
-    setIsLoading(true);
     publicInstance
       .post("api/user/itinerary/owner", null, {
         params: { username: username, id: itinerary.id },
       })
       .then((res) => {
+        setIsLoading(true);
         console.log(res);
       })
       .then(() => {
@@ -61,7 +61,7 @@ function ItineraryCard({ itinerary, reload }) {
         });
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
   }
@@ -75,7 +75,7 @@ function ItineraryCard({ itinerary, reload }) {
         <a
           className="text-"
           onClick={() => {
-            setOpen(true);
+            withModal ? setOpen(true) : navigate("./" + itinerary.id);
           }}
         >
           <span aria-hidden="true" className="absolute inset-0" />
@@ -130,43 +130,45 @@ function ItineraryCard({ itinerary, reload }) {
           </h3>
         </div>
       </div>
-      <ModalComponent
-        key={itinerary.id}
-        open={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-        accept={
-          role === "user"
-            ? {
-                title: "proponi itinerario",
-                action: () => {
-                  createRequestItinerary();
-                },
-              }
-            : undefined
-        }
-        deny={
-          role === "ente" || !itinerary.isDefault
-            ? {
-                title: "elimina itinerario",
-                action: () => {
-                  deleteItinerary();
-                  setOpen(false);
-                },
-              }
-            : undefined
-        }
-        title={itinerary.name}
-        modify={{
-          title: "vedi info",
-          action: () => {
-            navigate("./" + itinerary.id);
-          },
-        }}
-      >
-        <h2 className="text-lg">Che cosa vuoi fare?</h2>
-      </ModalComponent>
+      {withModal && (
+        <ModalComponent
+          key={itinerary.id}
+          open={open}
+          onClose={() => {
+            setOpen(false);
+          }}
+          accept={
+            role === "user"
+              ? {
+                  title: "proponi itinerario",
+                  action: () => {
+                    createRequestItinerary();
+                  },
+                }
+              : undefined
+          }
+          deny={
+            role === "ente" || !itinerary.isDefault
+              ? {
+                  title: "elimina itinerario",
+                  action: () => {
+                    deleteItinerary();
+                    setOpen(false);
+                  },
+                }
+              : undefined
+          }
+          title={itinerary.name}
+          modify={{
+            title: "vedi info",
+            action: () => {
+              navigate("./" + itinerary.id);
+            },
+          }}
+        >
+          <h2 className="text-lg">Che cosa vuoi fare?</h2>
+        </ModalComponent>
+      )}
       <LoadingComponent
         isLoading={isLoading}
         onClose={() => {

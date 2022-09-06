@@ -13,12 +13,12 @@ function ItineraryRequestsComponent({ reload }) {
    * get itinerary requests from server
    */
   function getItineraryRequests() {
-    setIsLoading(true);
     publicInstance
       .get("/api/ente/itinerary/requests", {
         params: { username: username },
       })
       .then((res) => {
+        setIsLoading(true);
         setRequests(res.data);
       })
       .then(() => {

@@ -5,11 +5,9 @@ import { publicInstance } from "../../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import "../../styles/ItineraryMapCreator.css";
 import MyMarker from "./MyMarker";
-import LoadingComponent from "../LoadingComponent";
 
 function ItineraryMapCreator({ zoom, renderAll, center, handleClick }) {
   const [pois, setPois] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fillPois();
@@ -19,16 +17,13 @@ function ItineraryMapCreator({ zoom, renderAll, center, handleClick }) {
   }, []);
 
   function fillPois() {
-    setIsLoading(true);
     publicInstance
       .get("/api/poi/all")
       .then((res) => {
         setPois(res.data);
       })
-      .then(() => setIsLoading(false))
       .catch((res) => {
         console.log(res.status);
-        setIsLoading(false);
       });
   }
 
@@ -63,12 +58,6 @@ function ItineraryMapCreator({ zoom, renderAll, center, handleClick }) {
         />
         {renderMarkers()}
       </MapContainer>
-      <LoadingComponent
-        onClose={() => {
-          setIsLoading(false);
-        }}
-        isLoading={isLoading}
-      />
     </div>
   );
 }

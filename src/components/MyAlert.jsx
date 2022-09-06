@@ -54,12 +54,12 @@ export default function MyAlert({
                   </Dialog.Title>
                 )}
                 {messages?.content && (
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">{messages.content}</p>
+                  <div className="mt-2 text-sm text-gray-500">
+                    {messages.content}
                   </div>
                 )}    
                 {content}            
-                {messages?.result && (
+                {messages?.result ? (
                   <div className="mt-4">
                     <button
                       type="button"
@@ -69,6 +69,8 @@ export default function MyAlert({
                       {messages.result}
                     </button>
                   </div>
+                ):(
+                  <button className="h-0 w-0 overflow-hidden" />
                 )}
               </Dialog.Panel>
             </Transition.Child>
