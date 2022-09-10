@@ -117,8 +117,8 @@ export default function AppShell({ children }) {
                       {/* <LocationMarkerIcon
                         className="h-6 w-6 text-indigo-600"
                         aria-hidden="true"
-                      /> */}
-                      <AppIcon color="#4287f5" />
+                      /> color="#4287f5"*/}
+                      <AppIcon color="#4287F5" />
                       {/* <img
                         className="h-8 w-8"
                         src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"

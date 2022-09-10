@@ -7,6 +7,7 @@ import { reverseLatLng } from "../utils/map-utils/coordsManager";
 import { useUserContext } from "../utils/UserInfoProvider";
 import { useNavigate } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
+import { ArrowRightIcon } from "@heroicons/react/solid";
 
 const initialInputs = { name: "", description: "" };
 const profiles = [
@@ -149,7 +150,9 @@ export default function CreateItineraryPage({ role }) {
 
   return (
     <div>
-      <h1 className="text-center">Create Itinerary</h1>
+      <h1 className="text-center font-medium text-lg mb-2">
+        Crea un itinerario
+      </h1>
       <ItineraryMapCreator
         renderAll
         zoom={15}
@@ -161,12 +164,13 @@ export default function CreateItineraryPage({ role }) {
         {renderList()}
         <button
           type="button"
-          className="flex m-auto border border-4 p-1 rounded-md hover:border-sky-500 border-sky-300"
+          className="transition ease-in-out delay-10 sm:hover:shadow-lg sm:hover:scale-105 sm:hover:shadow-indigo-500 duration-250 p-1 flex sm:float-right sm:m-2 m-auto border-4 rounded-md sm:hover:border-indigo-600 border-indigo-400"
           onClick={() => {
             setOpen(true);
           }}
         >
-          Completa
+          Completa{" "}
+          <ArrowRightIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
         </button>
         <ModalComponent
           open={open}

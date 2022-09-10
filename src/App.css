@@ -1,3 +1,20 @@
+/* .text-shadow-black{
+  text-shadow: -2px 5px 14px #4f46e5;
+  color: #262626;
+}
+
+.text-shadow-indigo{
+  text-shadow: -2px 6px 8px #818cf8;
+} */
+
+.map-shadow{
+  box-shadow: 0px 0px 10px 0px #4f46e5;
+}
+
+.map-shadow:hover{
+  box-shadow: 0px 0px 15px 0px #4f46e5;
+}
+
 .App {
   text-align: center;
 }

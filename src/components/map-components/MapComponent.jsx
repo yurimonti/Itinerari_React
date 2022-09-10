@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { publicInstance } from "../../api/axiosInstance";
 import "../../styles/map-style/MapComponent.css";
 import MyMarker from "./MyMarker";
+import "../../App.css";
 
 //Component that renders a Leaflet Map
 export default function MapComponent({ data, zoom, renderAll, center }) {
@@ -84,7 +85,7 @@ export default function MapComponent({ data, zoom, renderAll, center }) {
   */
 
   return (
-    <div id="map" className="leaflet-container">
+    <div id="map" className="leaflet-container map-shadow border-2 rounded-2xl border-indigo-400">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={true}>
         <TileLayer
           attribution={"https://www.openstreetmap.org/copyright"}

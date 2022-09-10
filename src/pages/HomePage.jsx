@@ -1,6 +1,7 @@
 import { Popover } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import { LocationMarkerIcon } from "@heroicons/react/outline";
+import "../App.css";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -26,21 +27,21 @@ export default function HomePage() {
           <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
             <div className="sm:text-center lg:text-left">
               <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                <span className="block">
+                <span className="text-shadow-black block">
                   EPPOI{" "}
                   <LocationMarkerIcon
                     className="mb-2 h-8 sm:h-12 md:h-16 w-12 text-indigo-600 inline"
                     aria-hidden="true"
                   />
                 </span>{" "}
-                <span className="block text-indigo-600">
+                <span className="text-shadow-indigo block text-indigo-600">
                   Scopri la bellezza dell'entroterra
                 </span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                <p className="inline text-indigo-600 font-semibold">
+                <span className="inline text-indigo-600 font-semibold">
                   Crea, segui e condividi
-                </p>{" "}
+                </span>{" "}
                 percorsi nelle piccole realtà dell'entroterra
               </p>
               <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
@@ -50,7 +51,7 @@ export default function HomePage() {
                     onClick={() => {
                       navigate("/login");
                     }}
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+                    className="w-full shadow-indigo-300 hover:shadow-indigo-400 shadow-xl flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                   >
                     Inizia!
                   </button>
@@ -61,7 +62,7 @@ export default function HomePage() {
                     onClick={() => {
                       navigate("/map");
                     }}
-                    className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
+                    className="w-full shadow-indigo-200 hover:shadow-indigo-300 shadow-xl flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
                   >
                     Luoghi Disponibili
                   </button>

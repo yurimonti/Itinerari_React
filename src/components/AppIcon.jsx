@@ -1,7 +1,10 @@
+import "../App.css";
+
 export default function AppIcon({ color, style }) {
+  /* text-[#4287f5] */
   return (
     <div>
-      <p className="float-left inline text-[#4287f5]">
+      <p className="float-left font-semibold text-lg inline text-[#4287F5]">
         EPPOI
       </p>
       <svg
