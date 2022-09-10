@@ -115,7 +115,8 @@ export default function PoiDescriptionPage({ role }) {
     <ErrorPage />
   ) : (
     <>
-      <div className="inline-block justify-center m-auto flex align-center">
+    /*before had also flex */
+      <div className="inline-block justify-center m-auto align-center">
         {role === "ente" && (
           <>
             <button
