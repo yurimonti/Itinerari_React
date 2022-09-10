@@ -46,6 +46,7 @@ function PoiRequestCard({ request, reload, role }) {
    * @param {string} toRead string to set in the message
    */
   function setRequestTo(toSet, id, toRead) {
+    setOpen(false);
     setIsLoading(true);
     if (role === "ente") {
       publicInstance
@@ -56,12 +57,13 @@ function PoiRequestCard({ request, reload, role }) {
         .then(() => {
           setMessages({ title: "SUCCESSO", content: "Richiesta " + toRead });
         })
-        .then(() => setIsLoading(false))
+        .then(() => {
+          setIsLoading(false);
+        })
         .then(() => {
           setIsOpen(true);
         })
         .catch((err) => {
-          setIsLoading(false);
           setMessages({
             title: "ERRORE",
             content: "Errore nella richiesta " + err.response.status,

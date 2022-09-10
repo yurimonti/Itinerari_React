@@ -89,7 +89,6 @@ export default function FormPage({ role }) {
   }
 
   function getDataFromId() {
-    setIsLoading(true);
     let url = "";
     if (id !== undefined) {
       if (location.state?.poi) url = "/api/poi";
@@ -100,6 +99,7 @@ export default function FormPage({ role }) {
         params: { id: id },
       })
       .then((res) => {
+        setIsLoading(true);
         setData(res.data);
         renderFormIfIsPreFilled(res.data);
       })
@@ -156,7 +156,7 @@ export default function FormPage({ role }) {
       })
       .then(() => {
         setIsLoading(false);
-        navigate("/notifies");
+        role === "user" ? navigate("/notifies") : navigate("/map");
       })
       .catch((err) => {
         console.log(err);
@@ -348,11 +348,12 @@ export default function FormPage({ role }) {
         });
       });
     }
-    //setIsLoading(false);
   }
 
   useEffect(() => {
-    id !== undefined && getDataFromId();
+    if (id !== undefined) {
+      getDataFromId();
+    }
     if (role === "user" && id === undefined) {
       getCities();
     }

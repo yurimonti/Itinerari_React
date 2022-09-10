@@ -5,6 +5,7 @@ import { useUserContext } from "../../utils/UserInfoProvider";
 import { publicInstance } from "../../api/axiosInstance.js";
 import { useNavigate } from "react-router-dom";
 import LoadingComponent from "../LoadingComponent";
+import MyAlert from "../MyAlert.jsx";
 
 //Component for an Itinerary Card
 function ItineraryCard({ itinerary, reload, withModal }) {
@@ -12,12 +13,13 @@ function ItineraryCard({ itinerary, reload, withModal }) {
   const navigate = useNavigate();
   const { role, username } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState({ result: "Indietro" });
 
   /**
    * delete an itinerary from server
    */
   function deleteItinerary() {
-    setIsLoading(true);
     let url = role === "ente" ? "/api/ente/itinerary" : "/api/user/itinerary";
     let params = { itineraryId: itinerary.id, username: username };
     /* role === "ente"
@@ -28,6 +30,7 @@ function ItineraryCard({ itinerary, reload, withModal }) {
         params: params,
       })
       .then((res) => {
+        setIsLoading(true);
         console.log(res.status);
       })
       .then(() => {
@@ -37,8 +40,17 @@ function ItineraryCard({ itinerary, reload, withModal }) {
         });
       })
       .catch((err) => {
+        setMessages((pre) => {
+          let result = {
+            ...pre,
+            title: "Impossibile eliminare itinerario",
+            content:"Si è verificato un errore durante l'eliminazione dell'itinerario",
+          };
+          return result;
+        });
         console.log(err.status);
         setIsLoading(false);
+        setIsOpen(true);
       });
   }
 
@@ -61,8 +73,17 @@ function ItineraryCard({ itinerary, reload, withModal }) {
         });
       })
       .catch((err) => {
+        setMessages((pre) => {
+          let result = {
+            ...pre,
+            title: "Impossibile creare una richiesta itinerario",
+            content: "Si è verificato un errore durante la richiesta",
+          };
+          return result;
+        });
         console.log(err);
         setIsLoading(false);
+        setIsOpen(true);
       });
   }
 
@@ -169,6 +190,7 @@ function ItineraryCard({ itinerary, reload, withModal }) {
           <h2 className="text-lg">Che cosa vuoi fare?</h2>
         </ModalComponent>
       )}
+      <MyAlert close={()=>{setIsOpen(false)}} messages={messages} trigger={isOpen} />
       <LoadingComponent
         isLoading={isLoading}
         onClose={() => {

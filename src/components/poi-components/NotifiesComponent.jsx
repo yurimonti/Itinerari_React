@@ -24,12 +24,8 @@ export default function NotifiesComponent({ role }) {
         .then((res) => {
           setRequests(res.data);
         })
-        .then(() => {
-          setIsLoading(false);
-        })
         .catch((err) => {
           console.log(err);
-          setIsLoading(false);
         });
     } else {
       publicInstance
@@ -39,18 +35,15 @@ export default function NotifiesComponent({ role }) {
         .then((res) => {
           setRequests(res.data);
         })
-        .then(() => {
-          setIsLoading(false);
-        })
         .catch((err) => {
           console.log(err);
-          setIsLoading(false);
         });
     }
   }
 
   useEffect(() => {
     getAllNotifies();
+    setIsLoading(false);
     return () => {
       setRequests([]);
     };

@@ -5,7 +5,7 @@ import ModalComponent from "../ModalComponent";
 import { publicInstance } from "../../api/axiosInstance";
 import { useUserContext } from "../../utils/UserInfoProvider";
 import LoadingComponent from "../LoadingComponent";
-
+import MyAlert from "../MyAlert";
 
 const colors = {
   pending: "border-yellow-200 hover:border-yellow-400 bg-yellow-200",
@@ -18,9 +18,11 @@ function ItineraryRequestCard({ request, reload }) {
   const navigate = useNavigate();
   const { username } = useUserContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState({ result: "Indietro" });
 
   /**
-   * 
+   *
    * @param {string} status of a request
    * @returns a text status for a request
    */
@@ -43,9 +45,9 @@ function ItineraryRequestCard({ request, reload }) {
   }
 
   /**
-   * 
-   * @param {number} requestId of a itinerary request to set consensus 
-   * @param {boolean} consensus to set 
+   *
+   * @param {number} requestId of a itinerary request to set consensus
+   * @param {boolean} consensus to set
    */
   function setConsensusToRequest(requestId, consensus) {
     publicInstance
@@ -67,13 +69,22 @@ function ItineraryRequestCard({ request, reload }) {
         });
       })
       .catch((err) => {
+        setMessages((pre) => {
+          let result = {
+            ...pre,
+            title: "Impossibile completare operazione",
+            content:"Si è verificato un errore durante l'operazione",
+          };
+          return result;
+        });
         console.log(err);
         setIsLoading(false);
+        setIsOpen(true);
       });
   }
 
   /**
-   * 
+   *
    * @returns a Modal component for a request
    */
   function renderModal() {
@@ -89,8 +100,8 @@ function ItineraryRequestCard({ request, reload }) {
             ? {
                 title: "accetta richiesta",
                 action: () => {
-                  setConsensusToRequest(request.id, true);
                   setOpen(false);
+                  setConsensusToRequest(request.id, true);
                 },
               }
             : undefined
@@ -100,8 +111,8 @@ function ItineraryRequestCard({ request, reload }) {
             ? {
                 title: "rifiuta richiesta",
                 action: () => {
-                  setConsensusToRequest(request.id, false);
                   setOpen(false);
+                  setConsensusToRequest(request.id, false);
                 },
               }
             : undefined
@@ -165,6 +176,7 @@ function ItineraryRequestCard({ request, reload }) {
         </div>
       </CardComponent>
       {renderModal(request)}
+      <MyAlert close={()=>{setIsOpen(false)}} messages={messages} trigger={isOpen} />
       <LoadingComponent
         isLoading={isLoading}
         onClose={() => {

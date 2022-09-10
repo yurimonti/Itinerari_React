@@ -6,7 +6,7 @@ import { printArray, mToKmRounded } from "../utils/utilFunctions";
 import MapComponent from "../components/map-components/MapComponent";
 import { calculateCenter } from "../utils/map-utils/coordsManager";
 import { Listbox } from "@headlessui/react";
-import { SelectorIcon } from "@heroicons/react/solid";
+import { SelectorIcon,PaperClipIcon } from "@heroicons/react/solid";
 import InstructionsComponent from "../components/itinerary-components/InstructionsComponent";
 import LoadingComponent from "../components/LoadingComponent";
 
@@ -33,8 +33,8 @@ export default function DescriptionLists() {
   const [isLoading, setIsLoading] = useState(false);
 
   function getDataById() {
-    setIsLoading(true);
     let url = state?.isRequest ? "/api/itinerary-request" : "/api/itinerary";
+    setIsLoading(true);
     publicInstance
       .get(url, {
         params: { id: id },
@@ -59,9 +59,6 @@ export default function DescriptionLists() {
           data: res[0],
         });
       })
-      .then(() => {
-        setIsLoading(false);
-      })
       .catch((err) => {
         setIsLoading(false);
         setError(true);
@@ -70,6 +67,7 @@ export default function DescriptionLists() {
   }
   useEffect(() => {
     getDataById();
+    setIsLoading(false);
     return () => {
       setItinerary(initialData);
       setGeoJsonSelect([]);
@@ -247,6 +245,25 @@ export default function DescriptionLists() {
                 {click ? "chiudi mappa" : "apri mappa"}
               </button>
               {renderMap()}
+            </dd>
+          </div>
+          <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <dt className="text-sm font-medium text-gray-500">
+              Scarica Percorso
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2 flex w-full flex-1 items-center">
+                <PaperClipIcon
+                  className="w-5 h-5 flex-shrink-0 text-gray-400"
+                  aria-hidden="true"
+                />
+                  {itinerary?.name}_{currentGeoJson?.name}.pdf
+              <div className="ml-4 flex-shrink-0">
+                <button
+                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                >
+                  Download
+                </button>
+              </div>
             </dd>
           </div>
         </dl>

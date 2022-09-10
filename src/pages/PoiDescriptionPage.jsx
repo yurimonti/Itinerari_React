@@ -105,7 +105,7 @@ export default function PoiDescriptionPage({ role }) {
         err.response.status === 400
           ? (content ="Esistono itinerari con questo POI: elimina gli itinerari che lo contengono")
           : (content = "Non è possibile eliminare il POI");
-        setMessages({ title: "Errore nell'eliminazione Poi", content: content, result: "ERRORE" });
+        setMessages({ title: "Errore nell'eliminazione Poi", content: content, result: "Indietro" });
         setIsLoading(false);
         setOpen(true);
       })
