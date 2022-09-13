@@ -9,8 +9,9 @@ function printArray(array) {
 }
 
 function mToKmRounded(metres) {
-  let km = metres / 1000;
-  return km - (km % 0.001);
+  let casted = Math.round((metres + Number.EPSILON) * 1000) / 1000;
+  let km = casted /1000;
+  return Math.round((km + Number.EPSILON) * 1000) / 1000
 }
 
 function renderHours(hours){

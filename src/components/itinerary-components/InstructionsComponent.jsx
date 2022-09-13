@@ -1,4 +1,5 @@
 import React from "react";
+import '../../styles/listStyle.css';
 
 //Component that render instructions for a direction
 function InstructionsComponent({ geojson }) {
@@ -6,7 +7,7 @@ function InstructionsComponent({ geojson }) {
     return geojson.features[0].properties.segments.map((segment) => {
       return segment.steps.map((step) => {
         return (
-          <li className="text-sm md:text-md" key={Math.random()}>
+          <li key={Math.random()}>
             {step.instruction}
           </li>
         );
@@ -15,10 +16,7 @@ function InstructionsComponent({ geojson }) {
   }
 
   return (
-    <ol
-      className="ml-5 text-center sm:text-left "
-      style={{ listStyleType: "number" }}
-    >
+    <ol>
       {directive()}
     </ol>
   );

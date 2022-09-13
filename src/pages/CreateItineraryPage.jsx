@@ -7,7 +7,7 @@ import { reverseLatLng } from "../utils/map-utils/coordsManager";
 import { useUserContext } from "../utils/UserInfoProvider";
 import { useNavigate } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
-import { ArrowRightIcon } from "@heroicons/react/solid";
+import { ChevronRightIcon } from "@heroicons/react/solid";
 
 const initialInputs = { name: "", description: "" };
 const profiles = [
@@ -113,6 +113,7 @@ export default function CreateItineraryPage({ role }) {
               {" "}
               {poi.name}
               <button
+                key={poi.id}
                 type="button"
                 onClick={() => {
                   deletePoiFromAdded(poi);
@@ -170,7 +171,10 @@ export default function CreateItineraryPage({ role }) {
           }}
         >
           Completa{" "}
-          <ArrowRightIcon className="h-6 w-6 text-indigo-600" aria-hidden="true" />
+          <ChevronRightIcon
+            className="h-6 w-6 text-indigo-600"
+            aria-hidden="true"
+          />
         </button>
         <ModalComponent
           open={open}
