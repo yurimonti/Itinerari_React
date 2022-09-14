@@ -6,6 +6,7 @@ import "./Material.css";
 import MyRoutes from "./components/MyRoutes";
 import { UserInfoProvider } from "./utils/UserInfoProvider";
 import AppContent from "./components/AppContent";
+import "./App.css";
 
 function App() {
   return (

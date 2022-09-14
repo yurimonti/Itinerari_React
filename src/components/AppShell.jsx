@@ -8,33 +8,96 @@ import {
   useUpdateUserContext,
 } from "../utils/UserInfoProvider";
 import AppIcon from "./AppIcon";
-import { LocationMarkerIcon } from "@heroicons/react/solid";
+import { LocationMarkerIcon, PlusIcon } from "@heroicons/react/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 const userRoutes = [
-  { name: "Home", href: "/", current: true },
-  { name: "Map", href: "/map", current: false },
-  { name: "Add Poi", href: "/poi-form", current: false },
-  { name: "Notifies", href: "/notifies", current: false },
-  { name: "Itinerary", href: "/itinerary", current: false },
-  { name: "Itineraries", href: "/itineraries", current: false },
+  {
+    name: "Mappa",
+    href: "/map",
+    current: false,
+    icon: undefined,
+    title: "Apri Mappa Poi",
+  },
+  {
+    name: "Aggiungi Poi",
+    href: "/poi-form",
+    current: false,
+    icon: <PlusIcon className="h-4 w-4 inline" aria-hidden="true" />,
+    title: "Aggiungi Poi",
+  },
+  {
+    name: "Notifiche",
+    href: "/notifies",
+    current: false,
+    icon: undefined,
+    title: "Visualizza richieste POI",
+  },
+  {
+    name: "Aggiungi Itinerario",
+    href: "/itinerary",
+    current: false,
+    icon: <PlusIcon className="h-4 w-4 inline" aria-hidden="true" />,
+    title: "Crea Itinerario",
+  },
+  {
+    name: "Itinerari",
+    href: "/itineraries",
+    current: false,
+    icon: undefined,
+    title: "Visualizza Itinerari Disponibili",
+  },
 ];
 
 const enteRoutes = [
-  { name: "Home", href: "/", current: true },
-  { name: "Map", href: "/map", current: false },
-  { name: "Add Poi", href: "/poi-form", current: false },
-  { name: "Notifies", href: "/notifies", current: false },
-  { name: "Itinerary", href: "/itinerary", current: false },
-  { name: "Itineraries", href: "/itineraries", current: false },
+  {
+    name: "Mappa",
+    href: "/map",
+    current: false,
+    icon: undefined,
+    title: "Apri Mappa Poi",
+  },
+  {
+    name: "Aggiungi Poi",
+    href: "/poi-form",
+    current: false,
+    icon: <PlusIcon className="h-4 w-4 inline" aria-hidden="true" />,
+    title: "Aggiungi Poi",
+  },
+  {
+    name: "Notifiche",
+    href: "/notifies",
+    current: false,
+    icon: undefined,
+    title: "Visualizza richieste POI",
+  },
+  {
+    name: "Aggiungi Itinerario",
+    href: "/itinerary",
+    current: false,
+    icon: <PlusIcon className="h-4 w-4 inline" aria-hidden="true" />,
+    title: "Crea Itinerario",
+  },
+  {
+    name: "Itinerari",
+    href: "/itineraries",
+    current: false,
+    icon: undefined,
+    title: "Visualizza Itinerari Disponibili",
+  },
 ];
 
 const publicRoutes = [
-  { name: "Home", href: "/", current: true },
-  { name: "Map", href: "/map", current: false },
+  {
+    name: "Mappa",
+    href: "/map",
+    current: false,
+    icon: undefined,
+    title: "Apri Mappa Poi",
+  },
 ];
 //Component for app shell
 export default function AppShell({ children }) {
@@ -57,7 +120,7 @@ export default function AppShell({ children }) {
   const LogInButton = userInfo?.isAuth ? (
     <button
       type="button"
-      className="text-white ml-3"
+      className="text-white ml-3 font-semibold"
       onClick={() => {
         setUserInfo({
           isAuth: false,
@@ -67,17 +130,17 @@ export default function AppShell({ children }) {
         navigate("/");
       }}
     >
-      Logout
+      Esci
     </button>
   ) : (
     <button
       type="button"
-      className="text-white ml-3"
+      className="text-white ml-3 font-semibold"
       onClick={() => {
         navigate("/login");
       }}
     >
-      Login
+      Accedi
     </button>
   );
 
@@ -118,7 +181,12 @@ export default function AppShell({ children }) {
                         className="h-6 w-6 text-indigo-600"
                         aria-hidden="true"
                       /> color="#4287f5"*/}
-                      <AppIcon color="#4287F5" />
+                      <AppIcon
+                        color="#4287F5"
+                        navigate={() => {
+                          navigate("/");
+                        }}
+                      />
                       {/* <img
                         className="h-8 w-8"
                         src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
@@ -126,7 +194,7 @@ export default function AppShell({ children }) {
                       /> */}
                     </div>
                     <div className="hidden md:block">
-                      <div className="ml-10 flex items-baseline space-x-4">
+                      <div className="ml-10 flex items-center space-x-4">
                         {navigation.map((item) => (
                           <button
                             key={item.name}
@@ -136,13 +204,14 @@ export default function AppShell({ children }) {
                                 : "text-gray-300 hover:bg-gray-700 hover:text-white",
                               "px-3 py-2 rounded-md text-sm font-medium"
                             )}
+                            title={item.title}
                             aria-current={item.current ? "page" : undefined}
                             onClick={() => {
                               setCurrentToNav(item);
                               navigate(item.href);
                             }}
                           >
-                            {item.name}
+                            <p className="inline">{item.name}</p>
                           </button>
                         ))}
                       </div>
@@ -163,7 +232,7 @@ export default function AppShell({ children }) {
                         <div>
                           <>
                             {userInfo?.isAuth && (
-                              <label className="text-white mr-2" for="roles">
+                              <label className="text-gray-300 mr-2" for="roles">
                                 {userInfo.username}
                               </label>
                             )}
@@ -203,6 +272,7 @@ export default function AppShell({ children }) {
                         setCurrentToNav(item);
                         navigate(item.href);
                       }}
+                      title={item.title}
                       className={classNames(
                         item.current
                           ? "bg-gray-900 text-white"
@@ -211,14 +281,14 @@ export default function AppShell({ children }) {
                       )}
                       aria-current={item.current ? "page" : undefined}
                     >
-                      {item.name}
+                      <p className="inline">{item.name}</p>
                     </Disclosure.Button>
                   ))}
                 </div>
                 <div className="pt-4 pb-3 border-t border-gray-700">
                   <div className="flex items-center px-5">
                     <div className="ml-3">
-                      <div className="text-sm mr-3 font-medium leading-none text-gray-400">
+                      <div className="text-md mr-3 leading-none text-gray-300">
                         {userInfo.username}
                         {LogInButton}
                       </div>

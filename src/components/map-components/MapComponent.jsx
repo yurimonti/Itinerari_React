@@ -85,7 +85,7 @@ export default function MapComponent({ data, zoom, renderAll, center }) {
   */
 
   return (
-    <div id="map" className="leaflet-container map-shadow border-2 rounded-2xl border-indigo-400">
+    <div id="map" className="leaflet-container transition ease-in-out duration-400 delay-10 sm:hover:border-indigo-600 rounded-xl border-4 border-indigo-400">
       <MapContainer center={center} zoom={zoom} scrollWheelZoom={true}>
         <TileLayer
           attribution={"https://www.openstreetmap.org/copyright"}

@@ -26,6 +26,8 @@ import {
   SunIcon,
   TruckIcon,
 } from "@heroicons/react/outline";
+import CrossIcon from "../components/CrossIcon";
+import ParkIcon from "../components/ParkIcon";
 
 const initialData = {
   id: 0,
@@ -64,7 +66,10 @@ export default function DescriptionLists() {
         result = <SunIcon className={iconStyle} aria-hidden="true" />;
         break;
       case "ZonaParcheggio":
-        result = <TruckIcon className={iconStyle} aria-hidden="true" />;
+        result = <ParkIcon className={iconStyle} color="#4F46E5"/>;
+        break;
+        case "Spirituale":
+        result =<CrossIcon className={iconStyle} color="#4F46E5"/>;
         break;
       default:
         result = "";

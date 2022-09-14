@@ -90,11 +90,11 @@ function ItineraryCard({ itinerary, reload, withModal }) {
   return (
     <div
       key={itinerary.id}
-      className="group relative p-2 border-4 rounded-md border-gray-300 hover:border-blue-400"
+      className="group relative p-2 border-4 rounded-xl border-blue-400 hover:border-blue-500 focus:border-blue-500 shadow-blue-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-blue-300"
     >
-      <h2 className="text-md text-center text-gray-700">
+      <h2 className="text-center text-lg leading-8 text-gray-900">
         <a
-          className="text-"
+          className="font-sans tracking-tighter"
           onClick={() => {
             withModal ? setOpen(true) : navigate("./" + itinerary.id);
           }}
@@ -105,17 +105,17 @@ function ItineraryCard({ itinerary, reload, withModal }) {
       </h2>
       <div className="mt-4 flex justify-between">
         <div>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Città:
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-gray-500">
               {itinerary.cities.map((c) => {
                 return <li key={c.name}>{c.name}</li>;
               })}
             </p>
           </h3>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Categorie:
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-gray-500">
               {itinerary.categories.map((c) => {
                 return <li key={c.name}>{c.name}</li>;
               })}
@@ -123,10 +123,10 @@ function ItineraryCard({ itinerary, reload, withModal }) {
           </h3>
         </div>
         <div>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Durata:{" "}
             {itinerary.geoJsonList.length !== 0 && (
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-gray-500">
                 {Math.round(
                   (itinerary.timeToVisit +
                     JSON.parse(itinerary.geoJsonList[0]).features[0].properties
@@ -137,10 +137,10 @@ function ItineraryCard({ itinerary, reload, withModal }) {
               </p>
             )}
           </h3>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Distanza:
             {itinerary.geoJsonList.length !== 0 && (
-              <p className="text-sm font-medium text-gray-900">
+              <p className="text-gray-500">
                 {mToKmRounded(
                   JSON.parse(itinerary.geoJsonList[0]).features[0].properties
                     .summary.distance
@@ -187,7 +187,7 @@ function ItineraryCard({ itinerary, reload, withModal }) {
             },
           }}
         >
-          <h2 className="text-lg">Che cosa vuoi fare?</h2>
+          <h2 className="text-lg font-sans text-gray-900">Che cosa vuoi fare?</h2>
         </ModalComponent>
       )}
       <MyAlert close={()=>{setIsOpen(false)}} messages={messages} trigger={isOpen} />

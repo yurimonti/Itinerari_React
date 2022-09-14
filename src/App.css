@@ -7,11 +7,11 @@
   text-shadow: -2px 6px 8px #818cf8;
 } */
 
-.map-shadow{
+.map-shadow {
   box-shadow: 0px 0px 10px 0px #4f46e5;
 }
 
-.map-shadow:hover{
+.map-shadow:hover {
   box-shadow: 0px 0px 15px 0px #4f46e5;
 }
 
@@ -36,11 +36,17 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 /*----------------------------------------------*/
-.App-load{
+.App-load {
   width: 200px;
   height: 200px;
   overflow-x: hidden;
@@ -55,6 +61,21 @@
 }
 
 @keyframes load-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+p,label {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+label {
+  color: rgb(107 114 128);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }

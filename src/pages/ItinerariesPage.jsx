@@ -35,12 +35,13 @@ const ItinerariesPage = ({ role }) => {
       role === "user" && owned
         ? "/api/" + role + "/itinerary/owner"
         : "/api/" + role + "/itinerary";
-    setIsLoading(true);
+    
     publicInstance
       .get(baseUrl, {
         params: params(owned),
       })
       .then((res) => {
+        setIsLoading(true);
         return res.data;
       })
       .then((data) => {
@@ -71,35 +72,40 @@ const ItinerariesPage = ({ role }) => {
   function renderUserOrEnte() {
     if (role === "user")
       return (
-        <>
-          <h2 className=" mt-5 text-2xl font-extrabold tracking-tight text-gray-900">
+        <div>
+          <h2 className=" mt-5 text-2xl font-extrabold tracking-wide text-gray-900">
             Itinerari Predefiniti
           </h2>
-          <div className="mt-5 justify-left">
-            <SelectComponent
-              values={cities}
-              selected={selectedCity}
-              setSelected={setSelectedCity}
-            />
-            <button
-              type="button"
-              onClick={() => {
-                selectedCity.name !== "" && getItineraries(false);
-              }}
-              className="bg-green-300"
-            >
-              <CheckIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setItinerariesFiltered([]);
-                setSelectedCity({ name: "" });
-              }}
-              className="bg-red-400"
-            >
-              <XIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
+          <div className="mt-5 justify-left m-auto">
+            <label className="block text-sm font-medium text-gray-700">
+              Seleziona Città
+            </label>
+            <div className="flex m-auto">
+              <SelectComponent
+                values={cities}
+                selected={selectedCity}
+                setSelected={setSelectedCity}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  selectedCity.name !== "" && getItineraries(false);
+                }}
+                className="bg-green-300 ml-4 mt-4 h-fit"
+              >
+                <CheckIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setItinerariesFiltered([]);
+                  setSelectedCity({ name: "" });
+                }}
+                className="bg-red-400 ml-4 mt-4 h-fit"
+              >
+                <XIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
           </div>
           <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {itinerariesFiltered.map((itinerary) => (
@@ -110,7 +116,7 @@ const ItinerariesPage = ({ role }) => {
               />
             ))}
           </div>
-        </>
+        </div>
       );
     else
       return (
@@ -125,7 +131,7 @@ const ItinerariesPage = ({ role }) => {
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
-        <h2 className="text-2xl font-extrabold tracking-tight text-gray-900">
+        <h2 className="text-2xl font-extrabold tracking-wide text-gray-900">
           {role === "user" ? "I miei Itinerari" : "Itinerari"}
         </h2>
 

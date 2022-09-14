@@ -8,9 +8,9 @@ import LoadingComponent from "../LoadingComponent";
 import MyAlert from "../MyAlert";
 
 const colors = {
-  pending: "border-yellow-200 hover:border-yellow-400 bg-yellow-200",
-  rejected: "border-red-200 hover:border-red-400 bg-red-200",
-  accepted: "border-green-200 hover:border-green-400 bg-green-200",
+  pending: "border-4 border-yellow-300 hover:border-yellow-400 focus:border-yellow-400 shadow-yellow-200 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-300",
+  rejected: "border-4 border-red-500 hover:border-red-600 focus:border-red-600 shadow-red-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-red-400",
+  accepted: "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
 };
 //component for render a card for a itinerary request
 function ItineraryRequestCard({ request, reload }) {
@@ -144,17 +144,17 @@ function ItineraryRequestCard({ request, reload }) {
         }}
       >
         <div>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Città:
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-gray-500">
               {request.cities.map((c) => {
                 return <li key={c.id}>{c.name}</li>;
               })}
             </p>
           </h3>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Punti:
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-gray-500">
               {request.points.map((p) => {
                 return <li key={p.id}>{p.poi.name}</li>;
               })}
@@ -162,17 +162,17 @@ function ItineraryRequestCard({ request, reload }) {
           </h3>
         </div>
         <div>
-          <h3 className="text-sm">
+          <h3 className="text-sm font-sans">
             Consensi
             {request.consensus.map((c) => {
               return (
-                <p className="mt-1 text-sm text-gray-500" key={c}>
+                <p className="mt-1 text-gray-500" key={c}>
                   {c}
                 </p>
               );
             })}
           </h3>
-          {request.consensus.length + "/" + request.cities.length}
+          <p className="mt-1 text-gray-500 font-sans text-sm" >{request.consensus.length + "/" + request.cities.length}</p>
         </div>
       </CardComponent>
       {renderModal(request)}

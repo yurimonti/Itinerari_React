@@ -55,7 +55,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
           onClick={() => {
             navigate("/pois/" + poi.id,{state:{poi:true}});
           }}
-          className="border bg-red-400"
+          className="border-2 rounded-md m-auto p-1 border-red-500 bg-red-400 hover:bg-red-500"
         >
           INFO
         </button>
@@ -63,7 +63,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
           onClick={() => {
             popUpEffect.action(poi);
           }}
-          className="border bg-sky-500 block float-right"
+          className=" border-2 rounded-md m-auto p-1 border-sky-500  hover:bg-sky-500 bg-sky-400 block float-right"
         >
           {popUpEffect?.name}
         </button>

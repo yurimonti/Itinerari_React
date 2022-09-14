@@ -12,9 +12,9 @@ export default function SelectComponent({selected,setSelected,values}) {
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">Seleziona Città</Listbox.Label>
-          <div className="mt-1 relative w-full md:w-1/4 flex">
-            <Listbox.Button className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          {/* <Listbox.Label className="block text-sm font-medium text-gray-700">Seleziona Città</Listbox.Label> */}
+          <div className="mt-1 relative w-2/3 lg:w-1/4 flex">
+            <Listbox.Button className="relative h-12 w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
               <span className="flex items-center">
                 <span className="ml-3 block truncate">{selected.name}</span>
               </span>

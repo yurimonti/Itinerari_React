@@ -8,6 +8,7 @@ import ClassicInput from "../components/ClassicInput";
 import { useUserContext } from "../utils/UserInfoProvider";
 import LoadingComponent from "../components/LoadingComponent";
 import MyAlert from "../components/MyAlert";
+import "../styles/form.css";
 
 const initialStateInputsString = {
   name: "",
@@ -370,7 +371,7 @@ export default function FormPage({ role }) {
   //---------------------------------------------input render-------------------------------
 
   return (
-    <div className="md:grid md:grid-cols-3 md:gap-6">
+    <div className="Form md:grid md:grid-cols-3 md:gap-6">
       <div className="md:col-span-1">
         <div className="px-4 sm:px-0">
           <h3 className="text-lg font-medium leading-6 text-gray-900">

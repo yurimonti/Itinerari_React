@@ -16,13 +16,33 @@ function PoiRequestCard({ request, reload, role }) {
   const styles =
     role === "ente"
       ? [
-          { type: "aggiunta", color: "bg-green-200 border border-green-600" },
-          { type: "modifica", color: "bg-yellow-200 border border-yellow-600" },
+          {
+            type: "aggiunta",
+            color: "bg-green-400",
+            border: "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
+          },
+          {
+            type: "modifica",
+            color: "bg-yellow-300",
+            border: "border-4 border-yellow-400 hover:border-yellow-500 focus:border-yellow-500 shadow-yellow-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-300",
+          },
         ]
       : [
-          { type: "accepted", color: "bg-green-200 border border-green-600" },
-          { type: "pending", color: "bg-yellow-200 border border-yellow-600" },
-          { type: "rejected", color: "bg-red-200 border border-red-600" },
+          {
+            type: "accettata",
+            color: "bg-green-400",
+            border: "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
+          },
+          {
+            type: "in attesa",
+            color: "bg-yellow-300",
+            border: "border-4 border-yellow-400 hover:border-yellow-500 focus:border-yellow-500 shadow-yellow-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-400",
+          },
+          {
+            type: "rifiutata",
+            color: "bg-red-400",
+            border: "border-4 border-red-500 hover:border-red-700 focus:border-red-700 shadow-red-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-red-400",
+          },
         ];
 
   function getType() {
@@ -144,18 +164,21 @@ function PoiRequestCard({ request, reload, role }) {
               state: { poi: false },
             });
       }}
+      className="rounded-xl focus:border-0"
     >
       <div
         className={
-          getRequestInfo(request).color +
+          getRequestInfo(request).border +
           " " +
-          "group relative w-full min-h-80 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75"
+          "group relative w-full min-h-80 aspect-w-1 aspect-h-1 rounded-xl overflow-hidden group-hover:opacity-75"
         }
       >
-        <h3 className="text-center mt-2">
-          {getRequestInfo(request).type.toUpperCase()}
-        </h3>
-        <div className="h-5 border-b-2 border-black" />
+        <div className={getRequestInfo(request).color + " " + "p-2"}>
+          <h3 className="text-center tracking-wide font-mono">
+            {getRequestInfo(request).type.toUpperCase()}
+          </h3>
+        </div>
+        {/* <div className="border-b-2 border-black" /> */}
         <div className="mt-4 justify-center">
           {/* nome aggiunta */}
           <div className="m-2">
@@ -178,7 +201,7 @@ function PoiRequestCard({ request, reload, role }) {
           </div>
         </div>
         <div className="text-right justify-end">
-          <h3 className="text-sm text-gray-700">da {request.username}</h3>
+          <h3 className="text-sm mr-2 text-gray-700">da {request.username}</h3>
         </div>
       </div>
       <ModalComponent

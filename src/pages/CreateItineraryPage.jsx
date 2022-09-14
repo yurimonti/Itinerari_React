@@ -7,7 +7,8 @@ import { reverseLatLng } from "../utils/map-utils/coordsManager";
 import { useUserContext } from "../utils/UserInfoProvider";
 import { useNavigate } from "react-router-dom";
 import LoadingComponent from "../components/LoadingComponent";
-import { ChevronRightIcon } from "@heroicons/react/solid";
+import { ChevronRightIcon, XIcon } from "@heroicons/react/solid";
+import "../styles/listStyle.css";
 
 const initialInputs = { name: "", description: "" };
 const profiles = [
@@ -106,7 +107,7 @@ export default function CreateItineraryPage({ role }) {
 
   function renderList() {
     return (
-      <ol className="ml-5" style={{ listStyleType: "number" }}>
+      <ol className="ml-2 sm:ml-0">
         {addedPois.map((poi) => {
           return (
             <li role="list" key={poi.id}>
@@ -118,10 +119,9 @@ export default function CreateItineraryPage({ role }) {
                 onClick={() => {
                   deletePoiFromAdded(poi);
                 }}
-                className="bg-red-500"
+                className="bg-red-400 ml-1"
               >
-                {" "}
-                X{" "}
+                <XIcon className="h-4 w-4" aria-hidden="true" />
               </button>
             </li>
           );
