@@ -9,6 +9,8 @@ import { useUserContext } from "../utils/UserInfoProvider";
 import LoadingComponent from "../components/LoadingComponent";
 import MyAlert from "../components/MyAlert";
 import "../styles/form.css";
+import DropDownComponent from "../components/form-components/DropDownComponent";
+import { ClockIcon,PhoneIcon } from "@heroicons/react/outline";
 
 const initialStateInputsString = {
   name: "",
@@ -395,7 +397,7 @@ export default function FormPage({ role }) {
                   name="name"
                   value={inputsString.name}
                   setValue={handleInputsString}
-                  label="name"
+                  label="Nome"
                   type="text"
                   placeholder="Nome del Poi"
                   min=""
@@ -538,95 +540,117 @@ export default function FormPage({ role }) {
                 />
               </div>
               <br />
-              <p>Contatti</p>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* email input */}
-                <ClassicInput
-                  name="emailContacts"
-                  value={inputsString.emailContacts}
-                  setValue={handleInputsString}
-                  label="emailContacts"
-                  type="text"
-                  placeholder="example@domain.com"
-                  min=""
-                />
-                {/* cellphone input */}
-                <ClassicInput
-                  name="phoneContacts"
-                  symbol="+39"
-                  value={inputsString.phoneContacts}
-                  setValue={handleInputsString}
-                  label="phoneContacts"
-                  type="number"
-                  placeholder="0123456789"
-                  min=""
-                />
-                {/* fax input */}
-                <ClassicInput
-                  name="faxContacts"
-                  //symbol="+39"
-                  value={inputsString.faxContacts}
-                  setValue={handleInputsString}
-                  label="faxContacts"
-                  type="text"
-                  placeholder="fax"
-                  min=""
-                />
-              </div>
+              <DropDownComponent
+                label="Contatti"
+                icon={
+                  <PhoneIcon
+                    className="ml-2 my-auto h-5 w-5 text-black-200"
+                    aria-hidden="true"
+                  />
+                }
+                menuStyle="bg-white w-80 mt-4 sm:w-auto px-6 rounded-md bg-white ring-2 ring-indigo-600 overflow-hidden focus:outline-none"
+                buttonStyle="bg-gray-50 border-2 border-indigo-600 inline-flex m-auto focus:outline-none rounded-xl px-4 py-2 hover:bg-indigo-600"
+              >
+                <div className="py-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* email input */}
+                  <ClassicInput
+                    name="emailContacts"
+                    value={inputsString.emailContacts}
+                    setValue={handleInputsString}
+                    label="emailContacts"
+                    type="text"
+                    placeholder="example@domain.com"
+                    min=""
+                  />
+                  {/* cellphone input */}
+                  <ClassicInput
+                    name="phoneContacts"
+                    symbol="+39"
+                    value={inputsString.phoneContacts}
+                    setValue={handleInputsString}
+                    label="phoneContacts"
+                    type="number"
+                    placeholder="0123456789"
+                    min=""
+                  />
+                  {/* fax input */}
+                  <ClassicInput
+                    name="faxContacts"
+                    //symbol="+39"
+                    value={inputsString.faxContacts}
+                    setValue={handleInputsString}
+                    label="faxContacts"
+                    type="text"
+                    placeholder="fax"
+                    min=""
+                  />
+                </div>
+              </DropDownComponent>
 
               {/* timepicker */}
               <br />
-              <p>Orari</p>
-              <button
-                type="button"
-                onClick={resetHours}
-                className="bg-sky-300 flex m-auto justify-center"
+
+              <DropDownComponent
+                label="Orari"
+                icon={
+                  <ClockIcon
+                    className="ml-2 my-auto h-5 w-5 text-black-200"
+                    aria-hidden="true"
+                  />
+                }
+                menuStyle="bg-white w-80 mt-4 sm:w-auto px-6 rounded-md bg-white ring-2 ring-indigo-600 overflow-hidden focus:outline-none"
+                buttonStyle="bg-gray-50 border-2 border-indigo-600 inline-flex m-auto focus:outline-none rounded-xl px-4 py-2 hover:bg-indigo-600"
               >
-                {" "}
-                clear hours{" "}
-              </button>
-              <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-2">
-                <DayHoursComponent
-                  keyValue="Lunedì"
-                  value={monday}
-                  setValue={setMonday}
-                />
-                <DayHoursComponent
-                  keyValue="Martedì"
-                  value={tuesday}
-                  setValue={setTuesday}
-                />
-                <DayHoursComponent
-                  keyValue="Mercoledì"
-                  value={wednesday}
-                  setValue={setWednesday}
-                />
-                <DayHoursComponent
-                  keyValue="Giovedì"
-                  value={thursday}
-                  setValue={setThursday}
-                />
-                <DayHoursComponent
-                  keyValue="Venerdì"
-                  value={friday}
-                  setValue={setFriday}
-                />
-                <DayHoursComponent
-                  keyValue="Sabato"
-                  value={saturday}
-                  setValue={setSaturday}
-                />
-                <DayHoursComponent
-                  keyValue="Domenica"
-                  value={sunday}
-                  setValue={setSunday}
-                />
-              </div>
+                <div className="grid grid-cols-4 sm:grid-cols-5 gap-2 text-center py-2 pr-4">
+                  <DayHoursComponent
+                    keyValue="Lunedì"
+                    value={monday}
+                    setValue={setMonday}
+                  />
+                  <DayHoursComponent
+                    keyValue="Martedì"
+                    value={tuesday}
+                    setValue={setTuesday}
+                  />
+                  <DayHoursComponent
+                    keyValue="Mercoledì"
+                    value={wednesday}
+                    setValue={setWednesday}
+                  />
+                  <DayHoursComponent
+                    keyValue="Giovedì"
+                    value={thursday}
+                    setValue={setThursday}
+                  />
+                  <DayHoursComponent
+                    keyValue="Venerdì"
+                    value={friday}
+                    setValue={setFriday}
+                  />
+                  <DayHoursComponent
+                    keyValue="Sabato"
+                    value={saturday}
+                    setValue={setSaturday}
+                  />
+                  <DayHoursComponent
+                    keyValue="Domenica"
+                    value={sunday}
+                    setValue={setSunday}
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={resetHours}
+                  className="ring-2 ring-red-500 hover:bg-red-400 rounded-md flex m-auto my-2 px-2 justify-center"
+                >
+                  reset
+                </button>
+              </DropDownComponent>
             </div>
-            <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+            <div className="px-4 py-3 bg-gray-100 text-right sm:px-6">
               <button
                 type="button"
-                className="inline-flex mr-3 justify-center py-2 px-4 border border-gray shadow-sm text-sm font-medium rounded-md text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-200"
+                className="inline-flex mr-3 justify-center py-2 px-4 border-2 border-red-500 shadow-red-400 shadow-sm text-sm font-medium rounded-md text-black bg-white hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-200"
                 onClick={() => {
                   location?.state?.poi === undefined
                     ? setClicked((c) => {
@@ -640,7 +664,7 @@ export default function FormPage({ role }) {
               </button>
               <button
                 type="button"
-                className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="inline-flex justify-center py-2 px-4 border-2 border-indigo-600 shadow-indigo-500 shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 onClick={() => {
                   setIsLoading(true);
                   handleSaveButtonClick();

@@ -204,7 +204,7 @@ export default function CategoriesComponent({
           value={typeValues}
           multiple={true}
           onChange={initTagsFromSelectedTypes}
-          keyValue="Types"
+          keyValue="Tipi"
           toView="name"
         />
       </div>

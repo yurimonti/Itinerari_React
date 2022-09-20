@@ -51,13 +51,14 @@ export default function DescriptionLists() {
   const { state } = useLocation();
   const [isLoading, setIsLoading] = useState(false);
   const [buttons, setButtons] = useState([true, false, false, false]);
+  const [disabled, setDisabled] = useState([]);
 
   const setIconToCategory = (category) => {
     const iconStyle = "h-7 w-7 text-indigo-600 mx-2 inline";
     let result;
     switch (category) {
       case "Culturale":
-        result =<BookOpenIcon className={iconStyle} aria-hidden="true" />;
+        result = <BookOpenIcon className={iconStyle} aria-hidden="true" />;
         break;
       case "Architetturale":
         result = <LibraryIcon className={iconStyle} aria-hidden="true" />;
@@ -66,10 +67,10 @@ export default function DescriptionLists() {
         result = <SunIcon className={iconStyle} aria-hidden="true" />;
         break;
       case "ZonaParcheggio":
-        result = <ParkIcon className={iconStyle} color="#4F46E5"/>;
+        result = <ParkIcon className={iconStyle} color="#4F46E5" />;
         break;
-        case "Spirituale":
-        result =<CrossIcon className={iconStyle} color="#4F46E5"/>;
+      case "Spirituale":
+        result = <CrossIcon className={iconStyle} color="#4F46E5" />;
         break;
       default:
         result = "";
@@ -77,22 +78,9 @@ export default function DescriptionLists() {
     return result;
   };
 
-  const renderButton = () => {
-    let disabled = [];
-    geoJsonSelect.map((g) => g.name).includes("driving-car")
-      ? disabled.push(false)
-      : true;
-    geoJsonSelect.map((g) => g.name).includes("wheelchair")
-      ? disabled.push(false)
-      : true;
-    geoJsonSelect.map((g) => g.name).includes("cycling-electric")
-      ? disabled.push(false)
-      : true;
-    geoJsonSelect.map((g) => g.name).includes("foot-walking")
-      ? disabled.push(false)
-      : true;
-    return disabled;
-  };
+  function isDisabled(profile) {
+    return geoJsonSelect.map((g) => g.name).includes(profile) ? false : true;
+  }
 
   function getDataById() {
     let url = state?.isRequest ? "/api/itinerary-request" : "/api/itinerary";
@@ -195,7 +183,7 @@ export default function DescriptionLists() {
       <div className="m-auto w-fit mb-2">
         <button
           type="button"
-          disabled={renderButton[0]}
+          disabled={isDisabled("driving-car")}
           className={
             buttons[0]
               ? "m-1 rounded-full border-4  border-indigo-600"
@@ -204,7 +192,7 @@ export default function DescriptionLists() {
           onClick={() => {
             if (!buttons[0]) {
               setButtons([true, false, false, false]);
-              if (!renderButton[0]) {
+              if (!isDisabled("driving-car")) {
                 let toSet = geoJsonSelect.filter(
                   (g) => g.name === "driving-car"
                 )[0];
@@ -218,7 +206,7 @@ export default function DescriptionLists() {
         </button>
         <button
           type="button"
-          disabled={renderButton[1]}
+          disabled={isDisabled("wheelchair")}
           className={
             buttons[1]
               ? "m-1 rounded-full border-4  border-indigo-600"
@@ -227,7 +215,7 @@ export default function DescriptionLists() {
           onClick={() => {
             if (!buttons[1]) {
               setButtons([false, true, false, false]);
-              if (!renderButton[1]) {
+              if (!isDisabled("wheelchair")) {
                 let toSet = geoJsonSelect.filter(
                   (g) => g.name === "wheelchair"
                 )[0];
@@ -241,7 +229,7 @@ export default function DescriptionLists() {
         </button>
         <button
           type="button"
-          disabled={renderButton[2]}
+          disabled={isDisabled("cycling-electric")}
           className={
             buttons[2]
               ? "m-1 rounded-full border-4  border-indigo-600"
@@ -250,7 +238,7 @@ export default function DescriptionLists() {
           onClick={() => {
             if (!buttons[2]) {
               setButtons([false, false, true, false]);
-              if (!renderButton[2]) {
+              if (!isDisabled("cycling-electric")) {
                 let toSet = geoJsonSelect.filter(
                   (g) => g.name === "cycling-electric"
                 )[0];
@@ -267,7 +255,7 @@ export default function DescriptionLists() {
         </button>
         <button
           type="button"
-          disabled={renderButton[3]}
+          disabled={isDisabled("foot-walking")}
           className={
             buttons[3]
               ? "m-1 rounded-full border-4  border-indigo-600"
@@ -276,7 +264,7 @@ export default function DescriptionLists() {
           onClick={() => {
             if (!buttons[3]) {
               setButtons([false, false, false, true]);
-              if (!renderButton[3]) {
+              if (!isDisabled("foot-walking")) {
                 let toSet = geoJsonSelect.filter(
                   (g) => g.name === "foot-walking"
                 )[0];
@@ -325,7 +313,7 @@ export default function DescriptionLists() {
               </Listbox>
             </dd>
           </div> */}
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Nome</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {itinerary?.name}
@@ -337,7 +325,7 @@ export default function DescriptionLists() {
                 {itinerary?.description}
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Città</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {printArray(itinerary.cities.map((c) => c.name))}
@@ -355,7 +343,7 @@ export default function DescriptionLists() {
                 </ol>
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
                 Tempo di visita totale
               </dt>
@@ -382,7 +370,7 @@ export default function DescriptionLists() {
                 km
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
                 {state?.isRequest ? "Richiesta effettuata da:" : "Creato da : "}
               </dt>
@@ -424,7 +412,7 @@ export default function DescriptionLists() {
                 </dd>
               </div>
             )}
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Istruzioni</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                 {itinerary.geoJsonList.length !== 0 && (
@@ -439,7 +427,7 @@ export default function DescriptionLists() {
                 {renderMap()}
               </dd>
             </div>
-            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">
                 Scarica Percorso
               </dt>

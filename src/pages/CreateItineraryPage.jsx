@@ -165,7 +165,7 @@ export default function CreateItineraryPage({ role }) {
         {renderList()}
         <button
           type="button"
-          className="transition ease-in-out delay-10 sm:hover:shadow-lg sm:hover:scale-105 sm:hover:shadow-indigo-500 duration-250 p-1 flex sm:float-right sm:m-2 m-auto border-4 rounded-md sm:hover:border-indigo-600 border-indigo-400"
+          className="bg-white transition ease-in-out delay-10 sm:hover:shadow-lg sm:hover:scale-105 sm:hover:shadow-indigo-500 duration-250 p-1 flex sm:float-right sm:m-2 m-auto border-4 rounded-md sm:hover:border-indigo-600 border-indigo-400"
           onClick={() => {
             setOpen(true);
           }}

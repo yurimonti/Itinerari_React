@@ -90,7 +90,7 @@ function ItineraryCard({ itinerary, reload, withModal }) {
   return (
     <div
       key={itinerary.id}
-      className="group relative p-2 border-4 rounded-xl border-blue-400 hover:border-blue-500 focus:border-blue-500 shadow-blue-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-blue-300"
+      className="group bg-white relative p-2 border-4 rounded-xl border-blue-400 hover:border-blue-500 focus:border-blue-500 shadow-blue-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-blue-300"
     >
       <h2 className="text-center text-lg leading-8 text-gray-900">
         <a

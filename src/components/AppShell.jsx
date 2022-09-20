@@ -8,7 +8,8 @@ import {
   useUpdateUserContext,
 } from "../utils/UserInfoProvider";
 import AppIcon from "./AppIcon";
-import { LocationMarkerIcon, PlusIcon } from "@heroicons/react/solid";
+import { PlusIcon } from "@heroicons/react/solid";
+import "../App.css";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -307,7 +308,7 @@ export default function AppShell({ children }) {
           )}
         </Disclosure>
         <main>
-          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="App-height max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             {children}
           </div>
         </main>
