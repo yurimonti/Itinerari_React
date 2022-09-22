@@ -49,7 +49,7 @@ export default function MapComponent({ data, zoom, renderAll, center }) {
         return (
           <MyMarker
             popUpEffect={{
-              name: "modifica",
+              name: "Modifica",
               action: () => {
                 navigate("/poi-form/poi/" + poi.id, { state: { poi: true } });
               },

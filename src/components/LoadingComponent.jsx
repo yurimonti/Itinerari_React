@@ -4,19 +4,17 @@ import MyAlert from "./MyAlert";
 
 function LoadingComponent({ isLoading, onClose }) {
   return (
-    <div>
-      <MyAlert
-        transparent
-        trigger={isLoading}
-        close={onClose}
-        content={
-          <>
-            <LoadIcon />
-            <p className="text-center">Caricamento...</p>
-          </>
-        }
-      />
-    </div>
+    <MyAlert
+      transparent
+      trigger={isLoading}
+      close={onClose}
+      content={
+        <>
+          <LoadIcon />
+          <p className="pt-2 text-xl text-center">Caricamento...</p>
+        </>
+      }
+    />
   );
 }
 

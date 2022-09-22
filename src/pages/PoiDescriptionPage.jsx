@@ -185,14 +185,14 @@ export default function PoiDescriptionPage({ role }) {
                 Costo Ticket
               </dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
-                {poi.ticketPrice}
+                {poi.ticketPrice}€
               </dd>
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">Orari</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
-                <p className="mb-3">
-                  Oggi è {poi?.hours?.open ? "Aperto" : "Chiuso"}
+                <p className={poi?.hours?.open ?"mb-3 text-green-700" : "mb-3 text-red-600"}>
+                  Adesso è {poi?.hours?.open ? "Aperto" : "Chiuso"}
                 </p>
                 {poi.hours.monday && (
                   <p>Lunedì: {renderHours(poi.hours.monday)}</p>
@@ -255,7 +255,7 @@ export default function PoiDescriptionPage({ role }) {
               </div>
             )}
             <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="font-sans text-gray-500">Tipi di Poi</dt>
+              <dt className="font-sans text-gray-500">Tipo di Poi</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                 {printArray(poi.types.map((t) => t.name))}
               </dd>

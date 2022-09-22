@@ -34,7 +34,7 @@ function ItineraryMapCreator({ zoom, renderAll, center, handleClick }) {
         return (
           <MyMarker
             popUpEffect={{
-              name: "aggiungi",
+              name: "Aggiungi",
               action: () => {
                 handleClick(poi);
               },

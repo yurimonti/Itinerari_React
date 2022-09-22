@@ -2,7 +2,7 @@
 function CardComponent({ name, children, onClick,color,disabled }) {
   return (
     <div 
-      className={color ? "group relative p-2 border-4 rounded-md "+color : "group relative p-2 border-4 rounded-md border-gray-300 hover:border-blue-400"}
+      className={color ? "min-w-fit bg-white group relative p-2 border-4 rounded-md "+color : "bg-white group relative p-2 border-4 rounded-md border-gray-300 hover:border-blue-400"}
     >
       <h2 className="text-md text-center text-gray-700">
         <a className={disabled ? "text-lg pointer-events-none" : "text-lg font-sans leading-8 tracking-tighter"} onClick={onClick}>

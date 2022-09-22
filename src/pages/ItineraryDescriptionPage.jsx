@@ -19,15 +19,8 @@ import WheelChairIcon from "../components/WheelChairIcon";
 import CyclingElectricIcon from "../components/CyclingElectricIcon";
 import WalkingIcon from "../components/WalkingIcon";
 import "../styles/listStyle.css";
-import {
-  DocumentDownloadIcon,
-  BookOpenIcon,
-  LibraryIcon,
-  SunIcon,
-  TruckIcon,
-} from "@heroicons/react/outline";
-import CrossIcon from "../components/CrossIcon";
-import ParkIcon from "../components/ParkIcon";
+import {DocumentDownloadIcon} from "@heroicons/react/outline";
+import setIconToCategory from "../utils/map-utils/categoryIconsManager";
 
 const initialData = {
   id: 0,
@@ -52,31 +45,6 @@ export default function DescriptionLists() {
   const [isLoading, setIsLoading] = useState(false);
   const [buttons, setButtons] = useState([true, false, false, false]);
   const [disabled, setDisabled] = useState([]);
-
-  const setIconToCategory = (category) => {
-    const iconStyle = "h-7 w-7 text-indigo-600 mx-2 inline";
-    let result;
-    switch (category) {
-      case "Culturale":
-        result = <BookOpenIcon className={iconStyle} aria-hidden="true" />;
-        break;
-      case "Architetturale":
-        result = <LibraryIcon className={iconStyle} aria-hidden="true" />;
-        break;
-      case "Naturalistica":
-        result = <SunIcon className={iconStyle} aria-hidden="true" />;
-        break;
-      case "ZonaParcheggio":
-        result = <ParkIcon className={iconStyle} color="#4F46E5" />;
-        break;
-      case "Spirituale":
-        result = <CrossIcon className={iconStyle} color="#4F46E5" />;
-        break;
-      default:
-        result = "";
-    }
-    return result;
-  };
 
   function isDisabled(profile) {
     return geoJsonSelect.map((g) => g.name).includes(profile) ? false : true;
@@ -403,7 +371,7 @@ export default function DescriptionLists() {
                       return (
                         <li key={category.name}>
                           {" "}
-                          {setIconToCategory(category.name)}
+                          {setIconToCategory(category.name,"7","7")}
                           {category.name}
                         </li>
                       );

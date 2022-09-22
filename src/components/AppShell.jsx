@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import { BellIcon, LoginIcon, LogoutIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -31,7 +31,7 @@ const userRoutes = [
     title: "Aggiungi Poi",
   },
   {
-    name: "Notifiche",
+    name: "Richieste",
     href: "/notifies",
     current: false,
     icon: undefined,
@@ -69,7 +69,7 @@ const enteRoutes = [
     title: "Aggiungi Poi",
   },
   {
-    name: "Notifiche",
+    name: "Richieste",
     href: "/notifies",
     current: false,
     icon: undefined,
@@ -131,7 +131,7 @@ export default function AppShell({ children }) {
         navigate("/");
       }}
     >
-      Esci
+      Esci <LogoutIcon className="w-7 h-7 inline" aria-hidden="true" />
     </button>
   ) : (
     <button
@@ -141,7 +141,7 @@ export default function AppShell({ children }) {
         navigate("/login");
       }}
     >
-      Accedi
+      Accedi <LoginIcon  className="w-7 h-7 inline" aria-hidden="true" />
     </button>
   );
 

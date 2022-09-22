@@ -164,7 +164,7 @@ function PoiRequestCard({ request, reload, role }) {
               state: { poi: false },
             });
       }}
-      className="rounded-xl focus:border-0"
+      className="rounded-xl focus:border-0 bg-white"
     >
       <div
         className={

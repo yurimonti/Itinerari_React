@@ -55,8 +55,6 @@ main{
 
 /*----------------------------------------------*/
 .App-load {
-  width: 200px;
-  height: 200px;
   overflow-x: hidden;
   flex: center;
   align-items: center;

@@ -2,6 +2,8 @@ import { Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { IconDefault } from "leaflet/src/layer/marker/Icon.Default";
 import { useNavigate } from "react-router-dom";
+import { ClockIcon } from "@heroicons/react/outline";
+import setIconToCategory from "../../utils/map-utils/categoryIconsManager";
 
 //Component that renders a Marker in a Map
 const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
@@ -13,15 +15,15 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     isOpen: poi?.hours?.isOpen,
     visit: poi.timeToVisit,
     price: poi.ticketPrice,
-    types: printTypes(poi),
+    types: poi.types,
     address: poi?.address?.street + " " + poi?.address?.number,
     email: poi?.contact?.email,
     fax: poi?.contact?.fax,
     phone: poi?.contact?.cellNumber,
   };
-  
+
   /**
-   * 
+   *
    * @param {Object} poi types to render
    * @returns text types
    */
@@ -34,7 +36,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   }
 
   /**
-   * 
+   *
    * @param {Object} poi that contains info to render
    * @returns component that render info
    */
@@ -42,28 +44,43 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
     return (
       <>
         <div className="text-center text-sm">
-          <h1 className="text-lg">{info.title}</h1>
-          <h4>{info.types}</h4>
-          <h4>{info.address}</h4>
+          <h1 className="font-semibold text-lg">{info.title}</h1>
+          <>
+          {poi.types[0].categories.map(c => { return setIconToCategory(c.name,6,6)})}
+          <h4 className="ml-1 inline font-sans text-base " >{printTypes(poi)}</h4></>
+          <h4 className="font-sans" >{info.address}</h4>
           {info.price !== 0 && info.price !== null && (
-            <h4>{"prezzo: " + info.price}</h4>
+            <h4 className="font-sans" >{"prezzo: " + info.price}</h4>
           )}
-          <h4>{"tempo visita: " + info.visit}minuti</h4>
-          <h4>{info.isOpen ? "APERTO" : "CHIUSO"}</h4>
+          <h4 className="font-sans" >
+            <ClockIcon className="inline text-indigo-600 mr-1 h-5 w-5" aria-hidden="true" />
+            {"Visita: " + info.visit} min
+          </h4>
+          <h4
+            className={
+              info.isOpen
+                ? "font-sans text-green-600"
+                : "font-sans text-red-600"
+            }
+          >
+            {info.isOpen ? "APERTO" : "CHIUSO"}
+          </h4>
         </div>
         <button
           onClick={() => {
-            navigate("/pois/" + poi.id,{state:{poi:true}});
+            navigate("/pois/" + poi.id, { state: { poi: true } });
           }}
-          className="border-2 rounded-md m-auto p-1 border-red-500 bg-red-400 hover:bg-red-500"
+          /* className="border-2 font-sans px-4 rounded-md m-auto p-1 border-red-500 bg-red-400 hover:bg-red-500" */
+          className="transition ease-in-out delay-10 sm:hover:shadow-md sm:hover:scale-105 sm:hover:shadow-red-400 duration-250 border-2 font-sans px-4 rounded-xl m-auto p-1 border-red-500"
         >
-          INFO
+          Info
         </button>
         <button
           onClick={() => {
             popUpEffect.action(poi);
           }}
-          className=" border-2 rounded-md m-auto p-1 border-sky-500  hover:bg-sky-500 bg-sky-400 block float-right"
+          /* className="font-sans border-2 rounded-md m-auto p-1 border-sky-500  hover:bg-sky-500 bg-sky-400 block float-right" */
+          className="transition ease-in-out delay-10 sm:hover:shadow-md sm:hover:scale-105 sm:hover:shadow-sky-300 duration-250 border-2 font-sans rounded-xl m-auto p-1 border-sky-400 block float-right"
         >
           {popUpEffect?.name}
         </button>
@@ -72,7 +89,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   }
 
   /**
-   * 
+   *
    * @param {number[]} iconSize width and height to set to an icon marker
    * @param {*} image to set for a marker
    * @returns icon to set
@@ -89,7 +106,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   }
 
   /**
-   * 
+   *
    * @returns standard Marker Icon of leaflet
    */
   function getStandardIcon() {
@@ -160,7 +177,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
         icon={isPoiIcon ? adjustIcon(poi) : getStandardIcon()}
       >
         {popup && (
-          <Popup maxWidth="300" minWidth="100" maxHeight="200">
+          <Popup maxWidth="300" minWidth="100">
             {renderInfoOfAPoi(poi)}
           </Popup>
         )}
