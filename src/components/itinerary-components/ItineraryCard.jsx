@@ -44,7 +44,8 @@ function ItineraryCard({ itinerary, reload, withModal }) {
           let result = {
             ...pre,
             title: "Impossibile eliminare itinerario",
-            content:"Si è verificato un errore durante l'eliminazione dell'itinerario",
+            content:
+              "Si è verificato un errore durante l'eliminazione dell'itinerario",
           };
           return result;
         });
@@ -100,7 +101,11 @@ function ItineraryCard({ itinerary, reload, withModal }) {
           }}
         >
           <span aria-hidden="true" className="absolute inset-0" />
-          {itinerary.name === null ? "Itinerario" : itinerary?.name}
+          {itinerary.name === null
+            ? "Itinerario"
+            : itinerary?.name.length > 30
+            ? itinerary?.name.slice(0, 30) + "..."
+            : itinerary?.name}
         </a>
       </h2>
       <div className="mt-4 flex justify-between">
@@ -187,10 +192,18 @@ function ItineraryCard({ itinerary, reload, withModal }) {
             },
           }}
         >
-          <h2 className="text-lg font-sans text-gray-900">Che cosa vuoi fare?</h2>
+          <h2 className="text-lg font-sans text-gray-900">
+            Che cosa vuoi fare?
+          </h2>
         </ModalComponent>
       )}
-      <MyAlert close={()=>{setIsOpen(false)}} messages={messages} trigger={isOpen} />
+      <MyAlert
+        close={() => {
+          setIsOpen(false);
+        }}
+        messages={messages}
+        trigger={isOpen}
+      />
       <LoadingComponent
         isLoading={isLoading}
         onClose={() => {

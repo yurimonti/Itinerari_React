@@ -8,9 +8,12 @@ import LoadingComponent from "../LoadingComponent";
 import MyAlert from "../MyAlert";
 
 const colors = {
-  pending: "border-4 border-yellow-300 hover:border-yellow-400 focus:border-yellow-400 shadow-yellow-200 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-300",
-  rejected: "border-4 border-red-500 hover:border-red-600 focus:border-red-600 shadow-red-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-red-400",
-  accepted: "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
+  pending:
+    "border-4 border-yellow-300 hover:border-yellow-400 focus:border-yellow-400 shadow-yellow-200 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-300",
+  rejected:
+    "border-4 border-red-500 hover:border-red-600 focus:border-red-600 shadow-red-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-red-400",
+  accepted:
+    "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
 };
 //component for render a card for a itinerary request
 function ItineraryRequestCard({ request, reload }) {
@@ -73,7 +76,7 @@ function ItineraryRequestCard({ request, reload }) {
           let result = {
             ...pre,
             title: "Impossibile completare operazione",
-            content:"Si è verificato un errore durante l'operazione",
+            content: "Si è verificato un errore durante l'operazione",
           };
           return result;
         });
@@ -156,7 +159,13 @@ function ItineraryRequestCard({ request, reload }) {
             Punti:
             <p className="mt-1 text-gray-500">
               {request.points.map((p) => {
-                return <li key={p.id}>{p.poi.name}</li>;
+                return (
+                  <li key={p.id}>
+                    {p.poi.name.length > 30
+                      ? p.poi.name.slice(0, 30) + "..."
+                      : p.poi.name}
+                  </li>
+                );
               })}
             </p>
           </h3>
@@ -172,11 +181,19 @@ function ItineraryRequestCard({ request, reload }) {
               );
             })}
           </h3>
-          <p className="mt-1 text-gray-500 font-sans text-sm" >{request.consensus.length + "/" + request.cities.length}</p>
+          <p className="mt-1 text-gray-500 font-sans text-sm">
+            {request.consensus.length + "/" + request.cities.length}
+          </p>
         </div>
       </CardComponent>
       {renderModal(request)}
-      <MyAlert close={()=>{setIsOpen(false)}} messages={messages} trigger={isOpen} />
+      <MyAlert
+        close={() => {
+          setIsOpen(false);
+        }}
+        messages={messages}
+        trigger={isOpen}
+      />
       <LoadingComponent
         isLoading={isLoading}
         onClose={() => {

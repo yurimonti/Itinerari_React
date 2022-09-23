@@ -122,7 +122,7 @@ export default function PoiDescriptionPage({ role }) {
           <>
             <button
               type="button"
-              className="text-md font-sans p-2 flex float-left ml-3 border-2 rounded-md border-red-400 transition ease-in-out shadow-red-200 shadow-md hover:shadow-lg hover:shadow-red-300 delay-10 duration-400  hover:bg-red-400 mb-4 "
+              className="bg-white text-md font-sans p-2 flex float-left ml-3 border-2 rounded-md border-red-400 transition ease-in-out shadow-red-200 shadow-md hover:shadow-lg hover:shadow-red-300 delay-10 duration-400  hover:bg-red-400 mb-4 "
               onClick={deletePoi}
             >
               Elimina Poi
@@ -140,7 +140,7 @@ export default function PoiDescriptionPage({ role }) {
         {state.poi && (
           <button
             type="button"
-            className="text-md font-sans p-2 flex float-left ml-3 border-2 rounded-md border-sky-400 transition ease-in-out shadow-sky-200 shadow-md hover:shadow-lg hover:shadow-sky-300 delay-10 duration-400  hover:bg-sky-400 mb-4 "
+            className="bg-white text-md font-sans p-2 flex float-left ml-3 border-2 rounded-md border-sky-400 transition ease-in-out shadow-sky-200 shadow-md hover:shadow-lg hover:shadow-sky-300 delay-10 duration-400  hover:bg-sky-400 mb-4 "
             onClick={() => {
               state.poi &&
                 navigate("/poi-form/poi/" + poi.id, { state: { poi: true } });
@@ -153,7 +153,7 @@ export default function PoiDescriptionPage({ role }) {
       <div className="bg-white clear-both shadow overflow-hidden sm:rounded-lg">
         <div className="border-t border-gray-200">
           <dl>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">Nome</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                 {poi?.name}
@@ -165,7 +165,7 @@ export default function PoiDescriptionPage({ role }) {
                 {poi?.description}
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">Città</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                 {city?.name}
@@ -180,7 +180,7 @@ export default function PoiDescriptionPage({ role }) {
                 </ul>
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">
                 Costo Ticket
               </dt>
@@ -217,7 +217,7 @@ export default function PoiDescriptionPage({ role }) {
                 )}
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">Indirizzo</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                 {poi?.address?.street}, {poi?.address?.number}
@@ -234,7 +234,7 @@ export default function PoiDescriptionPage({ role }) {
               </dd>
             </div>
             {state.poi ? (
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="font-sans text-gray-500">
                   Contributori
                 </dt>
@@ -247,20 +247,20 @@ export default function PoiDescriptionPage({ role }) {
                 </dd>
               </div>
             ) : (
-              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="font-sans text-gray-500">Creata da</dt>
                 <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                   {poi?.username}
                 </dd>
               </div>
             )}
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">Tipo di Poi</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                 {printArray(poi.types.map((t) => t.name))}
               </dd>
             </div>
-            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-gray-100 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">Tags</dt>
               <dd className="mt-1 font-sans text-gray-900 sm:mt-0 sm:col-span-2">
                 {poi.tagValues.map((tv) => {
@@ -276,7 +276,7 @@ export default function PoiDescriptionPage({ role }) {
                 })}
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="font-sans text-gray-500">
                 Tempo di visita
               </dt>

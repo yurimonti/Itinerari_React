@@ -10,7 +10,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
   const navigate = useNavigate();
 
   const info = {
-    title: poi.name,
+    title: poi.name.length > 60 ?poi.name.slice(0, 60) + "..." : poi.name,
     subtitle: poi.description,
     isOpen: poi?.hours?.isOpen,
     visit: poi.timeToVisit,
@@ -177,7 +177,7 @@ const MyMarker = ({ poi, popup, isPoiIcon, icon, popUpEffect }) => {
         icon={isPoiIcon ? adjustIcon(poi) : getStandardIcon()}
       >
         {popup && (
-          <Popup maxWidth="300" minWidth="100">
+          <Popup maxWidth="300" minWidth="140">
             {renderInfoOfAPoi(poi)}
           </Popup>
         )}

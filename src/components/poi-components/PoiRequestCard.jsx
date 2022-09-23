@@ -19,29 +19,34 @@ function PoiRequestCard({ request, reload, role }) {
           {
             type: "aggiunta",
             color: "bg-green-400",
-            border: "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
+            border:
+              "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
           },
           {
             type: "modifica",
             color: "bg-yellow-300",
-            border: "border-4 border-yellow-400 hover:border-yellow-500 focus:border-yellow-500 shadow-yellow-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-300",
+            border:
+              "border-4 border-yellow-400 hover:border-yellow-500 focus:border-yellow-500 shadow-yellow-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-300",
           },
         ]
       : [
           {
             type: "accettata",
             color: "bg-green-400",
-            border: "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
+            border:
+              "border-4 border-green-500 hover:border-green-600 focus:border-green-600 shadow-green-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-green-400",
           },
           {
             type: "in attesa",
             color: "bg-yellow-300",
-            border: "border-4 border-yellow-400 hover:border-yellow-500 focus:border-yellow-500 shadow-yellow-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-400",
+            border:
+              "border-4 border-yellow-400 hover:border-yellow-500 focus:border-yellow-500 shadow-yellow-300 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-yellow-400",
           },
           {
             type: "rifiutata",
             color: "bg-red-400",
-            border: "border-4 border-red-500 hover:border-red-700 focus:border-red-700 shadow-red-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-red-400",
+            border:
+              "border-4 border-red-500 hover:border-red-700 focus:border-red-700 shadow-red-400 shadow-md transition ease-in-out delay-10 duration-400 hover:shadow-lg hover:shadow-red-400",
           },
         ];
 
@@ -188,7 +193,9 @@ function PoiRequestCard({ request, reload, role }) {
           </div>
           <div className="m-2">
             <h2 className="text-sm text-gray-700 text-center">
-              {request.description.slice(0, 32) + "..."}
+              {request.description.length > 40
+                ? request.description.slice(0, 40) + "..."
+                : request.description}
             </h2>
           </div>
           <div className="m-2">
