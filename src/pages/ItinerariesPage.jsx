@@ -35,12 +35,12 @@ const ItinerariesPage = ({ role }) => {
       role === "user" && owned
         ? "/api/" + role + "/itinerary/owner"
         : "/api/" + role + "/itinerary";
-    setIsLoading(true);
     publicInstance
       .get(baseUrl, {
         params: params(owned),
       })
       .then((res) => {
+        setIsLoading(true);
         return res.data;
       })
       .then((data) => {
