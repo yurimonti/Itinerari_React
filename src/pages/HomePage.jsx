@@ -51,7 +51,7 @@ export default function HomePage() {
                     onClick={() => {
                       navigate("/login");
                     }}
-                    className="w-full shadow-indigo-300 hover:shadow-indigo-400 shadow-xl flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
+                    className="w-full sm:shadow-xl shadow-md sm:shadow-indigo-300 shadow-indigo-300 hover:shadow-indigo-400  flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10"
                   >
                     Inizia!
                   </button>
@@ -62,7 +62,7 @@ export default function HomePage() {
                     onClick={() => {
                       navigate("/map");
                     }}
-                    className="w-full shadow-indigo-200 hover:shadow-indigo-300 shadow-xl flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
+                    className="w-full sm:shadow-xl shadow-md sm:shadow-indigo-200 shadow-indigo-200 hover:shadow-indigo-300  flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10"
                   >
                     Luoghi Disponibili
                   </button>

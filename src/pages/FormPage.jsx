@@ -361,9 +361,7 @@ export default function FormPage({ role }) {
       getCities();
     }
     return () => {
-      setCategoryValues([]);
-      setTypeValues([]);
-      setTagValues([]);
+      reset();
       if (role === "user") {
         setCity({});
         setCities([]);
